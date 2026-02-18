@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA Valley Bank Demo - Cases Reference V6.28</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #09434e;
+            --accent-teal: #22D3EE;
+            --ops-teal: #0D9488;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --severity-critical: #dc2626;
+            --severity-high: #f59e0b;
+            --severity-medium: #6366f1;
+            --severity-low: #22c55e;
+            --status-success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a5563 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 0.875rem;
+            opacity: 0.85;
+        }
+
+        .header .version {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            display: inline-block;
+            margin-top: 0.75rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Summary table */
+        .summary-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-section h2 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .summary-table th {
+            background: #f1f5f9;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .summary-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .summary-table tr:last-child td { border-bottom: none; }
+
+        .summary-table tr:hover { background: #f8fafc; }
+
+        /* Severity badges */
+        .severity {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+        }
+
+        .severity-critical { background: #fef2f2; color: var(--severity-critical); }
+        .severity-high { background: #fffbeb; color: #b45309; }
+        .severity-medium { background: #eef2ff; color: var(--severity-medium); }
+        .severity-low { background: #f0fdf4; color: var(--severity-low); }
+
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+        }
+
+        .status-open { background: #fef3c7; color: #92400e; }
+        .status-closed { background: #d1fae5; color: #065f46; }
+
+        .score {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .dlp-true { color: var(--severity-critical); }
+        .dlp-false { color: var(--text-muted); }
+
+        .validated-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Category sections */
+        .category-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-header h2 {
+            font-size: 1.125rem;
+            font-weight: 800;
+        }
+
+        .category-header .count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--primary);
+            color: white;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+        }
+
+        .category-header .desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Case cards */
+        .case-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .case-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .case-card .case-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .case-card .case-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .case-card .case-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 0.15rem;
+        }
+
+        .case-card .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .case-card .entity {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .case-card .entity strong {
+            color: var(--text-primary);
+        }
+
+        .case-card .analysis {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .case-card .analysis-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ops-teal);
+            margin-bottom: 0.25rem;
+        }
+
+        .case-card .analysis-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .dlp-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .dlp-label {
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .valley-context {
+            background: #f0fdfa;
+            border: 1px solid #99f6e4;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        .valley-context .context-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ops-teal);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Key insight */
+        .key-insight {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%);
+            border: 1px solid #99f6e4;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .key-insight h3 {
+            font-size: 0.875rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .key-insight p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .key-insight .highlight {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .case-card .case-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>AXIA Valley Bank Demo - Cases Reference</h1>
+    <p>Complete reference for all 14 cases in the AXIA interactive demo, with Valley Bank-specific context and DLP comparison data. (V6.28: VB-008 and VB-010 moved to False Alerts panel only.)</p>
+    <span class="version">V6.28 - February 2026</span>
+</div>
+
+<div class="container">
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="number" style="color: var(--primary)">14</div>
+            <div class="label">Total Cases</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--severity-critical)">6</div>
+            <div class="label">True Positives (DLP missed)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--severity-medium)">5</div>
+            <div class="label">False Positives (AXIA suppressed)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--ops-teal)">2</div>
+            <div class="label">Context Validated</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: #8b5cf6">1</div>
+            <div class="label">Engagement Resolved</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--status-success)">7</div>
+            <div class="label">Lab-Validated Cases</div>
+        </div>
+    </div>
+
+    <!-- Key Insight -->
+    <div class="key-insight">
+        <h3>DLP Comparison: AXIA 8/8 Where DLP Was Wrong</h3>
+        <p>Validated test cases from Valley Bank's DLP evaluation confirm: traditional DLP (Purview, Netskope) was wrong on all 8 validated cases.
+        DLP fired <span class="highlight">6 false positive alerts</span> on test/sandbox data that AXIA correctly dismissed (score 0.0).
+        DLP was <span class="highlight">silent on 2 genuine threats</span> (FDIC Call Report draft + commercial client financials, branch consolidation plan with employee PII)
+        that AXIA detected at <span class="highlight">0.9 sensitivity</span> and recommended blocking.</p>
+    </div>
+
+    <!-- Summary Table -->
+    <div class="summary-section">
+        <h2>All Cases at a Glance</h2>
+        <div style="overflow-x: auto;">
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Severity</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>DLP</th>
+                    <th>Category</th>
+                    <th>Validated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="case-id" style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-001</span></td>
+                    <td>Credit risk model IP exfiltration</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">97</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-002</span></td>
+                    <td>Commercial client portfolio extraction via API</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">94</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-004</span></td>
+                    <td>Core banking migration postmortem to competitor</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">91</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-003</span></td>
+                    <td>OCC exam findings shared with banking reporter</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">83</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-005</span></td>
+                    <td>FDIC Call Report + client financials to unapproved advisor</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">80</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td><span class="validated-badge">Validated 0.9</span></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-014</span></td>
+                    <td>Branch consolidation plan with employee PII</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">78</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                    <td><span class="validated-badge">Validated 0.9</span></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-011</span></td>
+                    <td>Treasury platform specs to verified prospect (context-validated)</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">72</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>Context Validated</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-012</span></td>
+                    <td>Commercial client review to personal email (coached)</td>
+                    <td><span class="severity severity-medium">Medium</span></td>
+                    <td><span class="score">65</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>Engagement Resolved</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-006</span></td>
+                    <td>Synthetic loan data in credit risk staging</td>
+                    <td><span class="severity severity-medium">Medium</span></td>
+                    <td><span class="score">45</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td><span class="validated-badge">Validated 0.0</span></td>
+                </tr>
+                <tr style="opacity: 0.5; background: #f1f5f9;">
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--text-muted)">VB-008</span></td>
+                    <td><s>Core banking API test keys in CI/CD</s> <em style="color:var(--ops-teal);font-size:0.75rem">&rarr; Moved to False Alerts panel (FP-DLP-003)</em></td>
+                    <td><span class="severity severity-medium">Medium</span></td>
+                    <td><span class="score">48</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td><span class="validated-badge">Validated 0.0</span></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-007</span></td>
+                    <td>CDD/EDD test payloads in BSA/KYC vendor sandbox</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">32</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-009</span></td>
+                    <td>BSA/AML investigation training materials</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">28</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td><span class="validated-badge">Validated 0.0</span></td>
+                </tr>
+                <tr style="opacity: 0.5; background: #f1f5f9;">
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--text-muted)">VB-010</span></td>
+                    <td><s>Synthetic ACH batch load-test data</s> <em style="color:var(--ops-teal);font-size:0.75rem">&rarr; Moved to False Alerts panel (FP-DLP-008)</em></td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">30</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-013</span></td>
+                    <td>Open-source ACH file format parser (legitimate)</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">35</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>Context Validated</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-015</span></td>
+                    <td>ML fraud-model training dataset</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">20</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td><span class="validated-badge">Validated 0.0</span></td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">VB-016</span></td>
+                    <td>ACH return code simulation test file</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">18</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                    <td><span class="validated-badge">Validated 0.0</span></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <!-- ========== TRUE POSITIVES ========== -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 style="color: var(--severity-critical)">True Positives - DLP Missed, AXIA Caught</h2>
+            <span class="count">6</span>
+            <span class="desc">Real insider risk threats invisible to traditional DLP</span>
+        </div>
+
+        <!-- VB-001 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-critical);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-001</span>
+                    <div class="case-title">Proprietary credit risk scoring model exfiltrated before departure</div>
+                    <div class="meta-row">
+                        <span class="severity severity-critical">Critical</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 97</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Marcus Chen</strong> - Senior Data Scientist, Risk Management, Wayne NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - Chrome sync to personal Google Drive not monitored</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Departing data scientist (joining M&T Bank, a direct regional competitor) uploaded 134 files including credit risk scoring models, underwriting algorithms, and patent-pending optimization algorithms to personal Google Drive. 22x normal volume over 3 days.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Credit risk scoring is Valley's core IP in commercial lending. The models handle credit assessments across 8 commercial lending verticals and $18B in loan commitments. Loss to a direct competitor (M&T Bank) represents existential competitive risk in regional commercial banking. Chrome browser sync bypasses all file-based DLP monitoring.
+            </div>
+        </div>
+
+        <!-- VB-002 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-critical);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-002</span>
+                    <div class="case-title">Complete commercial client portfolio extracted via treasury platform API</div>
+                    <div class="meta-row">
+                        <span class="severity severity-critical">Critical</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 94</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Natasha Orlov</strong> - Senior Commercial Relationship Manager, Commercial Banking, New York</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Netskope):</span>
+                <span class="dlp-false">No alert - API-level extraction not monitored by file-based DLP</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Used service account credentials to extract portfolio data for 892 commercial clients ($18.4B in loan commitments), including treasury fee structures and covenant details. Husband launched a competing commercial banking advisory firm 3 weeks ago; LinkedIn now lists "Advisor" at that entity.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Commercial client data including fee structures and covenant details is the most commercially sensitive data in banking. Extraction of 892 clients (the full commercial book) via API is invisible to DLP. The competing advisory firm connection was detected through behavioral context.
+            </div>
+        </div>
+
+        <!-- VB-004 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-critical);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-004</span>
+                    <div class="case-title">Core banking migration postmortem forwarded to competitor contact</div>
+                    <div class="meta-row">
+                        <span class="severity severity-critical">Critical</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 91</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Rachel Tanaka</strong> - VP Digital Banking, Digital Banking, Tampa</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - multi-hop forwarding chain (corporate -> personal -> competitor) not tracked</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Forwarded internal "Core Conversion Lessons Learned" document to personal email, then to michael.ross@citizensbank.com (Citizens Financial Group, a competing regional bank). Document contains 5 named commercial clients, ACH/wire processing failure details, and satisfaction scores.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Multi-hop email forwarding (corporate to personal to competitor) is a common exfiltration pattern that DLP cannot trace. The initial forward appeared as routine mobile access. AXIA tracked the full chain and identified Citizens Financial as a direct regional banking competitor.
+            </div>
+        </div>
+
+        <!-- VB-003 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-high);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-003</span>
+                    <div class="case-title">BSA/AML examination findings shared with banking reporter</div>
+                    <div class="meta-row">
+                        <span class="severity severity-high">High</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 83</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Aaron Weiss</strong> - Compliance Analyst, Compliance/Regulatory, New York</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - Slack DMs to external contacts not scanned by DLP</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Shared Valley's internal OCC examination response document (3 MRAs, 2 MRIAs on BSA/AML transaction monitoring gaps, SAR filing deficiencies) via Slack DM to David Cho, a reporter at American Banker who previously published "Regional Banks Under Fire for AML Gaps."</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                OCC examination findings with MRAs/MRIAs are among the most sensitive documents in banking. American Banker is widely read by regulators, competitors, and depositors. Slack DMs are a blind spot for traditional DLP which focuses on email and file transfers.
+            </div>
+        </div>
+
+        <!-- VB-005 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-high);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-005</span> <span class="validated-badge">Lab-Validated: Sensitive 0.9</span>
+                    <div class="case-title">FDIC Call Report draft and commercial client financials shared with unapproved advisor</div>
+                    <div class="meta-row">
+                        <span class="severity severity-high">High</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 80</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Maya Patel</strong> - Regulatory Reporting Analyst, Compliance/Regulatory, Morristown NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - no DLP rules for Call Report content or commercial client names + dollar amounts</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Shared draft FDIC Call Report (unreleased capital ratios, loan loss provisions, CRE concentration data) and audited financial statements for 15 commercial clients to an unapproved consultant found on LinkedIn. Consultant not on approved vendor list, no NDA on file.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Draft Call Report data reveals Valley's unreleased financial position ahead of public filing. CRE concentration data combined with capital ratios could impact stock price if leaked. DLP has no patterns for Call Report financial content or commercial client names paired with loan balances. AXIA's LLM understood the semantic sensitivity.
+            </div>
+        </div>
+
+        <!-- VB-014 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-high);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-014</span> <span class="validated-badge">Lab-Validated: Sensitive 0.9</span>
+                    <div class="case-title">Branch consolidation plan with employee names and severance packages shared externally</div>
+                    <div class="meta-row">
+                        <span class="severity severity-high">High</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 78</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Karen Mitchell</strong> - HR Director, People Operations, Wayne NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - employee names + severance amounts don't match DLP patterns (no SSN, no credit card)</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Uploaded finalized Q1 branch consolidation plan to personal OneDrive. Document names 142 employees across 8 branches closing in NJ (3), PA (2), NY (2), and FL (1) with individual severance packages ($28K-$165K, total $4.2M). Uploaded 3 weeks before planned notification date.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Employee names paired with severance amounts is PII linked to sensitive employment and financial data. DLP has no patterns for "person name + dollar amount" in a branch closure context. A branch consolidation plan is highly confidential, especially before notification. AXIA's LLM recognized the combination as sensitive: PII + Employee + Financial.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FALSE POSITIVES ========== -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 style="color: var(--severity-medium)">False Positives - DLP Alerted, AXIA Suppressed</h2>
+            <span class="count">5</span>
+            <span class="desc">Test/sandbox data incorrectly flagged by DLP, dismissed by AXIA through context understanding</span>
+        </div>
+
+        <!-- VB-006 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-medium);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-006</span> <span class="validated-badge">Lab-Validated: Safe 0.0</span>
+                    <div class="case-title">DLP alert on synthetic loan data in credit risk staging environment</div>
+                    <div class="meta-row">
+                        <span class="severity severity-medium">Medium</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 45</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Ben Nakamura</strong> - QA Lead, Engineering, Wayne NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - pattern match on financial data (loan amounts, borrower records, default probabilities)</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Not unusual. QA Lead running v4.2 regression tests on credit risk models. Synthetic data from test data factory with all IDs prefixed "test_". Staging environment clearly labeled and network-isolated from production. Test indicators: "sandbox", "STAGING", "DO NOT USE FOR PRODUCTION".</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Commercial banks rely heavily on staging environments with synthetic loan data for credit risk model testing. All borrower IDs use test_ prefix, SSNs use IRS reserved range. Every data point is synthetic test data; flagging it wastes analyst time.
+            </div>
+        </div>
+
+        <!-- VB-008: MOVED TO FALSE ALERTS PANEL IN V6.28 (was a DLP false positive, not an AXIA case) -->
+        <div class="case-card" style="border-left: 3px solid #94a3b8; opacity: 0.55;">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:#94a3b8;font-size:0.75rem">CASE-VB-008</span> <span class="validated-badge">Lab-Validated: Safe 0.0</span>
+                    <div class="case-title" style="text-decoration: line-through;">DLP alert on core banking API test keys in deployment configuration</div>
+                    <div style="color: var(--ops-teal); font-size: 0.8rem; font-weight: 600; margin-top: 0.25rem;">&rarr; Moved to False Alerts panel (FP-DLP-003) in V6.28. This was a pure DLP false positive, not an AXIA investigation.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VB-007 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-low);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-007</span>
+                    <div class="case-title">DLP alert on CDD/EDD test payloads in BSA/KYC vendor integration sandbox</div>
+                    <div class="meta-row">
+                        <span class="severity severity-low">Low</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 32</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Sophia Kim</strong> - Integration Engineer, Engineering, Wayne NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - PII patterns (national IDs, dates of birth) in API payloads</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Standard test payloads from documented test suite sent to BSA/KYC vendor sandbox. All names contain "Test". Verified assignment via Jira ticket VB-2891. Auto-resolved as false positive.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                BSA/KYC vendor integration testing requires realistic-looking test payloads. Valley engineers regularly test with sandbox endpoints. DLP cannot distinguish test vs. production API destinations.
+            </div>
+        </div>
+
+        <!-- VB-009 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-low);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-009</span> <span class="validated-badge">Lab-Validated: Safe 0.0</span>
+                    <div class="case-title">DLP alert on synthetic data in BSA/AML investigation training materials</div>
+                    <div class="meta-row">
+                        <span class="severity severity-low">Low</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 28</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Lisa Chen</strong> - Compliance Training Lead, Compliance/Regulatory, New York</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - SSN patterns, account numbers, card numbers detected in training document</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">BSA/AML training manual with synthetic scenarios, clearly labeled "Training Scenario - Not Real Customer". SSN 333-44-5555 and Amex test card 378282246310005 are known test values. Distributed on internal compliance training SharePoint. Auto-resolved in 2 minutes.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Banks must conduct regular BSA/AML training. Training materials necessarily contain realistic-looking financial data. Standard Amex test card number and synthetic SSNs are well-documented in banking compliance.
+            </div>
+        </div>
+
+        <!-- VB-010: MOVED TO FALSE ALERTS PANEL IN V6.28 (was a DLP false positive, not an AXIA case) -->
+        <div class="case-card" style="border-left: 3px solid #94a3b8; opacity: 0.55;">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:#94a3b8;font-size:0.75rem">CASE-VB-010</span>
+                    <div class="case-title" style="text-decoration: line-through;">DLP alert on synthetic ACH batch data in performance testing pipeline</div>
+                    <div style="color: var(--ops-teal); font-size: 0.8rem; font-weight: 600; margin-top: 0.25rem;">&rarr; Moved to False Alerts panel (FP-DLP-008) in V6.28. This was a pure DLP false positive, not an AXIA investigation.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VB-015 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-low);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-015</span> <span class="validated-badge">Lab-Validated: Safe 0.0</span>
+                    <div class="case-title">DLP alert on synthetic fraud-model training dataset</div>
+                    <div class="meta-row">
+                        <span class="severity severity-low">Low</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 20</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Rachel Torres</strong> - ML Engineer, Engineering, Tel Aviv</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - SSN format (000-12-3456) and Mastercard number (5555...) detected</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">SSN 000-12-3456 uses reserved IRS test range (000-series). Card 5555-5555-5555-4444 is the standard Mastercard test number. All records tagged TEST_SCENARIO_ONLY, sourced from generated_dataset_v3. Auto-resolved in 2 minutes.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Fraud detection ML models in banking require synthetic training data with realistic financial patterns. IRS reserved test SSN ranges and standard card test numbers are well-documented. DLP cannot distinguish training data from real PII.
+            </div>
+        </div>
+
+        <!-- VB-016 -->
+        <div class="case-card" style="border-left: 3px solid var(--severity-low);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-016</span> <span class="validated-badge">Lab-Validated: Safe 0.0</span>
+                    <div class="case-title">DLP alert on ACH return code simulation test file</div>
+                    <div class="meta-row">
+                        <span class="severity severity-low">Low</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 18</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Priya Nair</strong> - QA Automation Engineer, Engineering, Boston</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Netskope):</span>
+                <span class="dlp-true">Alert fired - credit card number (4000...), CVV (123), expiry detected</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Card 4000-0000-0000-0002 is Stripe's standard test card for declined transactions. CVV 123 and expiry 12/30 are standard test values. File tagged DECLINE_SIMULATION_ONLY. Auto-resolved in 1 minute.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                ACH return processing in banking requires automated testing. Stripe standard test cards and ACH return codes are used across the banking industry. DLP pattern-matching cannot distinguish test values from real card data.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONTEXT VALIDATED ========== -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 style="color: var(--ops-teal)">Context-Validated Activity</h2>
+            <span class="count">2</span>
+            <span class="desc">Activity flagged for review but validated as legitimate through organizational context</span>
+        </div>
+
+        <!-- VB-011 -->
+        <div class="case-card" style="border-left: 3px solid var(--ops-teal);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-011</span>
+                    <div class="case-title">Context-validated treasury platform specs share - verified legitimate</div>
+                    <div class="meta-row">
+                        <span class="severity severity-high">High</span>
+                        <span class="status-badge status-open">Open</span>
+                        <span class="score">Score: 72</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Sarah Goldman</strong> - Treasury Solutions Architect, Treasury Solutions, New York</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - technical documentation with classified content</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Sent treasury management platform technical specifications (ACH processing, wire transfer protocols, fraud detection rules) to Prologis Inc (verified prospect, $2.8M annual fee opportunity in Salesforce pipeline, active RFP). Role-appropriate for Treasury Solutions Architect during enterprise sales. DLP alerted but AXIA identified as likely false positive.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Enterprise treasury management sales cycles require sharing detailed technical specs. AXIA cross-referenced CRM data (Salesforce pipeline) to validate the recipient as a legitimate prospect. DLP cannot access CRM context.
+            </div>
+        </div>
+
+        <!-- VB-013 -->
+        <div class="case-card" style="border-left: 3px solid var(--ops-teal);">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-013</span>
+                    <div class="case-title">Open-source ACH file format parser contribution - verified legitimate</div>
+                    <div class="meta-row">
+                        <span class="severity severity-low">Low</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 35</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Wei Zhang</strong> - Staff Engineer, Engineering, Wayne NJ</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">No alert - code push to public GitHub not monitored</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Pushed code to public GitHub repo (valley-utils/ach-format-parser). Generic ACH/NACHA file format parser, pre-approved for open-source release under Apache 2.0 license. Legal cleared 2 months ago. Listed as OSS project maintainer. Auto-resolved in 12 minutes.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                ACH/NACHA file parsing is a generic payment processing utility, not proprietary. Valley maintains approved OSS projects. AXIA verified pre-approval status, unlike DLP which either blocks all GitHub pushes or none.
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== ENGAGEMENT RESOLVED ========== -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 style="color: #8b5cf6">Engagement-Driven Resolution</h2>
+            <span class="count">1</span>
+            <span class="desc">Risk resolved through coaching rather than blocking</span>
+        </div>
+
+        <!-- VB-012 -->
+        <div class="case-card" style="border-left: 3px solid #8b5cf6;">
+            <div class="case-header">
+                <div>
+                    <span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary);font-size:0.75rem">CASE-VB-012</span>
+                    <div class="case-title">Commercial client financial review sent to personal email - resolved through coaching</div>
+                    <div class="meta-row">
+                        <span class="severity severity-medium">Medium</span>
+                        <span class="status-badge status-closed">Closed</span>
+                        <span class="score">Score: 65</span>
+                    </div>
+                </div>
+            </div>
+            <div class="entity"><strong>Tom Bradley</strong> - Commercial Banking Analyst, Commercial Banking, Bethlehem PA</div>
+            <div class="dlp-row">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alert fired - commercial client names and financial data detected</span>
+            </div>
+            <div class="analysis">
+                <div class="analysis-label">AXIA Analysis</div>
+                <div class="analysis-text">Sent quarterly commercial client portfolio review (38 clients, $2.1B in commitments, covenant compliance status, risk ratings) to personal Gmail. Low malicious intent: 3 years tenure, no prior incidents, working remotely, needed offline access for client call. Coaching appropriate. Resolved in 2.5 hours from detection to confirmed deletion.</div>
+            </div>
+            <div class="valley-context">
+                <div class="context-label">Valley Bank Context</div>
+                Commercial client financial data is sensitive but the intent was benign. Traditional DLP would block and escalate, damaging employee trust. AXIA's coaching approach resolved the issue in 2.5 hours while maintaining the employee relationship. This is the "judgment over enforcement" philosophy in action.
+            </div>
+        </div>
+    </div>
+
+    <!-- DLP Comparison Summary -->
+    <div class="summary-section">
+        <h2>DLP Comparison Summary</h2>
+        <div style="overflow-x: auto;">
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>DLP Blind Spot</th>
+                    <th>Cases</th>
+                    <th>Why DLP Misses It</th>
+                    <th>How AXIA Catches It</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight:700">Browser Sync / Cloud Upload</td>
+                    <td>VB-001, VB-014</td>
+                    <td>Chrome sync, personal OneDrive not in DLP scope</td>
+                    <td>Behavioral context: departure timing, volume anomaly, recipient analysis</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700">API-Level Extraction</td>
+                    <td>VB-002</td>
+                    <td>Service account treasury platform API calls not monitored</td>
+                    <td>Cross-referencing: volume anomaly + competing entity registration</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700">Multi-Hop Email</td>
+                    <td>VB-004</td>
+                    <td>DLP tracks individual hops, not forwarding chains</td>
+                    <td>Chain tracking: corporate -> personal -> competitor domain</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700">Slack DMs</td>
+                    <td>VB-003</td>
+                    <td>Slack external DMs not scanned by DLP</td>
+                    <td>Content + recipient analysis: journalist identification</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700">Semantic Content</td>
+                    <td>VB-005, VB-014</td>
+                    <td>No regex for FDIC Call Report, commercial client names + $, employee names + severance</td>
+                    <td>LLM understanding: PII + Financial = sensitive regardless of format</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:700">Test/Sandbox Context</td>
+                    <td>VB-006, VB-007, VB-009, VB-015, VB-016 (+ VB-008, VB-010 in False Alerts panel)</td>
+                    <td>Pattern-matching fires on any matching data regardless of context</td>
+                    <td>Context analysis: test_ prefixes, sandbox labels, standard test card numbers</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    AXIA - The Judgment Layer for Insider Risk | Valley Bank Demo Cases Reference V6.28 | February 2026<br>
+    All data is synthetic/test. No real PII, credentials, or client data.
+</div>
+
+</body>
+</html>
