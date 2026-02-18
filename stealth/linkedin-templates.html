@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AXIA Stealth Campaign: LinkedIn Post Templates</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #09434e;
+            --primary-hover: #0a5563;
+            --primary-light: rgba(9, 67, 78, 0.06);
+            --primary-medium: rgba(9, 67, 78, 0.12);
+            --surface-page: #FFFFFF;
+            --surface-card: #F9FAFB;
+            --surface-elevated: #EAECEF;
+            --surface-hover: #E5E7EB;
+            --border-default: #E5E7EB;
+            --border-subtle: #D1D5DB;
+            --border-strong: #9CA3AF;
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --text-muted: #9CA3AF;
+            --accent-teal: #0D9488;
+            --accent-cyan: #22D3EE;
+            --accent-orange: #B8540C;
+            --accent-blue: #2563EB;
+            --accent-purple: #7C3AED;
+            --accent-rose: #E11D48;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: var(--surface-page);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        ::selection { background: var(--primary); color: white; }
+
+        /* ---- HEADER ---- */
+        .page-header {
+            padding: 3rem 2rem 2rem;
+            border-bottom: 1px solid var(--border-default);
+            text-align: center;
+            background: linear-gradient(180deg, rgba(9, 67, 78, 0.03) 0%, transparent 100%);
+        }
+        .page-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            background: var(--primary-light);
+            border: 1px solid rgba(9, 67, 78, 0.15);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1.5rem;
+        }
+        .page-header h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        .page-header .subtitle {
+            font-size: 1.0625rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ---- GOLDEN RULE BANNER ---- */
+        .golden-rule {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1.25rem 2rem;
+            background: rgba(184, 84, 12, 0.04);
+            border: 1px solid rgba(184, 84, 12, 0.15);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .golden-rule .material-symbols-outlined { font-size: 1.5rem; color: var(--accent-orange); flex-shrink: 0; }
+        .golden-rule p { font-size: 0.875rem; color: var(--text-secondary); }
+        .golden-rule strong { color: var(--accent-orange); }
+
+        /* ---- NAVIGATION TABS ---- */
+        .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1.5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-default);
+            background: var(--surface-page);
+            color: var(--text-secondary);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .tab-btn:hover { border-color: var(--border-strong); color: var(--text-primary); background: var(--surface-card); }
+        .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 2px 8px rgba(9,67,78,0.2); }
+        .tab-btn .tab-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ---- POST CARD ---- */
+        .posts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        .post-section { display: none; }
+        .post-section.active { display: block; }
+
+        .post-card {
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .post-card-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--surface-card);
+        }
+        .post-card-header-left { display: flex; align-items: center; gap: 1rem; }
+        .post-type-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .post-card-title { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); }
+        .poster-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        /* ---- POST CONTENT AREA (LinkedIn mock) ---- */
+        .linkedin-mock { padding: 2rem; }
+        .linkedin-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .linkedin-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .linkedin-author-info h4 { font-size: 0.9375rem; font-weight: 700; color: var(--text-primary); }
+        .linkedin-author-info p { font-size: 0.75rem; color: var(--text-muted); }
+        .linkedin-body {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            white-space: pre-line;
+        }
+        .linkedin-body .hook {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        .linkedin-body .hashtags {
+            margin-top: 1rem;
+            color: var(--accent-teal);
+            font-size: 0.875rem;
+        }
+        .linkedin-actions {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid var(--border-default);
+        }
+        .linkedin-action {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .linkedin-action .material-symbols-outlined { font-size: 1.125rem; }
+
+        /* ---- POST IMAGE ---- */
+        .post-image-wrapper {
+            margin-top: 1.25rem;
+            border-radius: 0.625rem;
+            overflow: hidden;
+            border: 1px solid var(--border-default);
+        }
+        .post-image-wrapper img {
+            width: 100%;
+            display: block;
+        }
+        .post-image-caption {
+            padding: 0.75rem 1rem;
+            background: var(--surface-card);
+            border-top: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .post-image-caption .material-symbols-outlined {
+            font-size: 1rem;
+            color: var(--accent-teal);
+            flex-shrink: 0;
+        }
+        .post-image-caption p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .post-image-caption strong { color: var(--text-secondary); }
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(13, 148, 136, 0.08);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            font-size: 0.625rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        /* ---- IMAGE SUGGESTION (fallback) ---- */
+        .image-suggestion {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--surface-card);
+            border: 2px dashed var(--border-subtle);
+            border-radius: 0.625rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .image-suggestion .material-symbols-outlined {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+        .image-suggestion p {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .image-suggestion strong { color: var(--text-secondary); }
+
+        /* ---- VOICE NOTES ---- */
+        .voice-notes {
+            padding: 1.5rem 2rem;
+            background: var(--primary-light);
+            border-top: 1px solid var(--border-default);
+        }
+        .voice-notes-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+        .voice-notes ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .voice-notes li {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+            position: relative;
+        }
+        .voice-notes li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+            opacity: 0.5;
+        }
+
+        /* ---- EXECUTION PLAYBOOK ---- */
+        .playbook-card {
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+        }
+        .playbook-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-default);
+            background: var(--surface-card);
+        }
+        .playbook-header h2 { font-size: 1.25rem; font-weight: 800; color: var(--text-primary); }
+        .playbook-body { padding: 2rem; }
+        .playbook-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .playbook-item {
+            padding: 1.5rem;
+            background: var(--surface-card);
+            border-radius: 0.625rem;
+            border: 1px solid var(--border-default);
+        }
+        .playbook-item h3 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+        .playbook-item p, .playbook-item li {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .playbook-item ul { list-style: disc; padding-left: 1.25rem; }
+        .playbook-item li { margin-bottom: 0.25rem; }
+
+        /* ---- VOICE SPLIT TABLE ---- */
+        .voice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8125rem;
+            margin-top: 1rem;
+        }
+        .voice-table th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: var(--surface-card);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 2px solid var(--border-default);
+        }
+        .voice-table td {
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        /* ---- CALENDAR ---- */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .cal-day {
+            padding: 0.75rem;
+            background: var(--surface-card);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-default);
+            text-align: center;
+        }
+        .cal-day-name { font-size: 0.6875rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.375rem; }
+        .cal-day-content { font-size: 0.6875rem; color: var(--text-secondary); line-height: 1.5; }
+        .cal-day-content .poster { font-weight: 700; }
+        .cal-assaf { color: var(--accent-blue); }
+        .cal-guy { color: var(--accent-teal); }
+
+        /* ---- FOOTER ---- */
+        .page-footer {
+            padding: 2rem;
+            border-top: 1px solid var(--border-default);
+            text-align: center;
+            background: var(--surface-card);
+        }
+        .page-footer p { font-size: 0.75rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .tabs-nav { padding: 1rem; }
+            .post-card-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .linkedin-mock { padding: 1.25rem; }
+            .calendar-grid { grid-template-columns: repeat(2, 1fr); }
+            .playbook-body { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-header-badge">
+            <span class="material-symbols-outlined" style="font-size:14px">lock</span>
+            Internal Campaign Reference
+        </div>
+        <h1>Stealth Campaign: LinkedIn Post Templates</h1>
+        <p class="subtitle">6 post types for founder-led thought leadership. Problem-focused. No product reveal. Ready to use.</p>
+    </div>
+
+    <!-- Golden Rule -->
+    <div class="golden-rule">
+        <span class="material-symbols-outlined">warning</span>
+        <p><strong>Golden Rule:</strong> NEVER mention AXIA, hint at a product, or say "we're building something." These posts are pure thought leadership about market problems and wrong directions. If a competitor reads it, they should learn nothing about what you're building.</p>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="tabs-nav">
+        <button class="tab-btn active" onclick="showPost(0)">
+            <span class="tab-dot" style="background:var(--accent-blue)"></span>
+            1. Contrarian Take
+        </button>
+        <button class="tab-btn" onclick="showPost(1)">
+            <span class="tab-dot" style="background:var(--accent-teal)"></span>
+            2. DLP Series
+        </button>
+        <button class="tab-btn" onclick="showPost(2)">
+            <span class="tab-dot" style="background:var(--accent-orange)"></span>
+            3. Hot Take
+        </button>
+        <button class="tab-btn" onclick="showPost(3)">
+            <span class="tab-dot" style="background:var(--accent-purple)"></span>
+            4. Workflow Reality
+        </button>
+        <button class="tab-btn" onclick="showPost(4)">
+            <span class="tab-dot" style="background:var(--accent-rose)"></span>
+            5. Engagement Question
+        </button>
+        <button class="tab-btn" onclick="showPost(5)">
+            <span class="tab-dot" style="background:var(--primary)"></span>
+            6. Three Questions
+        </button>
+        <button class="tab-btn" onclick="showPost(6)">
+            <span class="tab-dot" style="background:var(--text-muted)"></span>
+            Playbook
+        </button>
+    </nav>
+
+    <div class="posts-container">
+
+        <!-- POST 1: Contrarian Take -->
+        <div class="post-section active" id="post-0">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(37,99,235,0.08); color:var(--accent-blue); border:1px solid rgba(37,99,235,0.2);">Contrarian Take</span>
+                        <span class="post-card-title">The Industry Is Broken</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-blue); border-color:rgba(37,99,235,0.2); background:rgba(37,99,235,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Asaf Massuri (CEO / Strategic Voice)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(37,99,235,0.08); color:var(--accent-blue);">AM</div>
+                        <div class="linkedin-author-info">
+                            <h4>Asaf Massuri</h4>
+                            <p>Co-Founder & CEO | Rethinking Insider Risk</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">We've spent 20 years building insider risk programs that treat employees like threats. And we're surprised they don't work.</span>
+Think about what the industry has built: systems that monitor every keystroke, flag every file transfer, block every USB port. We created surveillance infrastructure and called it "data protection."
+
+The result? 70-90% false positive rates. Security teams drowning in alerts they can't investigate. Employees who feel watched but never heard. And the insiders who actually intend harm? They learned to work around the rules years ago.
+
+Here's what nobody in the boardroom wants to admit: the problem isn't detection. We can detect everything. The problem is that detection without judgment is just noise. And noise at scale is paralysis.
+
+The next generation of insider risk won't be defined by who can monitor the most. It will be defined by who can understand the most. That's a fundamentally different challenge.
+
+What's the biggest gap you see in how organizations handle insider risk today?
+
+<span class="hashtags">#InsiderRisk #CISO #CyberSecurity #DataProtection</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post1-alert-noise.png" alt="Alert noise visualization: one real threat among thousands"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> One real threat glowing among thousands of noise alerts. <span class="ai-badge">AI-generated concept</span> Final version: bold stat card "70-90% false positive rate" in clean typography over teal.</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Authoritative but not arrogant. Diagnosing the industry, not attacking vendors.</li>
+                        <li><strong>Cadence:</strong> Short paragraphs. Punchy sentences. Build momentum toward the reframe.</li>
+                        <li><strong>Energy:</strong> Frustrated executive who's seen this movie before and knows how it ends.</li>
+                        <li><strong>Avoid:</strong> Naming specific competitors. Sounding like a pitch. Using "we" in a way that hints at a company building something.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 2: DLP Series -->
+        <div class="post-section" id="post-1">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(13,148,136,0.08); color:var(--accent-teal); border:1px solid rgba(13,148,136,0.2);">Recurring Series</span>
+                        <span class="post-card-title">What Your DLP Won't Tell You</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-teal); border-color:rgba(13,148,136,0.2); background:rgba(13,148,136,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Guy Hindi (CTO / Practitioner Voice)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(13,148,136,0.08); color:var(--accent-teal);">GH</div>
+                        <div class="linkedin-author-info">
+                            <h4>Guy Hindi</h4>
+                            <p>Co-Founder & CTO | Insider Risk, Security Operations</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">What Your DLP Won't Tell You, Part 3: The Departing Employee</span>
+Your DLP policy flags an employee downloading 200 files from SharePoint on a Tuesday afternoon. Alert fires. Analyst investigates. Turns out they're preparing a presentation for a client meeting.
+
+Case closed. False positive. 45 minutes wasted.
+
+But here's what your DLP didn't tell you: that same employee submitted their resignation three days ago. Their manager knows. HR knows. Your DLP doesn't know. It doesn't ask. It doesn't care about context.
+
+Now imagine the same 200-file download, but this time the employee hasn't resigned. They're working on a legitimate project. Same data. Same action. Completely different risk profile.
+
+The difference between these two scenarios isn't the data. It's the context. And right now, most security teams are making judgment calls about insider risk without the one thing that matters most: understanding why someone is doing what they're doing.
+
+Context isn't a nice-to-have. It's the entire game.
+
+Next in the series: What your DLP won't tell you about lateral sharing between departments.
+
+<span class="hashtags">#DLP #InsiderRisk #SecOps #DataSecurity</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post2-dlp-context.png" alt="Data visibility versus human context split-screen"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> Data visibility vs. human context. <span class="ai-badge">AI-generated concept</span> Final version: split-screen "What DLP sees: 200 files" vs "What DLP misses: Employee resigned 3 days ago."</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Practitioner storytelling. Guy has debugged these problems firsthand.</li>
+                        <li><strong>Series consistency:</strong> Always start with "What Your DLP Won't Tell You, Part [N]:" for brand recognition across posts.</li>
+                        <li><strong>Cadence:</strong> Scenario-driven. Paint a picture, then reveal the gap. Let the reader feel the waste.</li>
+                        <li><strong>Avoid:</strong> Abstract theory. This series lives in concrete, recognizable scenarios that SOC analysts nod along to.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 3: Hot Take -->
+        <div class="post-section" id="post-2">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(184,84,12,0.08); color:var(--accent-orange); border:1px solid rgba(184,84,12,0.2);">Hot Take</span>
+                        <span class="post-card-title">Incident Commentary</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-blue); border-color:rgba(37,99,235,0.2); background:rgba(37,99,235,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Asaf Massuri (CEO / Strategic Voice)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(184,84,12,0.08); color:var(--accent-orange);">AM</div>
+                        <div class="linkedin-author-info">
+                            <h4>Asaf Massuri</h4>
+                            <p>Co-Founder & CEO | Rethinking Insider Risk</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">90% of insider data theft happens in the 90 days before an employee leaves. Your DLP doesn't know someone is leaving. HR does.</span>
+I've been watching this cycle for 15 years. Incident happens. Vendor publishes a blog post about how their tool would have caught it. CISO buys another license. Nothing fundamentally changes.
+
+Here's what we keep getting wrong: we analyze these incidents as technology failures. "The DLP should have caught it." "The access controls were too permissive." But the real failure is almost never technical. It's organizational.
+
+The employee who exfiltrates data before leaving doesn't do it because the firewall had a gap. They do it because nobody discussed what was appropriate during their notice period. Nobody checked whether their access still matched their changing role. Nobody engaged the right people at the right time.
+
+We keep building better locks. The problem is that we're not having better conversations.
+
+What would change if we treated insider risk as a people problem first and a technology problem second?
+
+<span class="hashtags">#CyberSecurity #InsiderThreat #CISO #SecurityLeadership</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post3-90-90-stat.png" alt="90% of insider data theft occurs in 90 days before departure"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> The 90/90 pre-departure stat. <span class="ai-badge">AI-generated concept</span> Final version: bold stat card with timeline visual. For live incidents, swap with news headline screenshot.</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Reflective, not reactive. Stepping back to reveal patterns, not piling on the news.</li>
+                        <li><strong>Timing:</strong> Post within 24-48 hours of a relevant insider incident for maximum visibility.</li>
+                        <li><strong>Template:</strong> Adapt: replace the generic framing with the specific incident. Keep the structure: incident, predicted response, real lesson, reframe.</li>
+                        <li><strong>Avoid:</strong> Naming the victim company negatively. Appearing to capitalize on someone's breach.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 4: Workflow Reality -->
+        <div class="post-section" id="post-3">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(124,58,237,0.08); color:var(--accent-purple); border:1px solid rgba(124,58,237,0.2);">Practitioner Insight</span>
+                        <span class="post-card-title">Workflow Reality Check</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-teal); border-color:rgba(13,148,136,0.2); background:rgba(13,148,136,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Guy Hindi (CTO / Practitioner Voice)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(124,58,237,0.08); color:var(--accent-purple);">GH</div>
+                        <div class="linkedin-author-info">
+                            <h4>Guy Hindi</h4>
+                            <p>Co-Founder & CTO | Insider Risk, Security Operations</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">Monday morning. 1,247 DLP alerts from the weekend. One real threat. Your team has 8 hours. Go.</span>
+Let me walk you through what that looks like in practice.
+
+Alert fires at 2:47 PM. Analyst opens the ticket. Checks the user's role. Checks the file classification. Checks the recipient. Pulls up the user's history. Reads the email for context. Determines it's a sales rep sending a pricing sheet to a prospect. Marks it as false positive. Moves to the next alert.
+
+That's 25 minutes of skilled analyst time. Multiply that by 50 alerts a day. That's over 20 hours of daily investigation time consumed by noise. In a team of five analysts, that's the equivalent of 2.5 full-time employees doing nothing but confirming that legitimate business activities are, in fact, legitimate.
+
+And here's the part that keeps me up at night: while those analysts are drowning in false positives, the genuinely risky activity sits in the queue. Waiting. Because the system doesn't know the difference between a sales rep doing their job and a departing engineer collecting IP. It treats them exactly the same way.
+
+We don't have a detection problem. We have a prioritization problem. And the industry's answer is to hire more analysts to look at more noise.
+
+If you run a SOC or security team, how do you handle alert fatigue today? Genuinely curious.
+
+<span class="hashtags">#SecOps #DLP #AlertFatigue #CyberSecurity</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post4-alert-funnel.png" alt="Alert fatigue funnel: thousands of alerts filtered to few real threats"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> Alert funnel + wasted analyst time. <span class="ai-badge">AI-generated concept</span> Final version: clean infographic "50 alerts/day x 25 min = 20+ hours = 2.5 FTEs lost to noise."</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Empathetic practitioner. Guy isn't lecturing. He's commiserating. "I've been in those trenches."</li>
+                        <li><strong>Numbers:</strong> Use industry-standard stats (Ponemon, Gartner, SANS) that are publicly available. Never invent specific numbers.</li>
+                        <li><strong>Cadence:</strong> Walk through the scenario slowly. Let the reader feel the waste of time and talent.</li>
+                        <li><strong>Energy:</strong> Solidarity, not superiority. This is the post SOC analysts reshare with "THIS."</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 5: Engagement Question -->
+        <div class="post-section" id="post-4">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(225,29,72,0.08); color:var(--accent-rose); border:1px solid rgba(225,29,72,0.2);">Engagement</span>
+                        <span class="post-card-title">Spark Discussion</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-blue); border-color:rgba(37,99,235,0.2); background:rgba(37,99,235,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Asaf Massuri (alternating)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(225,29,72,0.08); color:var(--accent-rose);">AM</div>
+                        <div class="linkedin-author-info">
+                            <h4>Asaf Massuri</h4>
+                            <p>Co-Founder & CEO | Rethinking Insider Risk</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">I've been having the same debate with CISOs for months, and I want to bring it here.</span>
+When an employee does something risky with company data, you have a spectrum of responses:
+
+1. Block it automatically. Fast. Decisive. But you'll block legitimate work too, and employees will find workarounds.
+
+2. Alert the SOC and investigate. Thorough. But slow, expensive, and reactive. The data may already be gone.
+
+3. Engage the right people. Loop in the manager, HR, or legal depending on the situation. But who decides whom to involve? Based on what? Most organizations have no playbook for this.
+
+Most security tools give you option 1 or option 2. Almost nobody is building for option 3.
+
+My take: the future of insider risk isn't about faster detection or harder blocking. It's about getting the right people involved at the right time, whether that's a manager having a conversation, HR reviewing a departure, or legal assessing exposure. But I know that's controversial because "orchestration doesn't scale."
+
+So I'll ask directly: if you could redesign how your organization handles insider risk from scratch, which of these three would you build around? Or is there a fourth option I'm missing?
+
+Drop your take below. I'll respond to every comment.
+
+<span class="hashtags">#InsiderRisk #CISO #SecurityStrategy #CyberSecurity</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post5-response-options.png" alt="Three response options: Block, Investigate, Engage the right people"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> Three response paths with "Engage" highlighted. <span class="ai-badge">AI-generated concept</span> Final version: clean poll-style card "Block / Investigate / Engage the right people" with icons.</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Genuinely curious. Not leading the witness toward a predetermined answer.</li>
+                        <li><strong>Critical commitment:</strong> "I'll respond to every comment" is essential. This post only works if the author actually engages in the thread.</li>
+                        <li><strong>Framework:</strong> Providing 3 options seeds the discussion without biasing it. Present each option fairly.</li>
+                        <li><strong>Avoid:</strong> Rhetorical questions where the "right" answer is obvious. That kills genuine engagement.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST 6: Three Questions (NEW - from WHO/WHAT/WHO gap) -->
+        <div class="post-section" id="post-5">
+            <div class="post-card">
+                <div class="post-card-header">
+                    <div class="post-card-header-left">
+                        <span class="post-type-badge" style="background:rgba(9,67,78,0.08); color:var(--primary); border:1px solid rgba(9,67,78,0.2);">Framework Post</span>
+                        <span class="post-card-title">The Three Questions Nobody's Asking</span>
+                    </div>
+                    <span class="poster-badge" style="color:var(--accent-teal); border-color:rgba(13,148,136,0.2); background:rgba(13,148,136,0.04);">
+                        <span class="material-symbols-outlined" style="font-size:14px">person</span>
+                        Guy Hindi (CTO / Practitioner Voice)
+                    </span>
+                </div>
+                <div class="linkedin-mock">
+                    <div class="linkedin-author">
+                        <div class="linkedin-avatar" style="background:rgba(9,67,78,0.08); color:var(--primary);">GH</div>
+                        <div class="linkedin-author-info">
+                            <h4>Guy Hindi</h4>
+                            <p>Co-Founder & CTO | Insider Risk, Security Operations</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-body">
+<span class="hook">Your DLP can tell you exactly what was in that file. Credit card numbers. Social Security numbers. Source code. But it can't answer three questions that matter more.</span>
+Who sent it?
+Why did they send it?
+Who received it?
+
+Until you know all three, you don't know if you have a problem or a Tuesday.
+
+Think about it. A file containing customer records gets shared externally. Your DLP fires an alert for "sensitive data shared outside the organization." That's the WHAT. Now consider the three questions:
+
+WHO sent it? A contractor who's been with the company for six months.
+WHY did they send it? They're delivering a client report that requires sample data.
+WHO received it? The client's project lead, on the approved contacts list.
+
+Same alert. Zero risk. But without those three answers, your analyst just burned 30 minutes to reach a conclusion the system should have surfaced in seconds.
+
+Now change one variable. The sender submitted their resignation yesterday. Same file. Same recipient. Completely different risk profile. The WHAT didn't change. The WHO did.
+
+Every insider risk decision comes down to these three questions. The industry has spent 20 years optimizing for WHAT. Almost nobody is asking WHO and WHY.
+
+Which of these three does your current setup handle best? Which one is your blind spot?
+
+<span class="hashtags">#InsiderRisk #DLP #SecurityOperations #DataProtection</span></div>
+                    <!-- Post image -->
+                    <div class="post-image-wrapper">
+                        <img src="images/post6-three-questions.png" alt="Three questions your DLP can't answer"/>
+                        <div class="post-image-caption">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <p><strong>Concept visual:</strong> Three questions surrounding a document. <span class="ai-badge">AI-generated concept</span> Final version: typography card "WHO sent it? / WHY? / WHO received it?" with red X marks. Recurring visual anchor.</p>
+                        </div>
+                    </div>
+                    <div class="linkedin-actions">
+                        <span class="linkedin-action"><span class="material-symbols-outlined">thumb_up</span> Like</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">comment</span> Comment</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">repeat</span> Repost</span>
+                        <span class="linkedin-action"><span class="material-symbols-outlined">send</span> Send</span>
+                    </div>
+                </div>
+                <div class="voice-notes">
+                    <div class="voice-notes-title">Voice Notes</div>
+                    <ul>
+                        <li><strong>Tone:</strong> Teaching moment. Guy is revealing a framework disguised as an observation. Not academic, but insightful.</li>
+                        <li><strong>Recurring anchor:</strong> "The Three Questions" can become a callback reference in future posts: "As I mentioned in my Three Questions post..."</li>
+                        <li><strong>Cadence:</strong> Start with the gap, introduce the framework through a scenario, then flip one variable to show power of context.</li>
+                        <li><strong>Stealth check:</strong> This describes questions the industry should be asking. It does NOT describe a product that answers them. Safe.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLAYBOOK -->
+        <div class="post-section" id="post-6">
+            <div class="playbook-card">
+                <div class="playbook-header">
+                    <h2>Execution Playbook</h2>
+                </div>
+                <div class="playbook-body">
+                    <div class="playbook-grid">
+
+                        <!-- Posting Cadence -->
+                        <div class="playbook-item">
+                            <h3>Posting Cadence (Ramp)</h3>
+                            <ul>
+                                <li><strong>Weeks 1-2:</strong> 1 post per founder per week (2 total)</li>
+                                <li><strong>Weeks 3-6:</strong> 2 posts per founder per week (4 total)</li>
+                                <li><strong>Ongoing:</strong> 3-4 posts/week between both founders</li>
+                            </ul>
+                        </div>
+
+                        <!-- Content Rotation -->
+                        <div class="playbook-item">
+                            <h3>Content Rotation (2-Week Cycle)</h3>
+                            <p style="margin-bottom:0.75rem;"><strong>Week 1:</strong></p>
+                            <ul>
+                                <li>Asaf: Contrarian Take (Type 1)</li>
+                                <li>Guy: DLP Series (Type 2) or Three Questions (Type 6)</li>
+                            </ul>
+                            <p style="margin:0.75rem 0;"><strong>Week 2:</strong></p>
+                            <ul>
+                                <li>Asaf: Hot Take or Question (Type 3/5)</li>
+                                <li>Guy: Workflow Reality (Type 4)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Cross-Engagement -->
+                        <div class="playbook-item">
+                            <h3>Cross-Engagement Strategy</h3>
+                            <ul>
+                                <li>Asaf comments on Guy's posts (and vice versa)</li>
+                                <li>Guy's practitioner posts validate Asaf's strategic claims</li>
+                                <li>Asaf provides the "why it matters" frame for Guy's tactical observations</li>
+                                <li>Creates a natural dialogue that feels authentic, not orchestrated</li>
+                            </ul>
+                        </div>
+
+                        <!-- Engagement Rules -->
+                        <div class="playbook-item">
+                            <h3>Engagement Rules</h3>
+                            <ul>
+                                <li>Respond to every comment within 4 hours</li>
+                                <li>Never hint at a product. Redirect: "Just something I've been thinking about deeply."</li>
+                                <li>Amplify commenters who share insider risk frustrations</li>
+                                <li>Connect with every CISO/VP Security who engages</li>
+                            </ul>
+                        </div>
+
+                        <!-- Visual Content Strategy -->
+                        <div class="playbook-item">
+                            <h3>Visual Content Strategy</h3>
+                            <ul>
+                                <li><strong>Stat cards:</strong> Bold number + short insight. Teal/dark palette. No branding.</li>
+                                <li><strong>Split-screen:</strong> "What DLP sees" vs "What it misses." Great for DLP Series.</li>
+                                <li><strong>Infographics:</strong> Simple math visuals (alerts x time = waste). For Workflow Reality.</li>
+                                <li><strong>Framework cards:</strong> Three Questions visual anchor. Reusable.</li>
+                                <li><strong>Video (future):</strong> 60-90s founder commentary on incidents. Authentic, not produced.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Success Metrics -->
+                        <div class="playbook-item">
+                            <h3>Success Metrics</h3>
+                            <ul>
+                                <li><strong>Impressions/post:</strong> 2,000+ by week 4</li>
+                                <li><strong>Engagement rate:</strong> 3%+ (comments + shares)</li>
+                                <li><strong>Follower growth:</strong> 10-15% MoM per founder</li>
+                                <li><strong>Inbound DMs:</strong> Track CISOs reaching out</li>
+                                <li><strong>Ultimate signal:</strong> "What are you building?"</li>
+                            </ul>
+                        </div>
+
+                        <!-- Do's and Don'ts -->
+                        <div class="playbook-item">
+                            <h3>Do's and Don'ts</h3>
+                            <p style="color:var(--accent-teal); font-weight:700; margin-bottom:0.375rem;">DO:</p>
+                            <ul>
+                                <li>Use personal stories and industry observations</li>
+                                <li>End with a question or invitation to engage</li>
+                                <li>Use numbers from public sources only</li>
+                                <li>Include a visual graphic with every post</li>
+                            </ul>
+                            <p style="color:var(--accent-orange); font-weight:700; margin:0.75rem 0 0.375rem;">DON'T:</p>
+                            <ul>
+                                <li>Mention AXIA, "our product," or "stay tuned"</li>
+                                <li>Use em dashes (use periods, commas, colons)</li>
+                                <li>Name specific competitors negatively</li>
+                                <li>Use stock photography or generic "hacker" imagery</li>
+                            </ul>
+                        </div>
+
+                        <!-- Data Hook Bank -->
+                        <div class="playbook-item">
+                            <h3>Data Hook Bank (Stealth-Safe Stats)</h3>
+                            <ul>
+                                <li>"1,247 alerts. Monday morning. One real threat."</li>
+                                <li>"90% of data theft happens in the 90 days before departure."</li>
+                                <li>"72% of orgs run 2+ DLP solutions. None talk to each other."</li>
+                                <li>"85% of insider incidents involve legitimate access."</li>
+                                <li>"86 days average to contain an insider incident."</li>
+                                <li>"$16.2M average cost of an insider-caused incident."</li>
+                                <li>"70-90% false positive rates in DLP deployments."</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Voice Split Table -->
+                    <h3 style="font-size:0.875rem; font-weight:700; color:var(--primary); margin:2rem 0 0.5rem;">Founder Voice Split</h3>
+                    <table class="voice-table">
+                        <thead>
+                            <tr>
+                                <th>Dimension</th>
+                                <th style="color:var(--accent-blue);">Asaf Massuri (CEO)</th>
+                                <th style="color:var(--accent-teal);">Guy Hindi (CTO)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Level</td>
+                                <td>Strategic, board-room</td>
+                                <td>Tactical, engineering floor</td>
+                            </tr>
+                            <tr>
+                                <td>Audience</td>
+                                <td>CISOs, VP Security, boards</td>
+                                <td>SecOps leads, analysts, practitioners</td>
+                            </tr>
+                            <tr>
+                                <td>Core Question</td>
+                                <td>"Why is the industry wrong?"</td>
+                                <td>"Why does this workflow fail?"</td>
+                            </tr>
+                            <tr>
+                                <td>Emotion</td>
+                                <td>Frustrated authority, vision for change</td>
+                                <td>Empathetic practitioner, "I've been there"</td>
+                            </tr>
+                            <tr>
+                                <td>Post Types</td>
+                                <td>Type 1 (Contrarian), Type 3 (Hot Take), Type 5 (Question)</td>
+                                <td>Type 2 (DLP Series), Type 4 (Workflow), Type 6 (Three Questions)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Sample Week Calendar -->
+                    <h3 style="font-size:0.875rem; font-weight:700; color:var(--primary); margin:2rem 0 0.5rem;">Sample Week (Weeks 3+)</h3>
+                    <div class="calendar-grid">
+                        <div class="cal-day">
+                            <div class="cal-day-name">Mon</div>
+                            <div class="cal-day-content">
+                                <span class="poster cal-assaf">Asaf</span><br/>
+                                Contrarian Take
+                            </div>
+                        </div>
+                        <div class="cal-day">
+                            <div class="cal-day-name">Tue</div>
+                            <div class="cal-day-content">
+                                <span class="poster cal-guy">Guy</span><br/>
+                                DLP Series / 3 Questions
+                            </div>
+                        </div>
+                        <div class="cal-day">
+                            <div class="cal-day-name">Wed</div>
+                            <div class="cal-day-content" style="color:var(--text-muted); font-style:italic;">
+                                Engage &amp;<br/>Reply only
+                            </div>
+                        </div>
+                        <div class="cal-day">
+                            <div class="cal-day-name">Thu</div>
+                            <div class="cal-day-content">
+                                <span class="poster cal-assaf">Asaf</span><br/>
+                                Hot Take / Question
+                            </div>
+                        </div>
+                        <div class="cal-day">
+                            <div class="cal-day-name">Fri</div>
+                            <div class="cal-day-content">
+                                <span class="poster cal-guy">Guy</span><br/>
+                                Workflow Reality
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="page-footer">
+        <p>AXIA Stealth Campaign Reference | Internal Use Only | Feb 2026</p>
+    </div>
+
+    <script>
+        function showPost(index) {
+            document.querySelectorAll('.post-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('post-' + index).classList.add('active');
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+        }
+    </script>
+</body>
+</html>

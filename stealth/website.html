@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AXIA - Rethinking Insider Risk</title>
+    <meta name="description" content="Insider risk isn't a detection problem. It's a decision problem. AXIA is rethinking insider risk from first principles."/>
+    <meta property="og:title" content="AXIA - Rethinking Insider Risk"/>
+    <meta property="og:description" content="Insider risk isn't a detection problem. It's a decision problem."/>
+    <meta property="og:type" content="website"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #09434e;
+            --primary-hover: #0a5563;
+            --primary-light: rgba(9, 67, 78, 0.06);
+            --primary-medium: rgba(9, 67, 78, 0.12);
+            --surface-page: #FFFFFF;
+            --surface-card: #F9FAFB;
+            --surface-elevated: #EAECEF;
+            --surface-hover: #E5E7EB;
+            --border-default: #E5E7EB;
+            --border-subtle: #D1D5DB;
+            --border-strong: #9CA3AF;
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --text-muted: #9CA3AF;
+            --accent-teal: #0D9488;
+            --accent-cyan: #22D3EE;
+            --accent-orange: #B8540C;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: var(--surface-page);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        ::selection { background: var(--primary); color: white; }
+
+        /* ---- NAVIGATION ---- */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-default);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            background: var(--primary);
+            color: white !important;
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(9, 67, 78, 0.2);
+        }
+        .nav-cta:hover { background: var(--primary-hover); box-shadow: 0 4px 16px rgba(9, 67, 78, 0.3); }
+
+        /* ---- HERO ---- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(180deg, rgba(9, 67, 78, 0.03) 0%, transparent 50%);
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            background: var(--primary-light);
+            border: 1px solid rgba(9, 67, 78, 0.15);
+            margin-bottom: 2.5rem;
+        }
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .hero-badge-text {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.02em;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            max-width: 800px;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        .hero-sub {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: var(--text-secondary);
+            max-width: 620px;
+            line-height: 1.65;
+            margin-bottom: 3rem;
+        }
+        .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.625rem;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: 0 2px 12px rgba(9, 67, 78, 0.25);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(9, 67, 78, 0.35); }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.625rem;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            border: 1px solid var(--border-subtle);
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { color: var(--text-primary); border-color: var(--border-strong); background: var(--surface-card); }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        .scroll-hint .material-symbols-outlined { font-size: 2rem; color: var(--text-muted); }
+
+        /* ---- SECTIONS ---- */
+        section { padding: 6rem 2rem; }
+        .section-bordered { border-top: 1px solid var(--border-default); }
+        .section-tinted { background: var(--surface-card); }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ---- SCENARIO INTERLUDE ---- */
+        .scenario-interlude {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem;
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 0.75rem 0.75rem 0;
+            position: relative;
+        }
+        .scenario-interlude p {
+            font-size: 1.125rem;
+            line-height: 1.85;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .scenario-interlude .scenario-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* ---- STATS BAR ---- */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            max-width: 1000px;
+            margin: 4rem auto 0;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 1.75rem 1.25rem;
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+        }
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .stat-label { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; }
+        .stat-source { font-size: 0.6875rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic; }
+
+        /* ---- PROBLEM CARDS ---- */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .problem-card {
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s;
+        }
+        .problem-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(9, 67, 78, 0.25);
+            box-shadow: var(--shadow-hover);
+        }
+        .problem-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.625rem;
+            background: var(--primary-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        .problem-icon .material-symbols-outlined { font-size: 1.5rem; color: var(--primary); }
+        .problem-card h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .problem-card p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- VIDEO PLACEHOLDER ---- */
+        .video-placeholder {
+            max-width: 900px;
+            margin: 4rem auto 0;
+            border-radius: 0.75rem;
+            border: 2px dashed var(--border-subtle);
+            background: var(--surface-card);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(9, 67, 78, 0.02) 0%, rgba(13, 148, 136, 0.04) 100%);
+        }
+        .video-placeholder .material-symbols-outlined {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+        .video-placeholder p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            position: relative;
+        }
+        .video-placeholder .placeholder-label {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--border-strong);
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* ---- WRONG DIRECTION ---- */
+        .wrong-direction-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        .wrong-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s;
+        }
+        .wrong-item:hover { border-color: rgba(184, 84, 12, 0.3); box-shadow: var(--shadow-hover); }
+        .wrong-number {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: rgba(184, 84, 12, 0.08);
+            border: 1px solid rgba(184, 84, 12, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.875rem;
+            color: var(--accent-orange);
+        }
+        .wrong-content h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.625rem; color: var(--text-primary); }
+        .wrong-content p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- THREE QUESTIONS CALLOUT ---- */
+        .three-questions {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            padding: 2rem 2.5rem;
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+        }
+        .three-questions p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+        .three-questions strong { color: var(--text-primary); }
+
+        /* ---- DIFFERENT LENS ---- */
+        .lens-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .lens-card {
+            padding: 2.25rem;
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .lens-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent-teal));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .lens-card:hover::before { opacity: 1; }
+        .lens-card:hover { border-color: rgba(9, 67, 78, 0.2); box-shadow: var(--shadow-hover); }
+        .lens-card h3 {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+        .lens-card p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- CONCEPT IMAGE ---- */
+        .concept-image-wrapper {
+            max-width: 900px;
+            margin: 3rem auto 0;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+        }
+        .concept-image-wrapper img {
+            width: 100%;
+            display: block;
+        }
+        .concept-image-caption {
+            padding: 0.75rem 1.25rem;
+            background: var(--surface-card);
+            border-top: 1px solid var(--border-default);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .concept-image-caption .material-symbols-outlined {
+            font-size: 1rem;
+            color: var(--accent-teal);
+            flex-shrink: 0;
+        }
+        .concept-image-caption p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .concept-image-caption .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(13, 148, 136, 0.08);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        /* ---- IMAGE PLACEHOLDER (inline) ---- */
+        .image-placeholder {
+            border-radius: 0.75rem;
+            border: 2px dashed var(--border-subtle);
+            background: var(--surface-card);
+            padding: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .image-placeholder .material-symbols-outlined {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .image-placeholder p {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+
+        /* ---- FOUNDERS ---- */
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+        .founder-card {
+            background: var(--surface-page);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+        .founder-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-medium);
+            border: 3px solid var(--primary-light);
+            margin: 0 auto 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .founder-photo .material-symbols-outlined { font-size: 3rem; color: var(--primary); opacity: 0.4; }
+        .founder-photo-label {
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+        .founder-card h3 { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .founder-card .founder-role { font-size: 0.8125rem; font-weight: 600; color: var(--primary); margin-bottom: 1rem; }
+        .founder-card .founder-bio { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+        .founder-card .founder-linkedin {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-top: 1.25rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .founder-card .founder-linkedin:hover { opacity: 0.7; }
+
+        /* ---- CTA SECTION ---- */
+        .cta-section {
+            text-align: center;
+            padding: 7rem 2rem;
+            background: linear-gradient(180deg, transparent 0%, rgba(9, 67, 78, 0.04) 100%);
+        }
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+        }
+        .cta-section p {
+            font-size: 1.0625rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .cta-form-hint {
+            max-width: 500px;
+            margin: 2rem auto 0;
+            padding: 1.25rem 1.5rem;
+            background: var(--surface-card);
+            border-radius: 0.625rem;
+            border: 1px solid var(--border-default);
+            text-align: left;
+        }
+        .cta-form-hint .form-label {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .cta-form-hint .form-field {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-default);
+            border-radius: 0.375rem;
+            background: var(--surface-page);
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-family: inherit;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ---- FOOTER ---- */
+        footer {
+            border-top: 1px solid var(--border-default);
+            padding: 3rem 2rem;
+            background: var(--surface-card);
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .footer-brand { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 0.25rem; }
+        .footer-tagline { font-size: 0.8125rem; color: var(--text-muted); }
+        .footer-right { display: flex; align-items: center; gap: 1.5rem; }
+        .footer-right a { font-size: 0.8125rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-right a:hover { color: var(--text-secondary); }
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-default);
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .problem-grid { grid-template-columns: 1fr; }
+            .lens-grid { grid-template-columns: 1fr; }
+            .founders-grid { grid-template-columns: 1fr; }
+            .wrong-item { flex-direction: column; gap: 1rem; }
+            section { padding: 4rem 1.25rem; }
+            .hero { padding: 7rem 1.25rem 4rem; }
+            .scenario-interlude { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">AXIA</a>
+            <nav class="nav-links">
+                <a href="#problem">The Problem</a>
+                <a href="#wrong-direction">Wrong Direction</a>
+                <a href="#different-lens">A Different Lens</a>
+                <a href="#who-we-are">Who We Are</a>
+                <a href="#join" class="nav-cta">Talk to Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span class="hero-badge-text">Rethinking Insider Risk</span>
+            </div>
+            <h1>Insider risk isn't a detection problem. It's a decision problem.</h1>
+            <p class="hero-sub">
+                Your tools generate thousands of alerts. But who decides what actually matters, who to involve, and what to do about it? That's the gap no one is filling.
+            </p>
+            <div class="hero-ctas">
+                <a href="#join" class="btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:18px">chat_bubble</span>
+                    Talk to Us
+                </a>
+                <a href="#problem" class="btn-secondary">
+                    <span class="material-symbols-outlined" style="font-size:18px">arrow_downward</span>
+                    Read Our Thinking
+                </a>
+            </div>
+            <div class="scroll-hint">
+                <span class="material-symbols-outlined">keyboard_arrow_down</span>
+            </div>
+        </section>
+
+        <!-- CINEMATIC HOOK -->
+        <section class="section-bordered" style="padding: 4rem 2rem;">
+            <div class="scenario-interlude">
+                <span class="scenario-label">
+                    <span class="material-symbols-outlined" style="font-size:14px">schedule</span>
+                    Monday Morning
+                </span>
+                <p>
+                    1,247 DLP alerts from the weekend. One of them is a departing engineer exfiltrating your IP. Which one? Your team has eight hours and no way to tell. This is the reality of insider risk today.
+                </p>
+            </div>
+        </section>
+
+        <!-- THE PROBLEM -->
+        <section id="problem" class="section-tinted section-bordered">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Three truths the industry isn't ready to hear</h2>
+                    <p>Security teams are drowning. Not in threats. In noise.</p>
+                </div>
+                <div class="problem-grid">
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">hearing_disabled</span>
+                        </div>
+                        <h3>Detection without understanding is just noise</h3>
+                        <p>Your security stack can flag a file download in milliseconds. But it can't tell you whether that action was a mistake, a workaround, or a genuine threat. That distinction is the only one that matters.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">rule</span>
+                        </div>
+                        <h3>Policies don't prevent. They generate tickets.</h3>
+                        <p>Every new rule you write creates a new category of alerts. Most are false positives. Your analysts know it. Your employees know it. The only people who don't seem to know it are the vendors selling you more rules.</p>
+                    </div>
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">speed</span>
+                        </div>
+                        <h3>You're measuring speed to alert, not speed to resolution</h3>
+                        <p>The average insider incident costs $16.2M and takes nearly three months to contain. Not because teams are slow. Because the tools they rely on surface volume, not clarity.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">of insider incidents involve employees with legitimate access</div>
+                        <div class="stat-source">Ponemon Institute</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">86</div>
+                        <div class="stat-label">days average time to contain an insider incident</div>
+                        <div class="stat-source">IBM Cost of a Data Breach</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">90%</div>
+                        <div class="stat-label">of insider data theft occurs in the 90 days before departure</div>
+                        <div class="stat-source">CERT / Ponemon</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">72%</div>
+                        <div class="stat-label">of organizations run 2+ DLP solutions with no unified view</div>
+                        <div class="stat-source">Industry Research</div>
+                    </div>
+                </div>
+
+                <!-- Concept Visual: Data Ocean -->
+                <div class="concept-image-wrapper">
+                    <img src="images/website-hero-data-ocean.png" alt="Signals emerging from noise: meaningful patterns in a sea of data"/>
+                    <div class="concept-image-caption">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                        <p>Meaningful signals threading through noise. <span class="ai-badge">Concept visual</span> Final: 90-second animated explainer "The Insider Risk Problem"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STORY INTERLUDE -->
+        <section class="section-bordered" style="padding: 4rem 2rem;">
+            <div class="scenario-interlude">
+                <span class="scenario-label">
+                    <span class="material-symbols-outlined" style="font-size:14px">menu_book</span>
+                    A Story You've Heard Before
+                </span>
+                <p>
+                    A senior developer downloads 200 files on a Tuesday afternoon. Alert fires. Analyst investigates. Marks it as a false positive. Three weeks later, the developer resigns and takes the source code to a competitor. The alert was right. The context was missing. HR knew the developer was leaving. The manager knew. The security team found out 86 days too late.
+                </p>
+            </div>
+        </section>
+
+        <!-- WRONG DIRECTION -->
+        <section id="wrong-direction" class="section-tinted section-bordered">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Detection is solved. Judgment is not.</h2>
+                    <p>The industry keeps building better detection. The problem was never detection.</p>
+                </div>
+                <div class="wrong-direction-list">
+                    <div class="wrong-item">
+                        <div class="wrong-number">1</div>
+                        <div class="wrong-content">
+                            <h3>More pattern matching, applied faster</h3>
+                            <p>Legacy approaches treat insider risk like a keyword search problem. Match a regex, fire an alert. The result: false positive rates between 70% and 90%, year-long deployments, and a system that treats a new hire and a departing executive identically. Speed doesn't fix a broken premise.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item">
+                        <div class="wrong-number">2</div>
+                        <div class="wrong-content">
+                            <h3>Tracking movement without understanding meaning</h3>
+                            <p>A new generation of tools can tell you exactly where a file went. What they can't tell you is whether it mattered. Monitoring data movement without understanding data context produces an expensive inventory of events, not an actionable picture of risk.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item">
+                        <div class="wrong-number">3</div>
+                        <div class="wrong-content">
+                            <h3>Network-first thinking in a people-first problem</h3>
+                            <p>Cloud security platforms were built to protect perimeters. When they bolt on insider risk capabilities, those capabilities inherit a network mindset: policies, proxies, and packet inspection. Insider risk isn't a network problem. It's a judgment problem. Architecture designed for one can't solve the other.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item">
+                        <div class="wrong-number">4</div>
+                        <div class="wrong-content">
+                            <h3>Autonomous blocking, sold as intelligence</h3>
+                            <p>The latest pitch from the industry is faster automated blocking. But faster blocking is still just blocking. It still doesn't explain why something was risky. It still doesn't engage the person involved. It replaces one form of blunt force with a slightly faster one and calls it progress.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Three Questions Callout -->
+                <div class="three-questions">
+                    <p>
+                        Current tools focus exclusively on <strong>what</strong> was shared. They never ask <strong>who</strong> sent it, <strong>why</strong> they sent it, or <strong>who</strong> received it. Those three questions are the difference between a false positive and a real incident.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- A DIFFERENT LENS -->
+        <section id="different-lens" class="section-bordered">
+            <div class="container">
+                <div class="section-header">
+                    <h2>What if we've been asking the wrong questions?</h2>
+                    <p>The next evolution in insider risk won't be more detection, faster blocking, or bigger alert queues. It will require a fundamentally different way of thinking.</p>
+                </div>
+                <div class="lens-grid">
+                    <div class="lens-card">
+                        <h3>What if risk isn't binary?</h3>
+                        <p>Security tools classify actions as allowed or blocked. But human behavior exists on a spectrum. Context, intent, and circumstance all shape whether the same action is routine or dangerous. Any system that ignores the spectrum will always over-alert and under-protect.</p>
+                    </div>
+                    <div class="lens-card">
+                        <h3>What if the right people were involved at the right time?</h3>
+                        <p>Today's tools operate behind the scenes, generating alerts for analysts to investigate days later. The manager is never looped in. HR finds out weeks too late. Legal gets involved after the damage is done. What would change if the response engaged the right stakeholders in the moment, not just flagged an alert for someone to triage?</p>
+                    </div>
+                    <div class="lens-card">
+                        <h3>What if "why" matters more than "what"?</h3>
+                        <p>Every current tool in the market is optimized to answer what happened. Very few attempt to answer why it happened. And almost none use that understanding to shape what happens next. The gap between detection and comprehension is where insider incidents grow from moments into crises.</p>
+                    </div>
+                    <div class="lens-card">
+                        <h3>What if every incident made your security permanently smarter?</h3>
+                        <p>The end state of every current approach is a report, a remediation, and the same policies that failed in the first place. Nothing changes. What if each resolved case actually improved your organization's ability to prevent the next one?</p>
+                    </div>
+                </div>
+
+                <!-- Concept Visual: From Surveillance to Understanding -->
+                <div class="concept-image-wrapper" style="margin-top:3rem;">
+                    <img src="images/website-philosophy-illustration.png" alt="From rigid surveillance to organic understanding"/>
+                    <div class="concept-image-caption">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                        <p>From surveillance to understanding: rigid grids giving way to organic insight. <span class="ai-badge">Concept visual</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHO WE ARE -->
+        <section id="who-we-are" class="section-tinted section-bordered">
+            <div class="container">
+                <div class="section-header">
+                    <h2>We've spent our careers in this space. We see what's broken.</h2>
+                    <p>AXIA was founded by security and product leaders who spent years on both sides of the insider risk problem.</p>
+                </div>
+
+                <div class="founders-grid">
+                    <div class="founder-card">
+                        <div class="founder-photo">
+                            <!-- Replace with actual headshot -->
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <p class="founder-photo-label">Headshot placeholder</p>
+                        <h3>Asaf Massuri</h3>
+                        <p class="founder-role">Co-Founder & CEO</p>
+                        <p class="founder-bio">Years of experience in cybersecurity leadership. Focused on how security teams can make better decisions at scale. Sees insider risk as an organizational challenge, not a technology one.</p>
+                        <a href="#" class="founder-linkedin">
+                            <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+                            LinkedIn
+                        </a>
+                    </div>
+                    <div class="founder-card">
+                        <div class="founder-photo">
+                            <!-- Replace with actual headshot -->
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <p class="founder-photo-label">Headshot placeholder</p>
+                        <h3>Guy Hindi</h3>
+                        <p class="founder-role">Co-Founder & CTO</p>
+                        <p class="founder-bio">Years of experience building security products. Obsessed with the gap between what tools detect and what actually matters. Believes the industry needs to rethink insider risk from first principles.</p>
+                        <a href="#" class="founder-linkedin">
+                            <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+
+                <div style="max-width:700px; margin:0 auto; text-align:center;">
+                    <p style="font-size:1.0625rem; color:var(--text-secondary); line-height:1.75; margin-bottom:2rem;">
+                        We've built the tools, used the tools, and watched the gap between what they promised and what they delivered grow wider every year. We believe the insider risk industry is at an inflection point. The old playbook of "detect and block" has reached its limit. What comes next requires a fundamentally different approach.
+                    </p>
+                    <p style="font-size:1.25rem; font-weight:700; color:var(--primary);">We're building it.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA / JOIN -->
+        <section id="join" class="cta-section section-bordered">
+            <h2>This conversation is just starting.</h2>
+            <p>
+                If you're a security leader who feels the tension between what the industry sells and what your organization actually needs, we'd like to hear from you. Not to sell you something. To build something worth buying.
+            </p>
+            <div class="cta-buttons">
+                <a href="#" class="btn-primary" style="padding:1rem 2.25rem; font-size:1rem;">
+                    <span class="material-symbols-outlined" style="font-size:20px">calendar_today</span>
+                    Request a Private Briefing
+                </a>
+                <a href="#" class="btn-secondary" style="padding:1rem 2.25rem; font-size:1rem;">
+                    <span class="material-symbols-outlined" style="font-size:20px">edit_note</span>
+                    Share Your Insider Risk Story
+                </a>
+            </div>
+
+            <!-- Form Hint -->
+            <div class="cta-form-hint">
+                <div class="form-label">Or tell us what's broken</div>
+                <div class="form-field">Your name</div>
+                <div class="form-field">Your email</div>
+                <div class="form-field" style="height:4rem;">What's the biggest gap in your current insider risk approach?</div>
+                <p style="font-size:0.6875rem; color:var(--text-muted); margin-top:0.25rem; font-style:italic;">Form placeholder. Connect to Calendly + form backend.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">AXIA</div>
+                <div class="footer-tagline">A stealth-stage company rethinking insider risk from first principles.</div>
+            </div>
+            <div class="footer-right">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-copyright">&copy; 2026 AXIA. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+</html>
