@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA - Demos & Presentations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #09434e; --accent: #22D3EE; --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #0f172a; --text-sec: #64748b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); }
+        .header { background: linear-gradient(135deg, var(--primary) 0%, #0a5563 100%); color: #fff; padding: 3rem 2rem; text-align: center; }
+        .header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .header p { opacity: 0.8; font-size: 0.95rem; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+        .section { margin-bottom: 2.5rem; }
+        .section h2 { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; text-decoration: none; color: var(--text); transition: all 0.2s; }
+        .card:hover { border-color: var(--accent); box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
+        .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+        .card p { font-size: 0.8rem; color: var(--text-sec); line-height: 1.5; }
+        .badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; margin-bottom: 0.5rem; }
+        .badge-demo { background: rgba(34,211,238,0.15); color: #0891b2; }
+        .badge-pres { background: rgba(99,102,241,0.12); color: #6366f1; }
+        .badge-ref { background: rgba(245,158,11,0.12); color: #d97706; }
+        .footer { text-align: center; padding: 2rem; color: var(--text-sec); font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AXIA</h1>
+        <p>Interactive Demos & Presentations</p>
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>Interactive Demos</h2>
+            <div class="card-grid">
+                <a href="demos/fundguard/" class="card">
+                    <span class="badge badge-demo">LIVE DEMO</span>
+                    <h3>FundGuard Demo (V6.28)</h3>
+                    <p>Full interactive demo customized for FundGuard — fund administration context, 14 cases, false alerts analysis, contextual intelligence.</p>
+                </a>
+                <a href="demos/fundguard/cases-reference.html" class="card">
+                    <span class="badge badge-ref">REFERENCE</span>
+                    <h3>FundGuard Cases Reference</h3>
+                    <p>Complete reference for all demo cases with DLP comparison, AXIA analysis, and lab-validated scores.</p>
+                </a>
+                <a href="demos/generic/" class="card">
+                    <span class="badge badge-demo">LIVE DEMO</span>
+                    <h3>Generic Demo (V6.24)</h3>
+                    <p>Industry-agnostic AXIA demo with Insights tab redesign. Use for non-FundGuard prospects.</p>
+                </a>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Presentations</h2>
+            <div class="card-grid">
+                <a href="presentations/AXIA-PRD-V2-20260210-204347.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>PRD V2</h3>
+                    <p>Definitive product requirements document — phase-scoped with 14 diagrams.</p>
+                </a>
+                <a href="presentations/AXIA-PRD-V7-20260210-195532.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>PRD V7</h3>
+                    <p>Latest PRD iteration with updated scope and specifications.</p>
+                </a>
+                <a href="presentations/axia-engineering-brief-2026-02-09-20260209-141000.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>Engineering Brief</h3>
+                    <p>Technical baseline — stack, architecture, team, infrastructure.</p>
+                </a>
+                <a href="presentations/axia-jira-confluence-exploration-20260209-132347.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>JIRA/Confluence Exploration</h3>
+                    <p>Engineering baseline from Atlassian — 346 issues, 38 Confluence pages.</p>
+                </a>
+                <a href="presentations/AXIA-FE-Kit-20260208-095015.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>FE Kit</h3>
+                    <p>Design tokens, components, and data structures for frontend.</p>
+                </a>
+                <a href="presentations/prd-delivery-plan-20260210-210356.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>PRD Delivery Plan</h3>
+                    <p>Confluence/JIRA deployment strategy for PRD V2.</p>
+                </a>
+                <a href="presentations/insights-design-rationale-20260212-112551.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>Insights Design Rationale</h3>
+                    <p>Design decisions behind the Insights tab redesign.</p>
+                </a>
+                <a href="presentations/WHATS-NEW-V6.25-FundGuard-20260215-163912.html" class="card">
+                    <span class="badge badge-pres">PRESENTATION</span>
+                    <h3>What's New V6.25 FundGuard</h3>
+                    <p>FundGuard customization release notes — false alerts, cases, Intel.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        AXIA - The Judgment Layer for Insider Risk | axia-security.github.io/axia-pages
+    </div>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Inside AXIA's Engine Room</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --accent: #4ecdc4;
+            --accent-light: #95e1d3;
+            --warning: #f39c12;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --text: #eee;
+            --text-muted: #999;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 16px;
+            padding-bottom: 2rem;
+        }
+
+        /* Mobile-first sections */
+        .section {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid #333;
+            scroll-margin-top: 60px;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .section {
+                padding: 3rem 3rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+            .section {
+                padding: 4rem 5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--accent-light);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.4rem; }
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Tables - scroll on mobile */
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 300px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #0d1117;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        code {
+            background: #0d1117;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress bar - top */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent);
+            z-index: 200;
+            transition: width 0.2s ease-out;
+        }
+
+        /* Floating nav pill - bottom right */
+        .nav-pill {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 999px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .nav-pill button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s;
+        }
+
+        .nav-pill button:hover {
+            background: rgba(78, 205, 196, 0.12);
+        }
+
+        .nav-pill button:active {
+            background: rgba(78, 205, 196, 0.25);
+        }
+
+        .nav-pill .nav-counter {
+            padding: 0 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 44px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* SVG diagrams - responsive */
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1.5rem auto;
+            border-radius: 12px;
+        }
+
+        /* Strong/emphasis */
+        strong { color: var(--warning); }
+        em { color: #9b59b6; }
+
+        /* Status colors */
+        .status-ok { color: var(--success); }
+        .status-warn { color: var(--warning); }
+        .status-error { color: var(--error); }
+    </style>
+</head>
+<body>
+
+
+    <section class="section" id="section-1">
+        <h1>Inside AXIA's Engine Room</h1>
+    </section>
+
+    <section class="section" id="section-2">
+        <h2>What the JIRA & Confluence tell us | Feb 9, 2026</h2></p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-3">
+        <h2>The Big Picture</h2></p><p>Three months ago, a 4-person engineering team opened a blank JIRA board. Today, there are <strong>346 issues</strong> on it. Over <strong>260 are done</strong>. They're not planning anymore. They're shipping.</p><p>The project is called <strong>Axia MVP</strong>, and it lives at <code>axiasecurity.atlassian.net</code>. One JIRA project. One Confluence space. No committees. No process theater. Just work.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-4">
+        <h2>The People Behind the Code</h2></p><p>Four developers carry the entire MVP. Each owns a clear lane.</p><p><strong>Dana Keydar</strong> runs the backend brain: analysis engine, LLM integration, ingestion services. She's the one wiring AXIA's AI judgment layer to the data pipeline. Right now she's adding Drive link processing and prepping for deployment.</p><p><strong>Vadim Lakhterman</strong> is the connector guy. He builds the bridges between AXIA and the outside world: Outlook, Teams, Slack, OneDrive. Three of his connectors are in review right now. He's already building the next one.</p><p><strong>Aliaksei</strong> owns everything you see and everything that runs it. Frontend dashboards, Terraform infrastructure, CI/CD pipelines, ECR image management. He's currently building the Analysis Page and sensitive text highlighting.</p><p><strong>hezkib</strong> keeps the pipeline honest. E2E testing, data correlation, connector edge cases. He's running manual E2E tests across the full pipeline right now. The kind of work nobody tweets about but everybody needs.</p><p>Two more names appear: <strong>Marianna Yasko</strong> has 4 stories in review around MongoDB data storage. <strong>Dan Mimouni</strong> owns an LLM service enhancement task.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-5">
+        <h2>Where They Are Today</h2></p><p>The numbers tell a clear story: the team is past the build phase and entering the finish line.</p><p><strong>Done: ~260+</strong> stories. The core platform works. Ingestion, analysis, enrichment, object storage, frontend dashboards, infrastructure. All shipped.</p><p><strong>In Progress: 7</strong> focused work streams. Teams connector. E2E testing. Analysis page polish. Drive link support.</p><p><strong>In Review: 11</strong> items in the pipeline. Outlook connector stack, Terraform for client IAM, MongoDB persistence, deployment readiness.</p><p><strong>To Do: 61</strong> items. But here's the interesting part: 17 of those were created in the last 48 hours. They're not backlog debt. They're the deployment checklist.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-6">
+        <h2>The Deployment Signal</h2></p><p>Something shifted on February 8th. Dana created a new epic: <strong>Deployment Preparation</strong>. Then 17 stories poured in over two days:</p><p><ul><li>Review Deployment Requirements</li>
+<li>Adjust App + Backend to New LLM Service API</li>
+<li>Automation Tests, Performance Testing, Load Testing</li>
+<li>Disaster Testing & Recovery Strategy</li>
+<li>Observability Improvements & Dashboards</li>
+<li>E2E Manual Testing (already in progress)</li>
+</ul>
+This isn't roadmap planning. This is a team gearing up to go live. The testing stories alone (automation, performance, load, disaster, E2E) tell you they're thinking about production resilience, not feature demos.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-7">
+        <h2>The Connector Story</h2></p><p>AXIA started with email and DLP alerts. The original architecture ingested CSV mock data through RabbitMQ. That was November.</p><p>Now look at what's happening:</p><p><div class="table-container"><table>
+<thead><tr><th>Connector</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Outlook email</td><td>In Review</td></tr>
+<tr><td>OneDrive links</td><td>In Review</td></tr>
+<tr><td>Microsoft Teams</td><td>In Progress</td></tr>
+<tr><td>Slack Events API</td><td>Planned</td></tr>
+<tr><td>Netskope DLP sync</td><td>Research phase</td></tr>
+<tr><td>Google Drive folders</td><td>Planned</td></tr>
+</tbody></table></div></p><p>Vadim owns this entire expansion. The pattern is clear: AXIA is evolving from "analyze DLP alerts" to "ingest everything employees do across communication and storage platforms." Email was just the starting point.</p><p>The Netskope research story is particularly interesting: it suggests plans to sync with existing DLP infrastructure rather than replace it.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-8">
+        <h2>What Confluence Reveals</h2></p><p>38 pages in the Axia space. Not a lot of documentation for 346 JIRA issues, but what's there is telling.</p><p><strong>The Onboarding Guide</strong> is the most useful page. It reveals the actual tech stack: Python 3.12, Docker Compose, RabbitMQ (with Kafka migration in progress), MongoDB, AWS (S3, ECR, VPC). GitHub org is <code>Axia-Security</code>. They use Cursor as their IDE and have a ChatGPT Team subscription alongside their custom LLM service.</p><p><strong>Dashboard specs</strong> dominate the space. Pages for every major screen: Main Dashboard, DataSense, DLP Policies (with sub-pages for false positives, false negatives, missing policies), Tasks, Integrations, EmailSense, and User Drilldown. These read like product specs that Aliaksei builds from.</p><p><strong>Architecture lives in Google Drive</strong>, not Confluence. The Component Architecture page is just a link to a Drive diagram. This is common in fast-moving teams: Confluence for specs and process, Drive for visual artifacts.</p><p><strong>One meeting note exists</strong>: "Netskope Meeting with Dudu" from December 24. Partnership or integration discussion, likely feeding the Netskope connector research story.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-9">
+        <h2>The Tech Stack</h2></p><p>Reading between the lines of the onboarding guide, JIRA stories, and Confluence pages:</p><p><strong>Microservices architecture.</strong> Each service has its own repo under the Axia-Security GitHub org, its own Docker container, its own README.</p><p><strong>Event-driven pipeline.</strong> Connectors ingest data, publish to message queues, workers process asynchronously. RabbitMQ today, Kafka tomorrow (there's a "Integrate Kafka Schema Registry" story in the backlog).</p><p><strong>AWS-native deployment.</strong> ECR for container images, S3 for object storage, VPC for network isolation. Terraform for infrastructure as code. Self-hosted GitHub Action runners.</p><p><strong>MongoDB for persistence.</strong> Marianna's 4 in-review stories are building the data layer: repository pattern, service layer, API endpoints, frontend model adaptation.</p><p><strong>On-prem ready.</strong> The Terraform story for "client AWS IAM user to access ECR" plus the deployment readiness list suggests they're designing for enterprise customers who want to run AXIA in their own environment.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-10">
+        <h2>Reading the Velocity</h2></p><p>260+ stories done in 3 months with 4 people. That's roughly 20 stories per person per month, or about 5 per week each. For a startup building a complex microservices platform with connectors, AI, and dashboards, that's fast.</p><p>The backlog isn't growing uncontrollably. 61 open To Do items, but most are either future dashboard panels (on hold since November) or the fresh deployment prep stories. This team manages scope.</p><p>The 5 "On Hold" items are all Aliaksei's DLP Policies dashboard panels. Parked intentionally: the team chose to prioritize the analysis pipeline and connectors over completing every dashboard panel. Smart sequencing.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-11">
+        <h2>What This Means for You</h2></p><p>You're stepping into a team that's 3 months into a sprint, not 3 months into planning. The engineering machine is running. Here's what stands out:</p><p><strong>The good:</strong> Clear ownership lanes, strong velocity, focused scope, deployment-oriented thinking. This team ships.</p><p><strong>The gap:</strong> Limited documentation relative to the codebase complexity. Architecture diagrams live in Drive links. No ADRs (Architecture Decision Records) visible. The onboarding guide is helpful but light.</p><p><strong>The opportunity:</strong> Product direction. The JIRA board is all engineering stories: "implement X," "add Y support," "create Z endpoint." There's no product layer visible: no user stories framed around customer outcomes, no acceptance criteria beyond technical completion, no prioritization rationale documented.</p><p>The team knows how to build. The question is whether they're building the right things in the right order. That's your lane.
+    </section>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- Floating nav pill -->
+<nav class="nav-pill">
+    <button onclick="prevSection()" aria-label="Previous section">&#x25B2;</button>
+    <span class="nav-counter"><span id="current">1</span> / 11</span>
+    <button onclick="nextSection()" aria-label="Next section">&#x25BC;</button>
+</nav>
+
+<script>
+    const sections = document.querySelectorAll('.section');
+    let currentIndex = 0;
+
+    function updateCurrent() {
+        const scrollPos = window.scrollY + 100;
+        for (let i = sections.length - 1; i >= 0; i--) {
+            if (sections[i].offsetTop <= scrollPos) {
+                currentIndex = i;
+                document.getElementById('current').textContent = i + 1;
+                break;
+            }
+        }
+        // Update progress bar
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+        document.getElementById('progress-bar').style.width = progress + '%';
+    }
+
+    function scrollToSection(index) {
+        index = Math.max(0, Math.min(index, sections.length - 1));
+        sections[index].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextSection() { scrollToSection(currentIndex + 1); }
+    function prevSection() { scrollToSection(currentIndex - 1); }
+
+    // Keyboard navigation (desktop)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextSection();
+        }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSection();
+        }
+    });
+
+    window.addEventListener('scroll', updateCurrent, { passive: true });
+</script>
+
+</body>
+</html>

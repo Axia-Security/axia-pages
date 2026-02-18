@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AXIA Engineering Brief — State of Play</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --accent: #4ecdc4;
+            --accent-light: #95e1d3;
+            --warning: #f39c12;
+            --error: #e74c3c;
+            --success: #27ae60;
+            --text: #eee;
+            --text-muted: #999;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 16px;
+            padding-bottom: 2rem;
+        }
+
+        /* Mobile-first sections */
+        .section {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid #333;
+            scroll-margin-top: 60px;
+        }
+
+        /* Tablet and up */
+        @media (min-width: 768px) {
+            .section {
+                padding: 3rem 3rem;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+            .section {
+                padding: 4rem 5rem;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--accent-light);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.4rem; }
+        }
+
+        p { margin-bottom: 1rem; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Tables - scroll on mobile */
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 300px;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-card);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Code blocks */
+        pre {
+            background: #0d1117;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        code {
+            background: #0d1117;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress bar - top */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent);
+            z-index: 200;
+            transition: width 0.2s ease-out;
+        }
+
+        /* Floating nav pill - bottom right */
+        .nav-pill {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 999px;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+
+        .nav-pill button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s;
+        }
+
+        .nav-pill button:hover {
+            background: rgba(78, 205, 196, 0.12);
+        }
+
+        .nav-pill button:active {
+            background: rgba(78, 205, 196, 0.25);
+        }
+
+        .nav-pill .nav-counter {
+            padding: 0 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            min-width: 44px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* SVG diagrams - responsive */
+        svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1.5rem auto;
+            border-radius: 12px;
+        }
+
+        /* Strong/emphasis */
+        strong { color: var(--warning); }
+        em { color: #9b59b6; }
+
+        /* Status colors */
+        .status-ok { color: var(--success); }
+        .status-warn { color: var(--warning); }
+        .status-error { color: var(--error); }
+    </style>
+</head>
+<body>
+
+
+    <section class="section" id="section-1">
+        <h1>AXIA Engineering Brief — State of Play</h1>
+    </section>
+
+    <section class="section" id="section-2">
+        <h2>February 9, 2026</h2></p><p><strong>Prepared by:</strong> CPO Office | <strong>Classification:</strong> Internal | <strong>Version:</strong> 1.0</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-3">
+        <h2>1. What AXIA Is</h2></p><p><strong>AXIA</strong> is an AI-powered Insider Risk Management (IRM) and Data Loss Prevention (DLP) intelligence platform. Positioned as <strong>"The CISO's Front-Line AI for Insider Risk"</strong> — a judgment and engagement layer that:</p><p><ul><li><strong>Observes</strong> communications across enterprise channels (email, chat, cloud storage)</li>
+<li><strong>Explains</strong> why something is risky using LLM-powered semantic analysis</li>
+<li><strong>Contextualizes</strong> risk based on role, department, behavioral baselines</li>
+<li><strong>Orchestrates</strong> human response (employee coaching, manager notification, legal escalation)</li>
+</ul>
+<strong>Core Philosophy:</strong> AXIA evaluates risk in context. It does NOT replace DLP enforcement — it complements it by understanding <em>why</em> something is risky and guiding <em>what to do about it</em>.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-4">
+        <h2>2. Architecture Overview</h2></p><p><pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                     DATA SOURCES (Connectors)                    │
+│                                                                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────┐ │
+│  │ Outlook  │ │ Teams    │ │ Slack    │ │ OneDrive │ │ DLP   │ │
+│  │ ✅ Review │ │ 🔨 Build │ │ 📋 Todo  │ │ 🔨 Build │ │ 📋 Res│ │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └───┬───┘ │
+│       │             │            │             │           │     │
+└───────┼─────────────┼────────────┼─────────────┼───────────┼─────┘
+        │             │            │             │           │
+        ▼             ▼            ▼             ▼           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     INGESTION LAYER                              │
+│                                                                  │
+│  ┌────────────────────┐    ┌──────────────────────────────────┐ │
+│  │  Connector Workers  │───▶│  RabbitMQ (→ Kafka planned)     │ │
+│  │  (Per-source)       │    │  Message Queue                   │ │
+│  └────────────────────┘    └───────────────┬──────────────────┘ │
+│                                             │                    │
+└─────────────────────────────────────────────┼────────────────────┘
+                                              │
+                                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     ANALYSIS ENGINE                              │
+│                                                                  │
+│  ┌────────────────────┐    ┌──────────────────────────────────┐ │
+│  │  Analysis Worker    │    │  LLM Service                     │ │
+│  │  - Risk scoring     │◀──▶│  - Semantic analysis              │ │
+│  │  - Behavioral       │    │  - Content classification         │ │
+│  │    baselines        │    │  - Explanation generation         │ │
+│  │  - Pattern detect   │    │  - Custom model integration       │ │
+│  └────────┬───────────┘    └──────────────────────────────────┘ │
+│           │                                                      │
+│  ┌────────▼───────────┐    ┌──────────────────────────────────┐ │
+│  │  Enrichment Worker  │    │  Post-Processing                 │ │
+│  │  - Context layering │    │  - Case creation                 │ │
+│  │  - Role mapping     │    │  - Alert correlation             │ │
+│  └────────────────────┘    └──────────────────────────────────┘ │
+│                                                                  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     DATA LAYER                                   │
+│                                                                  │
+│  ┌────────────────────┐    ┌──────────────────────────────────┐ │
+│  │  MongoDB            │    │  AWS S3                          │ │
+│  │  - Cases            │    │  - Raw content                   │ │
+│  │  - Analyses         │    │  - Attachments                   │ │
+│  │  - Classifications  │    │  - Evidence archive              │ │
+│  └────────────────────┘    └──────────────────────────────────┘ │
+│                                                                  │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     FRONTEND (8 Screens)                         │
+│                                                                  │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌──────────┐             │
+│  │ Posture  │ │ Command │ │ Cases   │ │ Case Det │             │
+│  │ (hero)   │ │ (triage)│ │ (list)  │ │ (detail) │             │
+│  └─────────┘ └─────────┘ └─────────┘ └──────────┘             │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌──────────┐             │
+│  │ Insights │ │ Intel   │ │ Enforce │ │ Settings │             │
+│  │ (charts) │ │ (AI)    │ │ (DLP)   │ │ (config) │             │
+│  └─────────┘ └─────────┘ └─────────┘ └──────────┘             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre>
+    </section>
+
+    <section class="section" id="section-5">
+        <h3>Infrastructure</h3></p><p><div class="table-container"><table>
+<thead><tr><th>Layer</th><th>Technology</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Language</td><td>Python 3.12+</td><td>Production</td></tr>
+<tr><td>Messaging</td><td>RabbitMQ (Kafka planned: MVP-293)</td><td>Active, migration planned</td></tr>
+<tr><td>Database</td><td>MongoDB</td><td>Active</td></tr>
+<tr><td>Object Storage</td><td>AWS S3</td><td>Active</td></tr>
+<tr><td>Containers</td><td>Docker / Docker Compose</td><td>Active</td></tr>
+<tr><td>Cloud</td><td>AWS (IAM, ECR, VPC)</td><td>Active</td></tr>
+<tr><td>IaC</td><td>Terraform</td><td>In review</td></tr>
+<tr><td>CI/CD</td><td>GitHub Actions + self-hosted runners</td><td>Active</td></tr>
+<tr><td>AI</td><td>Custom LLM Service + ChatGPT Team</td><td>Active</td></tr>
+<tr><td>Architecture</td><td>Microservices, event-driven</td><td>Active</td></tr>
+</tbody></table></div></p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-6">
+        <h2>3. Team & Ownership</h2></p><p><pre><code>                    ┌──────────────────────┐
+                    │    AXIA Leadership    │
+                    │  Asaf Massuri (CEO)   │
+                    │  Guy Hindi            │
+                    │  Orr Levy             │
+                    │  Yohay Etsion (CPO)   │
+                    └──────────┬───────────┘
+                               │
+          ┌────────────────────┼────────────────────┐
+          │                    │                     │
+    ┌─────▼──────┐     ┌──────▼──────┐      ┌──────▼──────┐
+    │ Dana Keydar │     │   Vadim     │      │  Aliaksei   │
+    │ 20 issues   │     │ Lakhterman  │      │  26 issues  │
+    │             │     │ 25 issues   │      │             │
+    │ Backend     │     │             │      │ Frontend    │
+    │ Brain:      │     │ Connectors: │      │ Dashboards: │
+    │ · Analysis  │     │ · Outlook   │      │ · All UI    │
+    │   engine    │     │ · Teams     │      │ · DevOps    │
+    │ · LLM       │     │ · Slack     │      │ · Terraform │
+    │   integr.   │     │ · OneDrive  │      │ · CI/CD     │
+    │ · Ingestion │     │ · Netskope  │      │ · ECR       │
+    │ · Deploy    │     │   (research)│      │             │
+    └─────────────┘     └─────────────┘      └─────────────┘
+                                                    │
+                                              ┌─────▼──────┐
+                                              │   hezkib    │
+                                              │  27 issues  │
+                                              │             │
+                                              │ Pipeline:   │
+                                              │ · E2E test  │
+                                              │ · Data      │
+                                              │   correlat. │
+                                              │ · Connector │
+                                              │   testing   │
+                                              └─────────────┘</p><p>    Contributors:
+    ┌─────────────────┐  ┌─────────────────┐
+    │ Marianna Yasko  │  │ Dan Mimouni     │
+    │ 4 issues        │  │ 1 issue         │
+    │ MongoDB storage │  │ LLM enhance.    │
+    └─────────────────┘  └─────────────────┘
+</code></pre></p><p><strong>Velocity:</strong> ~260+ stories done in ~3 months with 4 core developers (~5 stories/person/week). Exceptional pace for a startup.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-7">
+        <h2>4. Current Sprint State (Feb 9, 2026)</h2></p><p><h3>Active Work (In Progress)</h3></p><p><div class="table-container"><table>
+<thead><tr><th>Key</th><th>Owner</th><th>Summary</th><th>Domain</th></tr></thead>
+<tbody>
+<tr><td>MVP-344</td><td>Vadim</td><td>Teams Enrichment Worker</td><td>Connectors</td></tr>
+<tr><td>MVP-343</td><td>Vadim</td><td>Microsoft Teams Connector</td><td>Connectors</td></tr>
+<tr><td>MVP-331</td><td>hezkib</td><td>E2E Manual Testing - Full Pipeline</td><td>Quality</td></tr>
+<tr><td>MVP-281</td><td>Aliaksei</td><td>Sensitive text highlighting</td><td>Frontend</td></tr>
+<tr><td>MVP-278</td><td>Dana</td><td>Drive links in email processing</td><td>Analysis</td></tr>
+<tr><td>MVP-189</td><td>Aliaksei</td><td>Analysis Page</td><td>Frontend</td></tr>
+<tr><td>MVP-27</td><td>Dana</td><td>Ingestion error handling & retry</td><td>Backend</td></tr>
+</tbody></table></div></p><p><h3>In Review (11 items)</h3></p><p><div class="table-container"><table>
+<thead><tr><th>Key</th><th>Owner</th><th>Summary</th><th>Domain</th></tr></thead>
+<tbody>
+<tr><td>MVP-346</td><td>Dana</td><td>DB_URI + MongoDB for ingestion</td><td>Backend</td></tr>
+<tr><td>MVP-329</td><td>Vadim</td><td>Outlook Worker</td><td>Connectors</td></tr>
+<tr><td>MVP-328</td><td>Vadim</td><td>OneDrive links in Outlook</td><td>Connectors</td></tr>
+<tr><td>MVP-327</td><td>Aliaksei</td><td>Terraform for client AWS IAM→ECR</td><td>Infra</td></tr>
+<tr><td>MVP-324</td><td>Vadim</td><td>Outlook Connector</td><td>Connectors</td></tr>
+<tr><td>MVP-321</td><td>Vadim</td><td>Move post-processing to analysis-worker</td><td>Backend</td></tr>
+<tr><td>MVP-267</td><td>Aliaksei</td><td>DevOps deployment readiness</td><td>Infra</td></tr>
+<tr><td>MVP-162</td><td>Marianna</td><td>MongoDB storage repository</td><td>Data</td></tr>
+<tr><td>MVP-161</td><td>Marianna</td><td>Data storage service</td><td>Data</td></tr>
+<tr><td>MVP-160</td><td>Marianna</td><td>Frontend model adaptation</td><td>Data</td></tr>
+<tr><td>MVP-159</td><td>Marianna</td><td>Data storage API endpoint</td><td>Data</td></tr>
+</tbody></table></div></p><p><h3>On Hold (Intentional)</h3></p><p>All DLP Policies dashboard panels (MVP-108 through MVP-313) — parked to prioritize pipeline + connectors. Smart scope management.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-8">
+        <h2>5. Connector Maturity</h2></p><p><pre><code>CONNECTOR STATUS MAP
+═══════════════════════════════════════════════════</p><p>  DONE        IN REVIEW       BUILDING       PLANNED
+  ────        ─────────       ────────       ───────</p><p>  ┌────────┐  ┌────────────┐  ┌───────────┐  ┌──────────┐
+  │ Email  │  │ Outlook    │  │ MS Teams  │  │ Slack    │
+  │ (CSV   │  │ Connector  │  │ Connector │  │ Events   │
+  │ mock)  │  │ + Worker   │  │ + Enrich  │  │ API      │
+  │ ██████ │  │ ████████░░ │  │ ██████░░░ │  │ ░░░░░░░░ │
+  └────────┘  └────────────┘  └───────────┘  └──────────┘</p><p>              ┌────────────┐  ┌───────────┐  ┌──────────┐
+              │ OneDrive   │  │ Drive     │  │ Netskope │
+              │ links in   │  │ links in  │  │ Sync     │
+              │ Outlook    │  │ emails    │  │ (Rsrch)  │
+              │ ████████░░ │  │ ██████░░░ │  │ ░░░░░░░░ │
+              └────────────┘  └───────────┘  └──────────┘</p><p>  ██ = Complete   ░░ = Remaining
+</code></pre></p><p><strong>Pattern:</strong> Evolving from "analyze DLP alerts" to "ingest everything employees do across communication and storage." Vadim is the connector machine — driving the multi-channel expansion.</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-9">
+        <h2>6. Deployment Readiness Push (Feb 8-9 Burst)</h2></p><p>17 stories created in 48 hours — signals imminent production deployment:</p><p><pre><code>DEPLOYMENT PREPARATION CHECKLIST
+═══════════════════════════════════════════════════</p><p>  TESTING                    INFRASTRUCTURE
+  ───────                    ──────────────
+  □ E2E Manual Testing       ■ DB_URI for ingestion (review)
+    (in progress)            □ Review deployment requirements
+  □ Automation Tests         □ Observability dashboards
+  □ Performance Testing      □ Disaster recovery strategy
+  □ Load Testing</p><p>  LLM ALIGNMENT              RESEARCH
+  ─────────────              ────────
+  □ Adjust App to new        □ On-demand client data
+    LLM Service API            access (no persistent storage)
+  □ Adjust Backend to        □ Sync connectors with
+    new LLM Service API        Netskope</p><p>  ■ = In Progress/Review    □ = To Do
+</code></pre></p><p><strong>Signal:</strong> This is a production readiness checklist. The team is moving from "build features" to "make it deployable."</p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-10">
+        <h2>7. Product Screen Map (PRD V6.22)</h2></p><p><pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                        AXIA NAVIGATION                          │
+│                                                                  │
+│  ┌─────────┬─────────┬─────────┬─────────┐                     │
+│  │ Posture │ Command │ Cases   │ Insights│                     │
+│  │ (Hero)  │(Triage) │ (List)  │(Analyt.)│                     │
+│  └────┬────┴────┬────┴────┬────┴────┬────┘                     │
+│       │         │         │         │                           │
+│  ┌────┴────┬────┴────┬────┴────┬────┴────┐                     │
+│  │  Intel  │ Enforce │ Connect │Settings │                     │
+│  │  (AI)   │  (DLP)  │(Sources)│(Config) │                     │
+│  └─────────┴─────────┴─────────┴─────────┘                     │
+│                                                                  │
+│  DETAIL VIEWS:                                                  │
+│  Cases → Case Details (entity, AI analysis, timeline, actions)  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</p><p>SCREEN PURPOSES:
+  Posture   → At-a-glance risk score, severity distribution
+  Command   → Severity cards, accordion case list, DLP overlap
+  Cases     → Full investigation workbench with AI search
+  Case Det. → Single case: What / Why It Matters / Why Unusual
+  Insights  → Trend widgets, dept heatmap, before/after AXIA
+  Intel     → Conversational AI advisor (chat interface)
+  Enforce   → DLP connections, smart block policies
+  Connect   → Data source management, org context
+</code></pre></p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-11">
+        <h2>8. CEO Feedback (Jan 21) — Open Items</h2></p><p>Asaf's 5 feature requests, with CPO prioritization:</p><p><div class="table-container"><table>
+<thead><tr><th>#</th><th>Request</th><th>Priority</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>4</td><td>Alert Insights (AXIA ROI visualization)</td><td><strong>P1</strong></td><td>In design</td></tr>
+<tr><td>5</td><td>DLP Alerted state (vs blocked/not detected)</td><td><strong>P1</strong></td><td>Quick win</td></tr>
+<tr><td>2</td><td>User-Centric Analysis (People view)</td><td><strong>P2</strong></td><td>Scoping</td></tr>
+<tr><td>3a</td><td>Sensitive content highlighting</td><td><strong>P2</strong></td><td>In design</td></tr>
+<tr><td>1</td><td>Intel quick-prompt chips</td><td><strong>P3</strong></td><td>Deferred</td></tr>
+<tr><td>3b</td><td>Email attachment with highlights</td><td><strong>P3</strong></td><td>Needs security review</td></tr>
+<tr><td>1+</td><td>Custom dashboards</td><td><strong>Backlog</strong></td><td>Separate initiative</td></tr>
+</tbody></table></div></p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-12">
+        <h2>9. Key Observations</h2></p><p><h3>Strengths</h3>
+<li><strong>Exceptional engineering velocity</strong> — 260+ stories in 3 months with 4 people</li>
+<li><strong>Smart scope management</strong> — DLP dashboard parked to prioritize pipeline</li>
+<li><strong>Multi-channel expansion</strong> — Moving fast from email to Outlook/Teams/Slack/OneDrive</li>
+<li><strong>Production push underway</strong> — 17 deployment stories in 48 hours</li>
+<li><strong>Clear product vision</strong> — "Judgment over enforcement" consistently executed</li></p><p><h3>Gaps</h3>
+<li><strong>No customer-outcome framing</strong> — Stories are "implement X" not "enable Y for Z"</li>
+<li><strong>No acceptance criteria</strong> beyond technical completion</li>
+<li><strong>No prioritization rationale</strong> documented</li>
+<li><strong>No ADRs</strong> (Architecture Decision Records)</li>
+<li><strong>Architecture in Google Drive, not Confluence</strong> — fragmented documentation</li>
+<li><strong>Epic statuses unreliable</strong> — All show "To Do" due to JIRA next-gen limitation</li>
+<li><strong>No product roadmap</strong> visible in JIRA or Confluence</li>
+<li><strong>No customer feedback/validation artifacts</strong> in Atlassian</li></p><p><h3>Risks</h3>
+<li><strong>RabbitMQ → Kafka migration</strong> not yet started but planned — timing relative to deployment?</li>
+<li><strong>Single points of knowledge</strong> — Dana = analysis brain, Vadim = all connectors, Aliaksei = all frontend + infra</li>
+<li><strong>On-prem deployment model</strong> (Terraform for client AWS) increases operational complexity</li>
+<li><strong>LLM API changes</strong> (MVP-338/339) — mid-deployment LLM service API adjustments suggest instability</li>
+<li><strong>Netskope partnership</strong> unclear — research story but no decision documented</li></p><p><hr style="border-color: #333; margin: 2rem 0;">
+    </section>
+
+    <section class="section" id="section-13">
+        <h2>10. Strategic Summary</h2></p><p>AXIA is a 4-person engineering team building an AI-powered insider risk platform that is approaching its first production deployment. The product differentiates by combining LLM semantic analysis with behavioral context — "the judgment layer for insider risk" — complementing rather than replacing DLP enforcement.</p><p>The team is currently in a <strong>connector expansion + deployment readiness</strong> phase. Outlook is nearly done, Teams is in progress, Slack and Netskope are next. Meanwhile, a 17-story deployment preparation burst signals production is imminent.</p><p><strong>The biggest gap is not engineering velocity — it's product maturity.</strong> Stories lack customer framing, acceptance criteria, and prioritization rationale. Architecture decisions are undocumented. There's no visible roadmap. The product is being built fast, but the "why" and "for whom" layer is thin.</p><p><hr style="border-color: #333; margin: 2rem 0;"></p><p><em>Brief prepared by CPO Office — for Design and Architecture review</em>
+    </section>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- Floating nav pill -->
+<nav class="nav-pill">
+    <button onclick="prevSection()" aria-label="Previous section">&#x25B2;</button>
+    <span class="nav-counter"><span id="current">1</span> / 13</span>
+    <button onclick="nextSection()" aria-label="Next section">&#x25BC;</button>
+</nav>
+
+<script>
+    const sections = document.querySelectorAll('.section');
+    let currentIndex = 0;
+
+    function updateCurrent() {
+        const scrollPos = window.scrollY + 100;
+        for (let i = sections.length - 1; i >= 0; i--) {
+            if (sections[i].offsetTop <= scrollPos) {
+                currentIndex = i;
+                document.getElementById('current').textContent = i + 1;
+                break;
+            }
+        }
+        // Update progress bar
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+        document.getElementById('progress-bar').style.width = progress + '%';
+    }
+
+    function scrollToSection(index) {
+        index = Math.max(0, Math.min(index, sections.length - 1));
+        sections[index].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextSection() { scrollToSection(currentIndex + 1); }
+    function prevSection() { scrollToSection(currentIndex - 1); }
+
+    // Keyboard navigation (desktop)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            nextSection();
+        }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            prevSection();
+        }
+    });
+
+    window.addEventListener('scroll', updateCurrent, { passive: true });
+</script>
+
+</body>
+</html>

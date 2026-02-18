@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why This Dashboard Works — AXIA V6.24 Insights Design Rationale</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0f14;
+    --card: rgba(17, 24, 39, 0.8);
+    --card-elevated: rgba(31, 41, 55, 0.6);
+    --deep-teal: #09434e;
+    --teal: #0D9488;
+    --cyan: #22D3EE;
+    --burnt-orange: #B8540C;
+    --critical: #EF4444;
+    --high: #F59E0B;
+    --medium: #22D3EE;
+    --low: #6B7280;
+    --border: rgba(55, 65, 81, 0.5);
+    --text: #E5E7EB;
+    --text-dim: #9CA3AF;
+    --text-bright: #F9FAFB;
+    --radius: 12px;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- Presentation Container --- */
+  .deck {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 56px 72px 64px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* --- Logo --- */
+  .logo {
+    position: fixed;
+    top: 20px;
+    left: 32px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--teal), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    z-index: 100;
+    user-select: none;
+  }
+
+  /* --- Counter --- */
+  .counter {
+    position: fixed;
+    bottom: 20px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    z-index: 100;
+    user-select: none;
+  }
+
+  /* --- Nav Arrows --- */
+  .nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+  .nav-arrow:hover {
+    background: var(--card-elevated);
+    color: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .nav-prev { left: 18px; }
+  .nav-next { right: 18px; }
+
+  /* --- Typography --- */
+  h1 {
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.15;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  h2 {
+    font-weight: 700;
+    font-size: 32px;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 18px;
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 12px;
+  }
+
+  /* --- Cards --- */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .card-elevated {
+    background: var(--card-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .card-glow {
+    background: var(--card);
+    border: 1px solid rgba(13, 148, 136, 0.5);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: 0 0 24px rgba(13, 148, 136, 0.12);
+  }
+  .card-highlight {
+    background: linear-gradient(135deg, rgba(9, 67, 78, 0.4), rgba(17, 24, 39, 0.8));
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: 0 0 32px rgba(34, 211, 238, 0.08);
+  }
+
+  /* --- Flex Helpers --- */
+  .row { display: flex; gap: 24px; }
+  .row-tight { display: flex; gap: 16px; }
+  .col { flex: 1; }
+  .col-2 { flex: 2; }
+  .col-3 { flex: 3; }
+  .grow { flex-grow: 1; }
+
+  /* --- Utility --- */
+  .mt-auto { margin-top: auto; }
+  .mt-24 { margin-top: 24px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-32 { margin-top: 32px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mb-32 { margin-bottom: 32px; }
+  .text-center { text-align: center; }
+  .text-sm { font-size: 14px; }
+  .text-xs { font-size: 12px; }
+  .text-dim { color: var(--text-dim); }
+  .text-cyan { color: var(--cyan); }
+  .text-teal { color: var(--teal); }
+  .text-orange { color: var(--burnt-orange); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .bold { font-weight: 700; }
+  .semi { font-weight: 600; }
+  .num-big { font-family: 'JetBrains Mono', monospace; font-size: 52px; font-weight: 700; }
+  .num-med { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 600; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tag-teal { background: rgba(13,148,136,0.15); color: var(--teal); border: 1px solid rgba(13,148,136,0.3); }
+  .tag-cyan { background: rgba(34,211,238,0.12); color: var(--cyan); border: 1px solid rgba(34,211,238,0.25); }
+  .tag-orange { background: rgba(184,84,12,0.15); color: #E8873A; border: 1px solid rgba(184,84,12,0.3); }
+
+  /* --- Table --- */
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 600;
+    color: var(--cyan);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(55,65,81,0.25);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* --- Grid Layout Visual --- */
+  .grid-visual {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+  .grid-cell {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+  }
+  .grid-cell .cell-label {
+    color: var(--text-dim);
+    font-size: 10px;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  /* --- Blockquote --- */
+  blockquote {
+    border-left: 3px solid var(--cyan);
+    padding-left: 20px;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* --- Slide-specific --- */
+  .slide-title-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .slide-title-hero h1 {
+    font-size: 56px;
+    margin-bottom: 16px;
+  }
+  .slide-title-hero .subtitle {
+    font-size: 22px;
+    margin-bottom: 48px;
+  }
+  .slide-title-hero .bottom-line {
+    font-size: 15px;
+    color: var(--text-dim);
+  }
+
+  .annotation {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(34,211,238,0.08);
+    border: 1px solid rgba(34,211,238,0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+  .annotation-arrow {
+    color: var(--cyan);
+    font-size: 16px;
+  }
+
+  .persona-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .final-callout {
+    background: linear-gradient(135deg, rgba(9,67,78,0.5), rgba(13,148,136,0.15));
+    border: 1px solid rgba(34,211,238,0.35);
+    border-radius: 16px;
+    padding: 36px 44px;
+    text-align: center;
+    box-shadow: 0 0 48px rgba(34,211,238,0.06);
+  }
+  .final-callout blockquote {
+    border-left: none;
+    text-align: center;
+    padding: 0;
+    font-size: 22px;
+  }
+
+  .progress-bar-bg {
+    height: 6px;
+    background: rgba(55,65,81,0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--teal);
+  }
+
+  /* Scrollbar */
+  .slide::-webkit-scrollbar { width: 4px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: rgba(55,65,81,0.5); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="logo">AXIA</div>
+<div class="counter"><span id="counter-current">1</span> / 12</div>
+<div class="nav-arrow nav-prev" onclick="go(-1)">&#8249;</div>
+<div class="nav-arrow nav-next" onclick="go(1)">&#8250;</div>
+
+<div class="deck">
+
+<!-- ==================== SLIDE 1 — TITLE ==================== -->
+<div class="slide slide-title-hero active" data-slide="1">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <p class="section-title mb-16">Design Rationale</p>
+    <h1>"Why This Dashboard Works"</h1>
+    <p class="subtitle">The Design Rationale Behind the V6.24 Insights Tab</p>
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <span class="tag tag-teal">Positioning</span>
+      <span class="tag tag-cyan">Brand</span>
+      <span class="tag tag-orange">Product Strategy</span>
+    </div>
+  </div>
+  <p class="bottom-line text-center text-dim" style="padding-bottom:12px;">For Guy &amp; Assaf &nbsp;|&nbsp; February 2026</p>
+</div>
+
+<!-- ==================== SLIDE 2 — THE PROBLEM ==================== -->
+<div class="slide" data-slide="2">
+  <h1>Security Dashboards Are Broken</h1>
+  <p class="subtitle">Three failure modes every legacy tool falls into</p>
+
+  <div class="row grow">
+    <div class="card col" style="display:flex;flex-direction:column;">
+      <div style="font-size:32px;margin-bottom:12px;">&#x1F6A8;</div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);">Alert Dumps</h3>
+      <p class="text-dim" style="line-height:1.6;">Legacy tools show raw alert counts. Nobody reads them. A wall of numbers creates the illusion of visibility while delivering none.</p>
+    </div>
+    <div class="card col" style="display:flex;flex-direction:column;">
+      <div style="font-size:32px;margin-bottom:12px;">&#x1F4C9;</div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);">No Value Story</h3>
+      <p class="text-dim" style="line-height:1.6;">CISOs can't answer "Is our tool working?" from a dashboard. Data exists. Meaning doesn't.</p>
+    </div>
+    <div class="card col" style="display:flex;flex-direction:column;">
+      <div style="font-size:32px;margin-bottom:12px;">&#x1F4CA;</div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);">Data Without Meaning</h3>
+      <p class="text-dim" style="line-height:1.6;">Charts exist because charts are expected, not because they answer questions. Decoration masquerading as insight.</p>
+    </div>
+  </div>
+
+  <div class="card-highlight mt-24" style="text-align:center;">
+    <p style="font-size:17px;line-height:1.5;">Our Insights tab answers <strong style="color:var(--cyan);">ONE question</strong>: <strong style="color:#fff;">"Is AXIA working?"</strong></p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3 — THREE PRINCIPLES ==================== -->
+<div class="slide" data-slide="3">
+  <h1>Three Design Principles</h1>
+  <p class="subtitle">The rules behind every layout and widget decision</p>
+
+  <div class="row grow" style="align-items:stretch;">
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <span class="num-big text-teal" style="margin-bottom:8px;">01</span>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:18px;">Story Over Data</h3>
+      <p class="text-dim" style="line-height:1.65;flex:1;">Every widget is a chapter in the narrative "AXIA is delivering value." No decorative charts. If a widget doesn't advance the story, it doesn't belong.</p>
+      <p class="tag tag-cyan mt-16" style="align-self:flex-start;">Narrative-driven</p>
+    </div>
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <span class="num-big text-teal" style="margin-bottom:8px;">02</span>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:18px;">Prominence = Importance</h3>
+      <p class="text-dim" style="line-height:1.65;flex:1;">Widget size communicates priority. The 9-column hero (Overall Posture) is the headline. 3-column details are supporting evidence. Visual hierarchy IS information hierarchy.</p>
+      <p class="tag tag-cyan mt-16" style="align-self:flex-start;">Size as signal</p>
+    </div>
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <span class="num-big text-teal" style="margin-bottom:8px;">03</span>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:18px;">Time as Narrative</h3>
+      <p class="text-dim" style="line-height:1.65;flex:1;">The time selector doesn't just filter. It changes the story. <strong style="color:var(--text);">1d</strong> = "today's performance." <strong style="color:var(--text);">90d</strong> = "the AXIA transformation." The 90-day view is a board presentation in a single tab.</p>
+      <p class="tag tag-cyan mt-16" style="align-self:flex-start;">Time = perspective</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4 — POSITIONING PILLARS ==================== -->
+<div class="slide" data-slide="4">
+  <h1>Every Widget Maps to a Positioning Pillar</h1>
+  <p class="subtitle">Nothing is decorative. Each widget proves part of the AXIA value proposition.</p>
+
+  <div class="card grow" style="overflow-y:auto;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%;">Widget</th>
+            <th style="width:14%;">Pillar</th>
+            <th>Question It Answers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">Overall Posture (RCS + MTTR)</td>
+            <td><span class="tag tag-teal">RESOLVES</span></td>
+            <td class="text-dim">"Are cases resolving faster? Is risk score improving?"</td>
+          </tr>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">Cases Timeline</td>
+            <td><span class="tag tag-cyan">CONTEXT</span></td>
+            <td class="text-dim">"Is AXIA learning? Fewer cases despite more interactions?"</td>
+          </tr>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">AXIA Actions</td>
+            <td><span class="tag tag-orange">ENGAGES</span></td>
+            <td class="text-dim">"What is AXIA doing? Coaching vs. blocking vs. escalating?"</td>
+          </tr>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">Alerts vs True Cases</td>
+            <td><span class="tag" style="background:rgba(239,68,68,0.12);color:#F87171;border:1px solid rgba(239,68,68,0.25);">GUIDES</span></td>
+            <td class="text-dim">"How much DLP noise did AXIA filter out?"</td>
+          </tr>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">Dept Heatmap</td>
+            <td><span class="tag tag-cyan">CONTEXT</span></td>
+            <td class="text-dim">"Where are the risk hotspots by department?"</td>
+          </tr>
+          <tr>
+            <td class="semi" style="color:var(--text-bright);">Top Case Types</td>
+            <td><span class="tag tag-cyan">CONTEXT</span></td>
+            <td class="text-dim">"What kinds of risks are we catching?"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card-elevated mt-16" style="text-align:center;">
+    <p class="text-sm" style="color:var(--text-dim);">The 4 pillars: <strong class="text-cyan">CONTEXT</strong> &middot; <strong class="text-orange">ENGAGES</strong> &middot; <strong class="text-teal">RESOLVES</strong> &middot; <strong style="color:#F87171;">GUIDES</strong> &mdash; each widget tells part of the story.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5 — LAYOUT GRID ==================== -->
+<div class="slide" data-slide="5">
+  <h1>Layout Follows Information Hierarchy</h1>
+  <p class="subtitle">Inspired by the Wiz model: fixed, purposeful layout. No drag-and-drop clutter.</p>
+
+  <div class="grow" style="display:flex;flex-direction:column;gap:12px;">
+    <!-- Row 1 -->
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="grid-cell" style="flex:9;background:rgba(13,148,136,0.12);border-color:rgba(13,148,136,0.35);padding:20px;">
+        <div class="semi" style="color:var(--cyan);font-size:14px;">Overall Posture</div>
+        <div class="cell-label">9 columns &mdash; THE HEADLINE</div>
+      </div>
+      <div class="grid-cell" style="flex:3;background:rgba(55,65,81,0.2);">
+        <div class="text-dim text-xs">Time Selector</div>
+        <div class="cell-label">3 cols</div>
+      </div>
+      <div class="annotation" style="margin-left:8px;">
+        <span class="annotation-arrow">&larr;</span> Executive summary FIRST
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="grid-cell" style="flex:9;">
+        <div class="semi" style="color:var(--text-bright);font-size:13px;">Cases Timeline</div>
+        <div class="cell-label">9 columns</div>
+      </div>
+      <div class="grid-cell" style="flex:3;">
+        <div class="semi" style="color:var(--text-bright);font-size:13px;">AXIA Actions</div>
+        <div class="cell-label">3 columns</div>
+      </div>
+      <div class="annotation" style="margin-left:8px;">
+        <span class="annotation-arrow">&larr;</span> Operational trends SECOND
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="grid-cell" style="flex:3;">
+        <div class="semi" style="color:var(--text-bright);font-size:13px;">Top Case Types</div>
+        <div class="cell-label">3 cols</div>
+      </div>
+      <div class="grid-cell" style="flex:6;">
+        <div class="semi" style="color:var(--text-bright);font-size:13px;">Dept Heatmap</div>
+        <div class="cell-label">6 columns</div>
+      </div>
+      <div class="grid-cell" style="flex:3;background:rgba(55,65,81,0.15);border-style:dashed;">
+        <div class="text-dim text-xs">&mdash;</div>
+        <div class="cell-label">reserved</div>
+      </div>
+      <div class="annotation" style="margin-left:8px;">
+        <span class="annotation-arrow">&larr;</span> Distribution details THIRD
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="grid-cell" style="flex:6;background:rgba(184,84,12,0.1);border-color:rgba(184,84,12,0.3);">
+        <div class="semi" style="color:#E8873A;font-size:14px;">Alerts vs True Cases</div>
+        <div class="cell-label">6 columns &mdash; THE PUNCHLINE</div>
+      </div>
+      <div style="flex:6;"></div>
+      <div class="annotation" style="margin-left:8px;">
+        <span class="annotation-arrow">&larr;</span> Value proof LAST (the punchline)
+      </div>
+    </div>
+  </div>
+
+  <p class="text-sm text-dim mt-16 text-center">Reading order: headline &rarr; trends &rarr; details &rarr; proof. Top-to-bottom mirrors the narrative arc.</p>
+</div>
+
+<!-- ==================== SLIDE 6 — OVERALL POSTURE ==================== -->
+<div class="slide" data-slide="6">
+  <h1>Widget 1: Overall Posture</h1>
+  <p class="subtitle">The Headline &mdash; Answers: "Are we getting better?"</p>
+
+  <div class="row grow">
+    <div class="card-glow col" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+      <p class="section-title mb-8">KPI</p>
+      <p class="num-big" style="background:linear-gradient(135deg,var(--teal),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">RCS</p>
+      <h3 class="semi mb-8" style="color:var(--text-bright);margin-top:8px;">Risk Control Score</h3>
+      <p class="text-dim text-sm" style="line-height:1.6;max-width:340px;">Composite score (0-100). Weighted: Cases Closed Rate 40%, FP Reduction 30%, MTTR 30%.</p>
+      <div class="card-elevated mt-16" style="width:100%;">
+        <p class="text-sm" style="color:var(--cyan);">One number the CISO takes to the board.</p>
+      </div>
+    </div>
+
+    <div class="card-glow col" style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+      <p class="section-title mb-8">KPI</p>
+      <p class="num-big" style="background:linear-gradient(135deg,var(--teal),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">MTTR</p>
+      <h3 class="semi mb-8" style="color:var(--text-bright);margin-top:8px;">Mean Time to Resolution</h3>
+      <p class="text-dim text-sm" style="line-height:1.6;max-width:340px;">From <span class="mono" style="color:var(--critical);">48 hours</span> to <span class="mono" style="color:var(--teal);">0.5 hours</span>. The transformation metric.</p>
+      <div class="card-elevated mt-16" style="width:100%;">
+        <p class="text-sm" style="color:var(--cyan);">Dual-line chart, dual Y-axes. Two KPIs, one glance.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-highlight mt-24" style="text-align:center;">
+    <p class="text-sm"><strong style="color:var(--cyan);">Brand alignment:</strong> <span class="text-dim">Maps to Message 6: Posture Transformation &mdash; "Risk Control Score improves from ~58 to ~94 within 90 days."</span></p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7 — CASES TIMELINE ==================== -->
+<div class="slide" data-slide="7">
+  <h1>Widget 2: Cases Timeline</h1>
+  <p class="subtitle">The Learning Proof &mdash; Answers: "Is case volume declining?"</p>
+
+  <div style="display:flex;flex-direction:column;gap:20px;flex:1;">
+    <div class="row" style="flex:1;">
+      <div class="card col" style="display:flex;flex-direction:column;">
+        <div class="mono text-cyan mb-8" style="font-size:20px;font-weight:700;">01</div>
+        <h3 class="semi mb-8" style="color:var(--text-bright);">Status/Severity Toggle</h3>
+        <p class="text-dim text-sm" style="line-height:1.6;flex:1;">Same data, two perspectives, no extra widget. <strong style="color:var(--text);">Status view</strong> for operations. <strong style="color:var(--text);">Severity view</strong> for risk assessment.</p>
+      </div>
+      <div class="card col" style="display:flex;flex-direction:column;">
+        <div class="mono text-cyan mb-8" style="font-size:20px;font-weight:700;">02</div>
+        <h3 class="semi mb-8" style="color:var(--text-bright);">Interactions Overlay</h3>
+        <p class="text-dim text-sm" style="line-height:1.6;flex:1;">The <span style="color:var(--cyan);font-weight:600;">cyan line</span> shows AXIA analyzing MORE interactions while producing FEWER cases. This is the visual proof that AXIA is learning.</p>
+      </div>
+      <div class="card col" style="display:flex;flex-direction:column;">
+        <div class="mono text-cyan mb-8" style="font-size:20px;font-weight:700;">03</div>
+        <h3 class="semi mb-8" style="color:var(--text-bright);">Declining Bars</h3>
+        <p class="text-dim text-sm" style="line-height:1.6;flex:1;">The visual story IS the value proposition. <strong style="color:var(--text);">Bars going down = AXIA working.</strong> No annotation needed. The shape tells the story.</p>
+      </div>
+    </div>
+
+    <div class="card-highlight" style="display:flex;align-items:center;gap:16px;">
+      <span class="tag tag-cyan">CONTEXT</span>
+      <p class="text-sm text-dim">Maps to Message 1: Context > Static Rules &mdash; behavioral context assigns the RIGHT severity.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8 — ACTIONS + ALERTS ==================== -->
+<div class="slide" data-slide="8">
+  <h1>The Engagement Proof + The Value Proof</h1>
+  <p class="subtitle">Two widgets that prove the two hardest claims we make</p>
+
+  <div class="row grow">
+    <!-- AXIA Actions -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span class="tag tag-orange">ENGAGES</span>
+        <h3 class="semi" style="color:var(--text-bright);font-size:16px;">AXIA Actions</h3>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="text-sm">Employee Coaching</span>
+          <span class="mono text-sm text-teal">largest</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:72%;background:var(--teal);"></div></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <span class="text-sm">Manager Notification</span>
+          <span class="mono text-sm text-dim">&nbsp;</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:38%;background:var(--cyan);"></div></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <span class="text-sm">Smart Leakage Control</span>
+          <span class="mono text-sm text-dim">&nbsp;</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:28%;background:var(--cyan);"></div></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <span class="text-sm">Legal / HR Escalation</span>
+          <span class="mono text-sm text-dim">&nbsp;</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:14%;background:var(--high);"></div></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <span class="text-sm">DLP Adjustments</span>
+          <span class="mono text-sm text-dim">&nbsp;</span>
+        </div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:8%;background:var(--low);"></div></div>
+      </div>
+
+      <div class="card-elevated mt-16">
+        <p class="text-sm"><strong style="color:var(--cyan);">Coaching dominates.</strong> <span class="text-dim">This IS our positioning: Judgment over Enforcement.</span></p>
+      </div>
+    </div>
+
+    <!-- Alerts vs True Cases -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span class="tag" style="background:rgba(239,68,68,0.12);color:#F87171;border:1px solid rgba(239,68,68,0.25);">GUIDES</span>
+        <h3 class="semi" style="color:var(--text-bright);font-size:16px;">Alerts vs True Cases</h3>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;">
+        <div style="display:flex;align-items:baseline;gap:16px;">
+          <div style="text-align:center;">
+            <p class="mono" style="font-size:42px;font-weight:700;color:var(--critical);">284</p>
+            <p class="text-xs text-dim">DLP Alerts</p>
+          </div>
+          <div style="font-size:28px;color:var(--text-dim);">&rarr;</div>
+          <div style="text-align:center;">
+            <p class="mono" style="font-size:42px;font-weight:700;color:var(--teal);">80</p>
+            <p class="text-xs text-dim">True Cases</p>
+          </div>
+        </div>
+        <div class="card-elevated" style="text-align:center;width:100%;">
+          <p class="mono" style="font-size:28px;font-weight:700;color:var(--cyan);">73%</p>
+          <p class="text-xs text-dim">noise reduction</p>
+        </div>
+      </div>
+
+      <div class="card-elevated mt-16">
+        <p class="text-sm"><strong style="color:var(--cyan);">THE money widget.</strong> <span class="text-dim">The gap between the lines = analyst hours saved = ROI.</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9 — HEATMAP + CASE TYPES ==================== -->
+<div class="slide" data-slide="9">
+  <h1>Where Risk Lives</h1>
+  <p class="subtitle">Spatial and categorical distribution of insider risk</p>
+
+  <div class="row grow">
+    <!-- Department Heatmap -->
+    <div class="card-glow col-2" style="display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span class="tag tag-cyan">CONTEXT</span>
+        <h3 class="semi" style="color:var(--text-bright);font-size:16px;">Department Heatmap</h3>
+      </div>
+
+      <!-- Mini heatmap visualization -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;">
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span class="text-xs text-dim" style="width:80px;text-align:right;">Engineering</span>
+          <div style="flex:1;display:flex;gap:3px;">
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(239,68,68,0.55);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(245,158,11,0.4);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(34,211,238,0.2);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(107,114,128,0.2);"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span class="text-xs text-dim" style="width:80px;text-align:right;">Sales</span>
+          <div style="flex:1;display:flex;gap:3px;">
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(239,68,68,0.15);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(245,158,11,0.5);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(34,211,238,0.35);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(107,114,128,0.15);"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span class="text-xs text-dim" style="width:80px;text-align:right;">Finance</span>
+          <div style="flex:1;display:flex;gap:3px;">
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(239,68,68,0.3);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(245,158,11,0.25);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(34,211,238,0.45);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(107,114,128,0.3);"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span class="text-xs text-dim" style="width:80px;text-align:right;">HR</span>
+          <div style="flex:1;display:flex;gap:3px;">
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(239,68,68,0.1);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(245,158,11,0.15);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(34,211,238,0.15);"></div>
+            <div style="flex:1;height:28px;border-radius:4px;background:rgba(107,114,128,0.4);"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:3px;margin-left:84px;margin-top:4px;">
+          <span class="text-xs" style="flex:1;text-align:center;color:var(--critical);">Critical</span>
+          <span class="text-xs" style="flex:1;text-align:center;color:var(--high);">High</span>
+          <span class="text-xs" style="flex:1;text-align:center;color:var(--medium);">Medium</span>
+          <span class="text-xs" style="flex:1;text-align:center;color:var(--low);">Low</span>
+        </div>
+      </div>
+
+      <div class="card-elevated mt-16">
+        <p class="text-sm text-dim">Pattern recognition beats number scanning. A <span style="color:var(--critical);">red cell</span> in Engineering / Data Exfil tells the story instantly.</p>
+      </div>
+    </div>
+
+    <!-- Top Case Types -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <span class="tag tag-cyan">CONTEXT</span>
+        <h3 class="semi" style="color:var(--text-bright);font-size:16px;">Top Case Types</h3>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="text-sm">Pre-departure Exfiltration</span>
+            <span class="mono text-xs text-dim">28%</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:70%;background:var(--critical);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="text-sm">IP Exposure</span>
+            <span class="mono text-xs text-dim">22%</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:55%;background:var(--high);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="text-sm">Policy Violations</span>
+            <span class="mono text-xs text-dim">18%</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:45%;background:var(--cyan);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="text-sm">Unauthorized Sharing</span>
+            <span class="mono text-xs text-dim">16%</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:40%;background:var(--teal);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span class="text-sm">Anomalous Access</span>
+            <span class="mono text-xs text-dim">10%</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:25%;background:var(--low);"></div></div>
+        </div>
+      </div>
+
+      <div class="card-elevated mt-16">
+        <p class="text-sm text-dim">Quick scan: ranked list with progress bars. What are the most common risk types?</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10 — TIME RANGE ==================== -->
+<div class="slide" data-slide="10">
+  <h1>Time as Narrative</h1>
+  <p class="subtitle">The time selector changes the story, not just the data</p>
+
+  <div class="row grow" style="align-items:stretch;">
+    <div class="card col" style="display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;">
+      <p class="mono" style="font-size:36px;font-weight:700;color:var(--text-dim);margin-bottom:12px;">1d</p>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:15px;">Current Operational Excellence</h3>
+      <p class="text-dim text-sm" style="line-height:1.5;">"Everything green. Today is strong."</p>
+    </div>
+
+    <div class="card col" style="display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;">
+      <p class="mono" style="font-size:36px;font-weight:700;color:var(--text-dim);margin-bottom:12px;">7d</p>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:15px;">This Week's Stability</h3>
+      <p class="text-dim text-sm" style="line-height:1.5;">"Consistent performance. No anomalies."</p>
+    </div>
+
+    <div class="card col" style="display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;">
+      <p class="mono" style="font-size:36px;font-weight:700;color:var(--cyan);margin-bottom:12px;">30d</p>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:15px;">This Month's Trajectory</h3>
+      <p class="text-dim text-sm" style="line-height:1.5;">"Improvement visible. AXIA is learning."</p>
+    </div>
+
+    <div class="card-highlight col" style="display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;flex:1.4;">
+      <p class="mono" style="font-size:48px;font-weight:800;background:linear-gradient(135deg,var(--teal),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;">90d</p>
+      <h3 class="semi mb-8" style="color:var(--cyan);font-size:17px;">THE AXIA TRANSFORMATION</h3>
+      <p class="text-dim text-sm" style="line-height:1.5;">"Before/after. Board-ready. ROI proven."</p>
+    </div>
+  </div>
+
+  <div class="card-highlight mt-24" style="text-align:center;">
+    <p style="font-size:15px;line-height:1.5;color:var(--text-dim);">The 90-day view is designed for the <strong style="color:var(--cyan);">CISO presenting to the board</strong>. It's not just a time filter. It's the origin story of AXIA's value.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11 — PERSONAS ==================== -->
+<div class="slide" data-slide="11">
+  <h1>One Dashboard, Three Stories</h1>
+  <p class="subtitle">Each persona gets their answer from the same fixed layout</p>
+
+  <div class="row grow" style="align-items:stretch;">
+    <!-- CISO -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div class="persona-icon" style="background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);">
+        <span style="font-size:24px;">&#x1F3E2;</span>
+      </div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:17px;">CISO / Board</h3>
+      <p class="text-dim text-sm mb-16" style="line-height:1.5;flex:1;">Their question: <strong style="color:var(--text);">"Is AXIA delivering ROI?"</strong></p>
+      <div class="section-title" style="margin-bottom:8px;font-size:11px;">Key Widgets</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--teal);"></div>
+          <span class="text-sm">Overall Posture (90d)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--teal);"></div>
+          <span class="text-sm">Alerts vs True Cases</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Head of Security -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div class="persona-icon" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.25);">
+        <span style="font-size:24px;">&#x1F6E1;&#xFE0F;</span>
+      </div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:17px;">Head of Security</h3>
+      <p class="text-dim text-sm mb-16" style="line-height:1.5;flex:1;">Their question: <strong style="color:var(--text);">"Where should I focus?"</strong></p>
+      <div class="section-title" style="margin-bottom:8px;font-size:11px;">Key Widgets</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);"></div>
+          <span class="text-sm">Dept Heatmap</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);"></div>
+          <span class="text-sm">Top Case Types</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--cyan);"></div>
+          <span class="text-sm">Cases Timeline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOC Team Lead -->
+    <div class="card-glow col" style="display:flex;flex-direction:column;">
+      <div class="persona-icon" style="background:rgba(184,84,12,0.12);border:1px solid rgba(184,84,12,0.25);">
+        <span style="font-size:24px;">&#x1F5A5;&#xFE0F;</span>
+      </div>
+      <h3 class="semi mb-8" style="color:var(--text-bright);font-size:17px;">SOC Team Lead</h3>
+      <p class="text-dim text-sm mb-16" style="line-height:1.5;flex:1;">Their question: <strong style="color:var(--text);">"What's today's workload?"</strong></p>
+      <div class="section-title" style="margin-bottom:8px;font-size:11px;">Key Widgets</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#E8873A;"></div>
+          <span class="text-sm">Cases Timeline (1d)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#E8873A;"></div>
+          <span class="text-sm">AXIA Actions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-elevated mt-24" style="text-align:center;">
+    <p style="font-size:15px;color:var(--text-dim);line-height:1.5;">Each persona gets their answer from the <strong style="color:var(--cyan);">same fixed layout</strong>. No customization needed because the information hierarchy already serves all three.</p>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12 — SUMMARY ==================== -->
+<div class="slide" data-slide="12">
+  <h1>The Insights Tab Is a Sales Tool</h1>
+  <p class="subtitle">Every choice is intentional. Nothing is decorative.</p>
+
+  <div class="row" style="margin-bottom:32px;">
+    <div class="card-glow col" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+      <p class="num-big text-teal" style="margin-bottom:8px;">01</p>
+      <p style="font-size:15px;line-height:1.5;color:var(--text-dim);">Every widget maps to a positioning pillar:<br><strong class="text-cyan">CONTEXT</strong> &middot; <strong class="text-orange">ENGAGES</strong> &middot; <strong class="text-teal">RESOLVES</strong> &middot; <strong style="color:#F87171;">GUIDES</strong></p>
+    </div>
+    <div class="card-glow col" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+      <p class="num-big text-teal" style="margin-bottom:8px;">02</p>
+      <p style="font-size:15px;line-height:1.5;color:var(--text-dim);">The layout tells a story:<br><strong style="color:var(--text);">headline &rarr; trends &rarr; details &rarr; proof</strong></p>
+    </div>
+    <div class="card-glow col" style="text-align:center;display:flex;flex-direction:column;align-items:center;">
+      <p class="num-big text-teal" style="margin-bottom:8px;">03</p>
+      <p style="font-size:15px;line-height:1.5;color:var(--text-dim);">The 90-day view is a<br><strong style="color:var(--text);">self-service board presentation</strong></p>
+    </div>
+  </div>
+
+  <div class="final-callout" style="flex:0;">
+    <blockquote style="margin-bottom:16px;">
+      <p style="font-size:24px;font-weight:700;color:var(--text-bright);">"The Judgment Layer for Insider Risk."</p>
+    </blockquote>
+    <p style="font-size:16px;color:var(--text-dim);">The Insights tab doesn't just show data. <strong style="color:var(--cyan);">It proves the tagline.</strong></p>
+  </div>
+
+  <p class="text-center text-dim text-sm mt-auto" style="padding-top:24px;">AXIA V6.24 &nbsp;|&nbsp; February 2026</p>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  function show(idx){
+    if(idx < 0 || idx >= total) return;
+    slides[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    document.getElementById('counter-current').textContent = current + 1;
+  }
+
+  window.go = function(dir){ show(current + dir); };
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(1); }
+    if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); go(-1); }
+    if(e.key === 'Home') { e.preventDefault(); show(0); }
+    if(e.key === 'End')  { e.preventDefault(); show(total-1); }
+  });
+
+  // Touch swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e){ touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e){
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if(Math.abs(diff) > 50){ diff > 0 ? go(-1) : go(1); }
+  });
+})();
+</script>
+</body>
+</html>
