@@ -8,6 +8,7 @@
     <meta property="og:title" content="AXIA - Rethinking Insider Risk"/>
     <meta property="og:description" content="Insider risk isn't a detection problem. It's a decision problem."/>
     <meta property="og:type" content="website"/>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='36' fill='%2309434e'/%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23fff'/%3E%3Cline x1='40' y1='8' x2='40' y2='18' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='40' y1='62' x2='40' y2='72' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='8' y1='40' x2='18' y2='40' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='62' y1='40' x2='72' y2='40' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -57,10 +58,11 @@
             top: 0;
             width: 100%;
             z-index: 50;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
             border-bottom: 1px solid var(--border-default);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
         .nav-inner {
             max-width: 1200px;
@@ -71,12 +73,18 @@
             justify-content: space-between;
         }
         .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
             text-decoration: none;
         }
+        .nav-logo span {
+            font-size: 1.375rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+        }
+        .nav-logo-mark { flex-shrink: 0; }
         .nav-links { display: flex; align-items: center; gap: 2rem; }
         .nav-links a {
             font-size: 0.875rem;
@@ -92,14 +100,14 @@
             gap: 0.5rem;
             padding: 0.625rem 1.25rem;
             border-radius: 0.5rem;
-            background: var(--primary);
+            background: linear-gradient(135deg, #09434e, #0a5563);
             color: white !important;
             font-weight: 700;
             font-size: 0.875rem;
-            transition: background 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
             box-shadow: 0 2px 8px rgba(9, 67, 78, 0.2);
         }
-        .nav-cta:hover { background: var(--primary-hover); box-shadow: 0 4px 16px rgba(9, 67, 78, 0.3); }
+        .nav-cta:hover { background: linear-gradient(135deg, #0a5563, #0D9488); box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3); }
 
         /* ---- HERO ---- */
         .hero {
@@ -111,7 +119,10 @@
             align-items: center;
             text-align: center;
             padding: 8rem 2rem 4rem;
-            background: linear-gradient(180deg, rgba(9, 67, 78, 0.03) 0%, transparent 50%);
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(13, 148, 136, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(34, 211, 238, 0.04) 0%, transparent 60%),
+                linear-gradient(180deg, rgba(9, 67, 78, 0.03) 0%, transparent 50%);
         }
         .hero-badge {
             display: inline-flex;
@@ -119,8 +130,9 @@
             gap: 0.5rem;
             padding: 0.5rem 1.25rem;
             border-radius: 9999px;
-            background: var(--primary-light);
-            border: 1px solid rgba(9, 67, 78, 0.15);
+            background: linear-gradient(135deg, rgba(9, 67, 78, 0.06), rgba(13, 148, 136, 0.08));
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            box-shadow: 0 2px 12px rgba(13, 148, 136, 0.08);
             margin-bottom: 2.5rem;
         }
         .hero-badge-dot {
@@ -147,7 +159,10 @@
             line-height: 1.1;
             max-width: 800px;
             margin-bottom: 1.5rem;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #111827 30%, #09434e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .hero-sub {
             font-size: clamp(1.125rem, 2vw, 1.375rem);
@@ -163,17 +178,17 @@
             gap: 0.5rem;
             padding: 0.875rem 2rem;
             border-radius: 0.625rem;
-            background: var(--primary);
+            background: linear-gradient(135deg, #09434e 0%, #0a5563 100%);
             color: white;
             font-weight: 700;
             font-size: 0.9375rem;
             text-decoration: none;
             transition: all 0.25s;
-            box-shadow: 0 2px 12px rgba(9, 67, 78, 0.25);
+            box-shadow: 0 2px 12px rgba(9, 67, 78, 0.25), 0 0 0 1px rgba(13, 148, 136, 0.1);
             border: none;
             cursor: pointer;
         }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(9, 67, 78, 0.35); }
+        .btn-primary:hover { background: linear-gradient(135deg, #0a5563 0%, #0D9488 100%); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(13, 148, 136, 0.3), 0 0 0 1px rgba(13, 148, 136, 0.2); }
         .btn-secondary {
             display: inline-flex;
             align-items: center;
@@ -216,7 +231,10 @@
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #111827 0%, #09434e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .section-header p {
             font-size: 1.125rem;
@@ -230,8 +248,9 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 3rem 2.5rem;
-            background: var(--primary-light);
-            border-left: 4px solid var(--primary);
+            background: linear-gradient(135deg, rgba(9, 67, 78, 0.05), rgba(13, 148, 136, 0.06));
+            border-left: 4px solid transparent;
+            border-image: linear-gradient(to bottom, #09434e, #0D9488) 1;
             border-radius: 0 0.75rem 0.75rem 0;
             position: relative;
         }
@@ -268,12 +287,26 @@
             border-radius: 0.75rem;
             border: 1px solid var(--border-default);
             box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #09434e, #0D9488);
         }
         .stat-number {
             font-family: 'JetBrains Mono', monospace;
             font-size: 2.25rem;
             font-weight: 700;
-            color: var(--primary);
+            background: linear-gradient(135deg, #09434e, #0D9488);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
         }
         .stat-label { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; }
@@ -295,14 +328,15 @@
         }
         .problem-card:hover {
             transform: translateY(-4px);
-            border-color: rgba(9, 67, 78, 0.25);
-            box-shadow: var(--shadow-hover);
+            border-color: rgba(13, 148, 136, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(13, 148, 136, 0.15);
         }
         .problem-icon {
             width: 3rem;
             height: 3rem;
             border-radius: 0.625rem;
-            background: var(--primary-medium);
+            background: linear-gradient(135deg, rgba(9, 67, 78, 0.1), rgba(13, 148, 136, 0.12));
+            border: 1px solid rgba(13, 148, 136, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -423,8 +457,8 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent-teal));
-            opacity: 0;
+            background: linear-gradient(90deg, #09434e, #0D9488, #22D3EE);
+            opacity: 0.6;
             transition: opacity 0.3s;
         }
         .lens-card:hover::before { opacity: 1; }
@@ -522,8 +556,8 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: var(--primary-medium);
-            border: 3px solid var(--primary-light);
+            background: linear-gradient(135deg, rgba(9, 67, 78, 0.08), rgba(13, 148, 136, 0.1));
+            border: 3px solid rgba(13, 148, 136, 0.2);
             margin: 0 auto 1.25rem;
             display: flex;
             align-items: center;
@@ -558,14 +592,20 @@
         .cta-section {
             text-align: center;
             padding: 7rem 2rem;
-            background: linear-gradient(180deg, transparent 0%, rgba(9, 67, 78, 0.04) 100%);
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 100%, rgba(13, 148, 136, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 30% at 20% 80%, rgba(34, 211, 238, 0.03) 0%, transparent 50%),
+                linear-gradient(180deg, transparent 0%, rgba(9, 67, 78, 0.04) 100%);
         }
         .cta-section h2 {
             font-size: clamp(1.75rem, 3.5vw, 2.5rem);
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 1.25rem;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #111827, #09434e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .cta-section p {
             font-size: 1.0625rem;
@@ -652,7 +692,19 @@
     <!-- Navigation -->
     <header class="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">AXIA</a>
+            <a href="#" class="nav-logo">
+                <svg class="nav-logo-mark" viewBox="0 0 80 80" width="28" height="28">
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#0F766E" stroke-width="2"/>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="#0D9488" stroke-width="1.5"/>
+                    <circle cx="40" cy="40" r="8" fill="#0D9488" opacity="0.2"/>
+                    <circle cx="40" cy="40" r="3" fill="#0D9488"/>
+                    <line x1="40" y1="12" x2="40" y2="18" stroke="#0F766E" stroke-width="2"/>
+                    <line x1="40" y1="62" x2="40" y2="72" stroke="#0F766E" stroke-width="2"/>
+                    <line x1="8" y1="40" x2="18" y2="40" stroke="#0F766E" stroke-width="2"/>
+                    <line x1="62" y1="40" x2="72" y2="40" stroke="#0F766E" stroke-width="2"/>
+                </svg>
+                <span>AXIA</span>
+            </a>
             <nav class="nav-links">
                 <a href="#problem">The Problem</a>
                 <a href="#wrong-direction">Wrong Direction</a>
@@ -945,7 +997,19 @@
     <footer>
         <div class="footer-inner">
             <div>
-                <div class="footer-brand">AXIA</div>
+                <div class="footer-brand">
+                    <svg viewBox="0 0 80 80" width="22" height="22" style="vertical-align: middle; margin-right: 0.5rem;">
+                        <circle cx="40" cy="40" r="28" fill="none" stroke="#0F766E" stroke-width="2"/>
+                        <circle cx="40" cy="40" r="18" fill="none" stroke="#0D9488" stroke-width="1.5"/>
+                        <circle cx="40" cy="40" r="8" fill="#0D9488" opacity="0.2"/>
+                        <circle cx="40" cy="40" r="3" fill="#0D9488"/>
+                        <line x1="40" y1="12" x2="40" y2="18" stroke="#0F766E" stroke-width="2"/>
+                        <line x1="40" y1="62" x2="40" y2="72" stroke="#0F766E" stroke-width="2"/>
+                        <line x1="8" y1="40" x2="18" y2="40" stroke="#0F766E" stroke-width="2"/>
+                        <line x1="62" y1="40" x2="72" y2="40" stroke="#0F766E" stroke-width="2"/>
+                    </svg>
+                    AXIA
+                </div>
                 <div class="footer-tagline">A stealth-stage company rethinking insider risk from first principles.</div>
             </div>
             <div class="footer-right">
