@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA - The Judgment Layer for Insider Risk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #09434e;
+            --primary-hover: #0a5563;
+            --accent-teal: #14B8A6;
+            --accent-cyan: #22D3EE;
+            --surface-dark: #0D1117;
+            --surface-card: #161b22;
+            --surface-elevated: #1c2128;
+            --text-primary: #FFFFFF;
+            --text-secondary: #9CA3AF;
+            --severity-critical: #E74C3C;
+            --severity-high: #F39C12;
+            --severity-medium: #3498DB;
+            --severity-low: #6B7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: var(--surface-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 56px 80px 48px;
+            background: linear-gradient(135deg, var(--surface-dark) 0%, #0a2d34 100%);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide-header {
+            margin-bottom: 28px;
+            flex-shrink: 0;
+        }
+
+        .slide-number {
+            font-size: 11px;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+
+        h1 .highlight {
+            color: var(--accent-teal);
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--accent-teal);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 750px;
+            line-height: 1.5;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .pillar-card {
+            background: var(--surface-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-teal);
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-teal);
+            box-shadow: 0 20px 40px rgba(20, 184, 166, 0.12);
+        }
+
+        .pillar-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(20, 184, 166, 0.15);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 22px;
+        }
+
+        .pillar-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        .pillar-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .framework-box {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a5563 100%);
+            border: 2px solid var(--accent-teal);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .framework-text {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .framework-text .emphasis {
+            color: var(--accent-teal);
+            font-weight: 800;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .list {
+            list-style: none;
+        }
+
+        .list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--accent-teal);
+            border-radius: 3px;
+        }
+
+        .list-danger li::before {
+            background: var(--severity-critical);
+            opacity: 0.5;
+        }
+
+        .competitor-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .competitor-table th,
+        .competitor-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .competitor-table th {
+            font-weight: 700;
+            color: var(--accent-teal);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .competitor-table td {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .competitor-table td:first-child {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .competitor-table tr:hover td {
+            background: var(--surface-elevated);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-yes {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22C55E;
+        }
+
+        .badge-partial {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        .badge-no {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(22, 27, 34, 0.9);
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.08);
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-indicator {
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-width: 56px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--surface-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .quote-box {
+            background: var(--surface-card);
+            border-left: 4px solid var(--accent-teal);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .quote-text {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== Slide 1: Moody opening ===== */
+        .slide-opening {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(160deg, #0D1117 0%, #0f1a1e 40%, #0a1215 100%);
+            position: relative;
+        }
+
+        .slide-opening::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 50% 60%, rgba(20, 184, 166, 0.03) 0%, transparent 70%);
+        }
+
+        .opening-scenario {
+            font-size: 26px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .opening-scenario strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .opening-scenario .punch {
+            display: block;
+            margin-top: 48px;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+
+        .logo-corner {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.35;
+            z-index: 1;
+        }
+
+        .logo-corner svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        /* ===== Timeline (Marcus Chen) ===== */
+        .timeline {
+            display: flex;
+            gap: 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 26px;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--severity-critical), var(--severity-high), var(--accent-teal), #22C55E);
+            z-index: 0;
+        }
+
+        .timeline-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 0 6px;
+        }
+
+        .timeline-dot {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 20px;
+            font-weight: 800;
+            border: 3px solid;
+        }
+
+        .timeline-dot.ctx { background: rgba(231, 76, 60, 0.15); border-color: var(--severity-critical); color: var(--severity-critical); }
+        .timeline-dot.eng { background: rgba(243, 156, 18, 0.15); border-color: var(--severity-high); color: var(--severity-high); }
+        .timeline-dot.res { background: rgba(20, 184, 166, 0.15); border-color: var(--accent-teal); color: var(--accent-teal); }
+        .timeline-dot.gui { background: rgba(34, 197, 94, 0.15); border-color: #22C55E; color: #22C55E; }
+
+        .timeline-label {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .timeline-label.ctx { color: var(--severity-critical); }
+        .timeline-label.eng { color: var(--severity-high); }
+        .timeline-label.res { color: var(--accent-teal); }
+        .timeline-label.gui { color: #22C55E; }
+
+        .timeline-detail {
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            background: var(--surface-card);
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+            text-align: left;
+        }
+
+        /* ===== Transformation split ===== */
+        .transform-grid {
+            display: grid;
+            grid-template-columns: 1fr 48px 1fr;
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .transform-side {
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .transform-before {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.08) 0%, rgba(231, 76, 60, 0.02) 100%);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .transform-after {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.08) 0%, rgba(20, 184, 166, 0.02) 100%);
+            border: 1px solid rgba(20, 184, 166, 0.2);
+        }
+
+        .transform-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transform-arrow {
+            font-size: 28px;
+            color: var(--accent-teal);
+            font-weight: 800;
+        }
+
+        .transform-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .transform-title.before { color: var(--severity-critical); }
+        .transform-title.after { color: var(--accent-teal); }
+
+        .transform-item {
+            padding: 7px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .transform-item .dot {
+            flex-shrink: 0;
+            margin-top: 3px;
+            font-size: 10px;
+        }
+
+        .transform-item .dot.bad { color: var(--severity-critical); }
+        .transform-item .dot.good { color: var(--accent-teal); }
+
+        /* ===== Hero tagline ===== */
+        .slide-hero {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(160deg, var(--surface-dark) 0%, #0a2d34 50%, var(--primary) 100%);
+            position: relative;
+        }
+
+        .slide-hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tagline {
+            font-size: 58px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-pillars {
+            display: flex;
+            gap: 36px;
+            justify-content: center;
+            margin: 32px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-pillar {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            letter-spacing: 2px;
+        }
+
+        .hero-sep {
+            color: rgba(255,255,255,0.2);
+            font-weight: 300;
+            font-size: 18px;
+        }
+
+        .hero-elevator {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Closing ===== */
+        .slide-closing {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--surface-dark) 0%, #0a2d34 100%);
+        }
+
+        .closing-brand {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            letter-spacing: -1px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+        }
+
+        .closing-tagline {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+        }
+
+        .closing-pillars {
+            display: flex;
+            gap: 44px;
+            justify-content: center;
+            margin-bottom: 36px;
+        }
+
+        .closing-pillar-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            letter-spacing: 1px;
+        }
+
+        .closing-pillar-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .closing-framework {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .closing-framework .em {
+            color: var(--accent-teal);
+            font-weight: 700;
+        }
+
+        /* ===== Shift visual ===== */
+        .shift-visual {
+            display: grid;
+            grid-template-columns: 1fr 60px 1fr;
+            gap: 0;
+        }
+
+        .shift-box {
+            background: var(--surface-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .shift-box .label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .shift-box.old .label { color: var(--severity-low); }
+        .shift-box.new .label { color: var(--accent-teal); }
+
+        .shift-item {
+            padding: 9px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .shift-box.old .shift-item { color: var(--text-secondary); }
+        .shift-box.new .shift-item { color: var(--accent-teal); }
+
+        .shift-arrows {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding-top: 36px;
+        }
+
+        .shift-arrow {
+            color: var(--accent-teal);
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        /* ===== Audience cards ===== */
+        .audience-card {
+            background: var(--surface-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .audience-card.primary {
+            border-color: var(--accent-teal);
+            background: linear-gradient(135deg, var(--surface-card) 0%, rgba(20, 184, 166, 0.06) 100%);
+        }
+
+        .audience-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+
+        .audience-icon {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .audience-role {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .audience-card.primary .audience-role {
+            color: var(--accent-teal);
+        }
+
+        .audience-pain {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .audience-message {
+            background: var(--surface-elevated);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== Pre-departure ===== */
+        .predeparture-hero {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.03) 100%);
+            border: 1px solid rgba(231, 76, 60, 0.25);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .predeparture-number {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--severity-critical);
+        }
+
+        .predeparture-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* ===== Competitive one-liners ===== */
+        .comp-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 6px 0;
+        }
+
+        .comp-vs {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            min-width: 110px;
+        }
+
+        .comp-line {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide.active .content {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .slide.active .opening-scenario {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.35; }
+            50% { opacity: 0.6; }
+        }
+
+        .logo-corner {
+            animation: pulse 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+
+        <!-- ============================================================ -->
+        <!-- ACT 1: THE WORLD TODAY (Slides 1-3)                          -->
+        <!-- ============================================================ -->
+
+        <!-- SLIDE 1: The Moment of Truth -->
+        <div class="slide slide-opening active" data-slide="1">
+            <div class="opening-scenario">
+                <strong>Monday morning.</strong><br><br>
+                1,247 DLP alerts from the weekend.<br><br>
+                One of them is a departing engineer<br>
+                exfiltrating your IP.<br>
+                <span class="punch">Which one?</span>
+            </div>
+            <div class="logo-corner">
+                <svg viewBox="0 0 80 80">
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#0D9488" stroke-width="2"/>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="#22D3EE" stroke-width="1.5"/>
+                    <circle cx="40" cy="40" r="8" fill="#22D3EE" opacity="0.3"/>
+                    <circle cx="40" cy="40" r="3" fill="#22D3EE"/>
+                    <line x1="40" y1="12" x2="40" y2="18" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="40" y1="62" x2="40" y2="68" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="12" y1="40" x2="18" y2="40" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="62" y1="40" x2="68" y2="40" stroke="#0D9488" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: The Real Problem -->
+        <div class="slide" data-slide="2">
+            <div class="slide-header">
+                <div class="slide-number">The Problem</div>
+                <h1>Detection Is Solved. <span class="highlight">Judgment Is Not.</span></h1>
+            </div>
+            <div class="content">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">90%+</div>
+                        <div class="stat-label">DLP alerts are false positives<br>or ignored</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">86</div>
+                        <div class="stat-label">Days on average to contain<br>an insider incident</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">72%</div>
+                        <div class="stat-label">Of orgs use 2+ DLP solutions<br>with no unified view</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <p style="font-size: 16px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5;">
+                        Your best analysts spend 80% of their time on alerts that don't matter. DLP tools generate noise. <strong style="color: var(--accent-teal);">AXIA generates clarity.</strong>
+                    </p>
+                    <h3>The Real Issue</h3>
+                    <ul class="list">
+                        <li>DLP tools generate alerts with no context about <em>why</em> it matters</li>
+                        <li>No resolution path: just endless queues for overwhelmed analysts</li>
+                        <li>Blocking without judgment creates friction and workarounds</li>
+                        <li>Security teams can't scale to review every alert</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: The Shift -->
+        <div class="slide" data-slide="3">
+            <div class="slide-header">
+                <div class="slide-number">The Shift</div>
+                <h1>The <span class="highlight">Judgment Layer</span> for Insider Risk.</h1>
+                <p class="subtitle">Not a replacement for DLP. The AI-powered decision-making layer that sits above it.</p>
+            </div>
+            <div class="content">
+                <div class="card" style="padding: 20px 24px;">
+                    <p style="font-size: 16px; color: var(--text-secondary); line-height: 1.6;">
+                        Where DLP generates alerts, AXIA delivers <strong style="color: var(--text-primary);">verdicts</strong>. Where tools block or ignore, AXIA <strong style="color: var(--text-primary);">engages, coaches, and escalates</strong>.
+                    </p>
+                </div>
+                <div class="shift-visual">
+                    <div class="shift-box old">
+                        <div class="label">Legacy Approach</div>
+                        <div class="shift-item">Detection</div>
+                        <div class="shift-item">Blocking</div>
+                        <div class="shift-item">Alerts</div>
+                    </div>
+                    <div class="shift-arrows">
+                        <div class="shift-arrow">&rarr;</div>
+                        <div class="shift-arrow">&rarr;</div>
+                        <div class="shift-arrow">&rarr;</div>
+                    </div>
+                    <div class="shift-box new">
+                        <div class="label">AXIA Approach</div>
+                        <div class="shift-item">Judgment</div>
+                        <div class="shift-item">Engagement</div>
+                        <div class="shift-item">Resolution</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ACT 2: THE AXIA APPROACH (Slides 4-7)                        -->
+        <!-- ============================================================ -->
+
+        <!-- SLIDE 4: WHO / WHAT / WHO -->
+        <div class="slide" data-slide="4">
+            <div class="slide-header">
+                <div class="slide-number">The Framework</div>
+                <h1>The <span class="highlight">WHO / WHAT / WHO</span> Framework</h1>
+            </div>
+            <div class="content">
+                <div class="framework-box">
+                    <p class="framework-text">
+                        <span class="emphasis">WHO</span> sent it. <span class="emphasis">WHAT</span> it contains. <span class="emphasis">WHO</span> received it.<br>
+                        <span style="font-size: 18px; color: var(--text-secondary); display: block; margin-top: 12px;">
+                            That's how you find the right cases and assign the right severity.
+                        </span>
+                    </p>
+                </div>
+                <div class="two-column">
+                    <div class="card">
+                        <h3 style="color: var(--severity-low);">Traditional DLP</h3>
+                        <ul class="list list-danger">
+                            <li>Pattern matching on content only</li>
+                            <li>No understanding of sender context</li>
+                            <li>No understanding of recipient relationship</li>
+                            <li>Binary: block or allow</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-teal);">
+                        <h3>AXIA's Judgment</h3>
+                        <ul class="list">
+                            <li>Semantic understanding of content via LLM</li>
+                            <li>Role, department, and baseline behavior</li>
+                            <li>Recipient trust level and history</li>
+                            <li>Contextual severity with explanation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: The Four Pillars -->
+        <div class="slide" data-slide="5">
+            <div class="slide-header">
+                <div class="slide-number">Core Differentiators</div>
+                <h1>The Four <span class="highlight">Pillars</span> of AXIA</h1>
+            </div>
+            <div class="content" style="justify-content: center;">
+                <div class="card-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="pillar-card">
+                        <div class="pillar-icon">&#x1F451;</div>
+                        <div class="pillar-title">CONTEXT</div>
+                        <div class="pillar-subtitle">Context is King</div>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5;">Understands who, what, why, and when. Behavioral baselines. Role-aware severity.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">&#x1F4AC;</div>
+                        <div class="pillar-title">ENGAGES</div>
+                        <div class="pillar-subtitle">not just alerts</div>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5;">Coaches employees. Alerts managers. Escalates to legal. Orchestrates humans.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">&#x2705;</div>
+                        <div class="pillar-title">RESOLVES</div>
+                        <div class="pillar-subtitle">cases, not queues</div>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5;">Every case tracks to outcome. Full audit trail. Behavior changes. Risk reduces.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">&#x1F6E1;</div>
+                        <div class="pillar-title">GUIDES</div>
+                        <div class="pillar-subtitle">Security Systems</div>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5;">Creates Smart Blocks. Adjusts DLP rules. Your security systems get smarter over time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: The Marcus Chen Case -->
+        <div class="slide" data-slide="6">
+            <div class="slide-header">
+                <div class="slide-number">See It In Action</div>
+                <h1>The <span class="highlight">Marcus Chen</span> Case</h1>
+                <p class="subtitle">One scenario. All four pillars. From detection to prevention.</p>
+            </div>
+            <div class="content" style="justify-content: center;">
+                <div class="timeline">
+                    <div class="timeline-step">
+                        <div class="timeline-dot ctx">&#x1F451;</div>
+                        <div class="timeline-label ctx">CONTEXT</div>
+                        <div class="timeline-detail">
+                            <strong style="color: var(--text-primary);">Marcus Chen</strong>, Senior Developer. First external code send <strong style="color: var(--severity-critical);">in 3 years</strong>. Recipient: personal Gmail never contacted before. Late-night access spike this week. <strong style="color: var(--severity-critical);">AXIA flags: pre-departure pattern.</strong>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot eng">&#x1F4AC;</div>
+                        <div class="timeline-label eng">ENGAGES</div>
+                        <div class="timeline-detail">
+                            AXIA notifies Marcus's <strong style="color: var(--text-primary);">manager</strong> and <strong style="color: var(--text-primary);">security lead</strong> with full context. Pre-drafted communication ready. Manager conversation recommended within 24 hours.
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot res">&#x2705;</div>
+                        <div class="timeline-label res">RESOLVES</div>
+                        <div class="timeline-detail">
+                            Case tracked to resolution: manager conversation held, evidence preserved for legal, case closed with <strong style="color: var(--text-primary);">full audit trail</strong>. Total time: <strong style="color: var(--accent-teal);">4 hours</strong>, not 4 days.
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot gui">&#x1F6E1;</div>
+                        <div class="timeline-label gui">GUIDES</div>
+                        <div class="timeline-detail">
+                            AXIA feeds the insight back to your DLP: <strong style="color: var(--text-primary);">tighten monitoring</strong> on employees showing similar behavioral patterns. Your security posture <strong style="color: #22C55E;">gets smarter with every case.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: The Transformation -->
+        <div class="slide" data-slide="7">
+            <div class="slide-header">
+                <div class="slide-number">The Transformation</div>
+                <h1>What <span class="highlight">Changes</span></h1>
+                <p class="subtitle">Organizations see their security posture transform within 90 days.</p>
+            </div>
+            <div class="content" style="justify-content: center;">
+                <div class="transform-grid">
+                    <div class="transform-side transform-before">
+                        <div class="transform-title before">
+                            <span>&#x274C;</span> Before AXIA
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot bad">&#x25CF;</span>
+                            <span>1,000+ alerts per week, each 30 min to investigate</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot bad">&#x25CF;</span>
+                            <span>86-day average containment time</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot bad">&#x25CF;</span>
+                            <span>Analyst burnout and chronic alert fatigue</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot bad">&#x25CF;</span>
+                            <span>No meaningful metrics for the board</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot bad">&#x25CF;</span>
+                            <span>"Block everything or nothing"</span>
+                        </div>
+                    </div>
+                    <div class="transform-divider">
+                        <div class="transform-arrow">&rarr;</div>
+                    </div>
+                    <div class="transform-side transform-after">
+                        <div class="transform-title after">
+                            <span>&#x2705;</span> After AXIA
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot good">&#x25CF;</span>
+                            <span><strong style="color: var(--accent-teal);">80 cases</strong> that matter, not 1,000 alerts</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot good">&#x25CF;</span>
+                            <span>Same-day resolution for most cases</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot good">&#x25CF;</span>
+                            <span>Risk Control Score: measurable improvement</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot good">&#x25CF;</span>
+                            <span>Board-ready insider risk metrics</span>
+                        </div>
+                        <div class="transform-item">
+                            <span class="dot good">&#x25CF;</span>
+                            <span>"Coach, escalate, or block: based on judgment"</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ACT 3: PROOF POINTS (Slides 8-10)                           -->
+        <!-- ============================================================ -->
+
+        <!-- SLIDE 8: Pre-Departure Protection -->
+        <div class="slide" data-slide="8">
+            <div class="slide-header">
+                <div class="slide-number">Unique Capability</div>
+                <h1><span class="highlight">Pre-Departure</span> Protection</h1>
+                <p class="subtitle">Detecting departure intent before anyone else knows.</p>
+            </div>
+            <div class="content">
+                <div class="predeparture-hero">
+                    <div class="predeparture-number">90%</div>
+                    <div class="predeparture-text">of insider data theft occurs in the <strong style="color: var(--text-primary);">90 days before departure</strong></div>
+                    <p style="margin-top: 10px; font-size: 15px; color: var(--text-secondary);">Your DLP can't read behavioral intent. <strong style="color: var(--accent-teal);">AXIA can.</strong></p>
+                </div>
+                <div class="two-column">
+                    <div class="card">
+                        <h3>How It Works</h3>
+                        <ul class="list">
+                            <li>Detects behavioral anomalies: first-ever sends to personal email, unusual download spikes, off-hours access</li>
+                            <li>Correlates multiple weak signals into a strong departure-intent pattern</li>
+                            <li>Alerts managers and security <em>before</em> the employee even submits resignation</li>
+                            <li>Automated manager notification with pre-drafted talking points</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-teal);">
+                        <h3>The Marcus Chen Signal</h3>
+                        <div style="background: var(--surface-elevated); padding: 14px; border-radius: 10px; margin-top: 6px;">
+                            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.7;">
+                                <strong style="color: var(--text-primary);">First external code send</strong> in 3 years.<br>
+                                <strong style="color: var(--text-primary);">Recipient:</strong> personal Gmail, never contacted before.<br>
+                                <strong style="color: var(--text-primary);">Pattern:</strong> late-night access spike over the past week.<br>
+                                <strong style="color: var(--severity-critical);">AXIA verdict:</strong> Pre-departure data exfiltration risk.
+                            </p>
+                        </div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-top: 12px; line-height: 1.5;">
+                            A traditional DLP sees "code sent externally." AXIA sees the behavioral signature of someone about to leave, and alerts the manager before it's too late.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Competitive Landscape -->
+        <div class="slide" data-slide="9">
+            <div class="slide-header">
+                <div class="slide-number">Competitive Landscape</div>
+                <h1>Where <span class="highlight">Others Fall Short</span></h1>
+            </div>
+            <div class="content">
+                <div class="quote-box" style="margin-bottom: 4px;">
+                    <p class="quote-text" style="font-size: 15px;">"DLP focuses on what the data is. AXIA understands why it matters who's sending it."</p>
+                </div>
+                <div class="card" style="overflow-x: auto; padding: 16px;">
+                    <table class="competitor-table">
+                        <tr>
+                            <th>Capability</th>
+                            <th>Traditional DLP</th>
+                            <th>Modern IRM</th>
+                            <th>CASB / SSE</th>
+                            <th style="color: var(--accent-teal);">AXIA</th>
+                        </tr>
+                        <tr>
+                            <td>Content Understanding (LLM)</td>
+                            <td><span class="badge badge-no">Pattern Only</span></td>
+                            <td><span class="badge badge-partial">Limited</span></td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-yes">Semantic AI</span></td>
+                        </tr>
+                        <tr>
+                            <td>Role &amp; Behavioral Context</td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-yes">Yes</span></td>
+                            <td><span class="badge badge-partial">Basic</span></td>
+                            <td><span class="badge badge-yes">Deep</span></td>
+                        </tr>
+                        <tr>
+                            <td>Direct Employee Engagement</td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-yes">Yes</span></td>
+                        </tr>
+                        <tr>
+                            <td>DLP Policy Management</td>
+                            <td><span class="badge badge-partial">Manual</span></td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-partial">Basic</span></td>
+                            <td><span class="badge badge-yes">Smart Blocks</span></td>
+                        </tr>
+                        <tr>
+                            <td>Resolution Tracking</td>
+                            <td><span class="badge badge-no">Queue Only</span></td>
+                            <td><span class="badge badge-partial">Basic</span></td>
+                            <td><span class="badge badge-no">No</span></td>
+                            <td><span class="badge badge-yes">End-to-End</span></td>
+                        </tr>
+                        <tr>
+                            <td>Deployment Time</td>
+                            <td><span class="badge badge-no">Months</span></td>
+                            <td><span class="badge badge-partial">Weeks</span></td>
+                            <td><span class="badge badge-partial">Weeks</span></td>
+                            <td><span class="badge badge-yes">48 Hours</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <div class="comp-row">
+                        <div class="comp-vs">vs. Traditional DLP</div>
+                        <div class="comp-line">"They catch patterns. We understand intent."</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-vs">vs. Modern IRM</div>
+                        <div class="comp-line">"They monitor behavior. We orchestrate response."</div>
+                    </div>
+                    <div class="comp-row">
+                        <div class="comp-vs">vs. CASB / SSE</div>
+                        <div class="comp-line">"They secure the network. We protect the people."</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Messaging by Stakeholder -->
+        <div class="slide" data-slide="10">
+            <div class="slide-header">
+                <div class="slide-number">Audience Messaging</div>
+                <h1>Messaging by <span class="highlight">Stakeholder</span></h1>
+            </div>
+            <div class="content" style="justify-content: center;">
+                <div class="three-column">
+                    <div class="audience-card primary">
+                        <div class="audience-icon">&#x1F451;</div>
+                        <div class="audience-role">CISO / VP Security</div>
+                        <div class="audience-pain">
+                            <strong>Pain:</strong> Alert fatigue, board reporting pressure, deployment complexity, AI governance concerns
+                        </div>
+                        <div class="audience-message">
+                            "5 minutes to connect. 48 hours to protection. Board-ready insider risk metrics. Your DLP generates 1,000 alerts. We deliver 80 cases that matter."
+                        </div>
+                    </div>
+                    <div class="audience-card">
+                        <div class="audience-icon">&#x1F575;</div>
+                        <div class="audience-role">Security / SOC Team</div>
+                        <div class="audience-pain">
+                            <strong>Pain:</strong> Drowning in alerts, no context, manual investigation, tool fatigue
+                        </div>
+                        <div class="audience-message">
+                            "What happened. Why it matters. Why it's unusual. Pre-drafted communications. One click to act. You focus on judgment, not paperwork."
+                        </div>
+                    </div>
+                    <div class="audience-card">
+                        <div class="audience-icon">&#x1F4BC;</div>
+                        <div class="audience-role">Board / Executive</div>
+                        <div class="audience-pain">
+                            <strong>Pain:</strong> Cyber risk quantification, AI governance, budget justification
+                        </div>
+                        <div class="audience-message">
+                            "Risk Control Score: One metric the board can track. Transform insider risk from 'we have alerts' to 'we have answers.'"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- ACT 4: LANDING (Slides 11-12)                                -->
+        <!-- ============================================================ -->
+
+        <!-- SLIDE 11: The Hero Tagline -->
+        <div class="slide slide-hero" data-slide="11">
+            <div style="position: relative; z-index: 1;">
+                <div style="margin-bottom: 16px;">
+                    <svg viewBox="0 0 80 80" style="width: 60px; height: 60px;">
+                        <circle cx="40" cy="40" r="28" fill="none" stroke="#0D9488" stroke-width="2"/>
+                        <circle cx="40" cy="40" r="18" fill="none" stroke="#22D3EE" stroke-width="1.5"/>
+                        <circle cx="40" cy="40" r="8" fill="#22D3EE" opacity="0.3"/>
+                        <circle cx="40" cy="40" r="3" fill="#22D3EE"/>
+                        <line x1="40" y1="12" x2="40" y2="18" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="40" y1="62" x2="40" y2="68" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="12" y1="40" x2="18" y2="40" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="62" y1="40" x2="68" y2="40" stroke="#0D9488" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="hero-tagline">
+                    The Judgment Layer<br>for <span class="highlight">Insider Risk.</span>
+                </div>
+                <div class="hero-pillars">
+                    <span class="hero-pillar">CONTEXT</span>
+                    <span class="hero-sep">&middot;</span>
+                    <span class="hero-pillar">ENGAGES</span>
+                    <span class="hero-sep">&middot;</span>
+                    <span class="hero-pillar">RESOLVES</span>
+                    <span class="hero-sep">&middot;</span>
+                    <span class="hero-pillar">GUIDES</span>
+                </div>
+                <p class="hero-elevator">
+                    AXIA is the AI judgment layer for insider risk. Your DLP generates alerts; we turn them into decisions. 48 hours to deploy. One click to act.
+                </p>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Summary + Contact -->
+        <div class="slide slide-closing" data-slide="12">
+            <div>
+                <svg viewBox="0 0 80 80" style="width: 72px; height: 72px;">
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#0D9488" stroke-width="2"/>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="#22D3EE" stroke-width="1.5"/>
+                    <circle cx="40" cy="40" r="8" fill="#22D3EE" opacity="0.3"/>
+                    <circle cx="40" cy="40" r="3" fill="#22D3EE"/>
+                    <line x1="40" y1="12" x2="40" y2="18" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="40" y1="62" x2="40" y2="68" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="12" y1="40" x2="18" y2="40" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="62" y1="40" x2="68" y2="40" stroke="#0D9488" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="closing-brand">AXIA</div>
+            <div class="closing-tagline">The CISO's Front-Line AI for Insider Risk</div>
+            <div class="closing-pillars">
+                <div>
+                    <div class="closing-pillar-name">CONTEXT</div>
+                    <div class="closing-pillar-sub">Context is King</div>
+                </div>
+                <div>
+                    <div class="closing-pillar-name">ENGAGES</div>
+                    <div class="closing-pillar-sub">not just alerts</div>
+                </div>
+                <div>
+                    <div class="closing-pillar-name">RESOLVES</div>
+                    <div class="closing-pillar-sub">cases, not queues</div>
+                </div>
+                <div>
+                    <div class="closing-pillar-name">GUIDES</div>
+                    <div class="closing-pillar-sub">Security Systems</div>
+                </div>
+            </div>
+            <div class="closing-framework">
+                <span class="em">WHO</span> sent it. <span class="em">WHAT</span> it contains. <span class="em">WHO</span> received it.<br>
+                That's how you find the right cases and assign the right severity.
+            </div>
+            <div style="margin-top: 44px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08);">
+                <p style="font-size: 14px; color: var(--text-secondary);">
+                    Insider Risk. Decided.
+                </p>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; opacity: 0.5;">
+                    February 2026
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous slide">&#x2190;</button>
+        <span class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">12</span></span>
+        <button class="nav-btn" id="nextBtn" aria-label="Next slide">&#x2192;</button>
+    </nav>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const currentSlideEl = document.getElementById('currentSlide');
+        const totalSlidesEl = document.getElementById('totalSlides');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentSlide = 1;
+        const totalSlides = slides.length;
+        totalSlidesEl.textContent = totalSlides;
+
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > totalSlides) n = totalSlides;
+            slides.forEach(s => s.classList.remove('active'));
+            document.querySelector('[data-slide="' + n + '"]').classList.add('active');
+            currentSlide = n;
+            currentSlideEl.textContent = n;
+            prevBtn.disabled = n === 1;
+            nextBtn.disabled = n === totalSlides;
+        }
+
+        prevBtn.addEventListener('click', function() { showSlide(currentSlide - 1); });
+        nextBtn.addEventListener('click', function() { showSlide(currentSlide + 1); });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                showSlide(currentSlide - 1);
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                showSlide(currentSlide + 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(1);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides);
+            }
+        });
+
+        // Touch support
+        var touchStartX = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        document.addEventListener('touchend', function(e) {
+            var touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) {
+                showSlide(currentSlide + 1);
+            } else if (touchEndX - touchStartX > 50) {
+                showSlide(currentSlide - 1);
+            }
+        });
+
+        showSlide(1);
+    </script>
+</body>
+</html>
