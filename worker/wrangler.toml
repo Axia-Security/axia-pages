@@ -1,0 +1,7 @@
+name = "axia-demo-proxy"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# The OPENAI_API_KEY secret is set via:
+#   npx wrangler secret put OPENAI_API_KEY
+# Never put the key in this file.
