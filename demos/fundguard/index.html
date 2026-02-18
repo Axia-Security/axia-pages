@@ -1457,7 +1457,10 @@ const tailwindConfig = {
 
 // OpenAI Assistant configuration
 const ASSISTANT_ID = 'asst_FGu7DqyGPbRZQiN28mRRkZm4';
-const DEFAULT_API_KEY = 'REDACTED_KEY';
+// API key is held server-side by the Cloudflare Worker proxy.
+// Users can still paste their own key via the Settings modal.
+const PROXY_URL = 'https://axia-demo-proxy.yohaye.workers.dev';
+const DEFAULT_API_KEY = '';
 
 
 // ========== default.js ==========
@@ -3628,7 +3631,27 @@ function getDemoResponse(message) {
 
 // ==================== API KEY FUNCTIONS ====================
 function getApiKey() {
-    return localStorage.getItem('axia_api_key') || (typeof DEFAULT_API_KEY !== 'undefined' ? DEFAULT_API_KEY : null);
+    const userKey = localStorage.getItem('axia_api_key');
+    if (userKey) return userKey;
+    return PROXY_URL ? 'proxy' : null;
+}
+
+function getApiBase() {
+    const userKey = localStorage.getItem('axia_api_key');
+    if (userKey) return 'https://api.openai.com';
+    return PROXY_URL || 'https://api.openai.com';
+}
+
+function getAuthHeaders() {
+    const userKey = localStorage.getItem('axia_api_key');
+    const headers = {
+        'Content-Type': 'application/json',
+        'OpenAI-Beta': 'assistants=v2'
+    };
+    if (userKey) {
+        headers['Authorization'] = `Bearer ${userKey}`;
+    }
+    return headers;
 }
 
 function saveApiKey() {
@@ -3828,13 +3851,10 @@ async function sendMessage() {
         return;
     }
 
-    // Live mode - use OpenAI API
+    // Live mode - use OpenAI API (via proxy or direct)
     try {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-            'OpenAI-Beta': 'assistants=v2'
-        };
+        const base = getApiBase();
+        const headers = getAuthHeaders();
 
         let fileId = null;
         if (fileToSend) {
@@ -3844,7 +3864,7 @@ async function sendMessage() {
         }
 
         if (!currentThreadId) {
-            const threadRes = await fetch('https://api.openai.com/v1/threads', {
+            const threadRes = await fetch(`${base}/v1/threads`, {
                 method: 'POST',
                 headers
             });
@@ -3865,7 +3885,7 @@ async function sendMessage() {
             }];
         }
 
-        const msgRes = await fetch(`https://api.openai.com/v1/threads/${currentThreadId}/messages`, {
+        const msgRes = await fetch(`${base}/v1/threads/${currentThreadId}/messages`, {
             method: 'POST',
             headers,
             body: JSON.stringify(messageBody)
@@ -3875,7 +3895,7 @@ async function sendMessage() {
             throw new Error(errData.error?.message || 'Failed to add message');
         }
 
-        const runRes = await fetch(`https://api.openai.com/v1/threads/${currentThreadId}/runs`, {
+        const runRes = await fetch(`${base}/v1/threads/${currentThreadId}/runs`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ assistant_id: ASSISTANT_ID })
@@ -3889,7 +3909,7 @@ async function sendMessage() {
         const maxAttempts = 120;
         do {
             await new Promise(r => setTimeout(r, 1000));
-            const pollRes = await fetch(`https://api.openai.com/v1/threads/${currentThreadId}/runs/${runId}`, { headers });
+            const pollRes = await fetch(`${base}/v1/threads/${currentThreadId}/runs/${runId}`, { headers });
             run = await pollRes.json();
             attempts++;
         } while ((run.status === 'queued' || run.status === 'in_progress') && attempts < maxAttempts);
@@ -3898,7 +3918,7 @@ async function sendMessage() {
             throw new Error(`Run ended with status: ${run.status}`);
         }
 
-        const messagesRes = await fetch(`https://api.openai.com/v1/threads/${currentThreadId}/messages?limit=1&order=desc`, { headers });
+        const messagesRes = await fetch(`${base}/v1/threads/${currentThreadId}/messages?limit=1&order=desc`, { headers });
         const messagesData = await messagesRes.json();
         const assistantMessage = messagesData.data[0]?.content[0]?.text?.value || 'No response';
 
@@ -3974,11 +3994,16 @@ async function uploadFileToOpenAI(file) {
     formData.append('file', file);
     formData.append('purpose', 'assistants');
 
-    const response = await fetch('https://api.openai.com/v1/files', {
+    const base = getApiBase();
+    const uploadHeaders = {};
+    const userKey = localStorage.getItem('axia_api_key');
+    if (userKey) {
+        uploadHeaders['Authorization'] = `Bearer ${userKey}`;
+    }
+
+    const response = await fetch(`${base}/v1/files`, {
         method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${getApiKey()}`
-        },
+        headers: uploadHeaders,
         body: formData
     });
 
