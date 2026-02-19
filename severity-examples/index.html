@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIA Severity Classification Test Suite — 50 Email Examples</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --primary: #09434e;
+    --primary-light: #0a5a6a;
+    --accent-teal: #22D3EE;
+    --accent-cyan: #14B8A6;
+    --bg-dark: #0D1117;
+    --bg-card: #161B22;
+    --bg-elevated: #1C2128;
+    --text-primary: #E6EDF3;
+    --text-secondary: #9CA3AF;
+    --border: rgba(255,255,255,0.08);
+    --severity-critical: #EF4444;
+    --severity-critical-bg: rgba(239,68,68,0.12);
+    --severity-high: #F59E0B;
+    --severity-high-bg: rgba(245,158,11,0.12);
+    --severity-medium: #3B82F6;
+    --severity-medium-bg: rgba(59,130,246,0.12);
+    --severity-low: #6B7280;
+    --severity-low-bg: rgba(107,114,128,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--bg-dark) 100%);
+    padding: 48px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span { color: var(--accent-teal); }
+
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .header-meta strong { color: var(--accent-teal); }
+
+  .nav-bar {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+  .filter-btn.active { background: var(--primary); color: white; border-color: var(--accent-teal); }
+  .filter-btn.critical.active { background: var(--severity-critical); border-color: var(--severity-critical); }
+  .filter-btn.high.active { background: var(--severity-high); border-color: var(--severity-high); color: #000; }
+  .filter-btn.medium.active { background: var(--severity-medium); border-color: var(--severity-medium); }
+  .filter-btn.low.active { background: var(--severity-low); border-color: var(--severity-low); }
+
+  .counter {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .counter strong { color: var(--accent-teal); }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  .example-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .example-card:hover { border-color: rgba(255,255,255,0.15); }
+
+  .example-card.severity-critical { border-left: 4px solid var(--severity-critical); }
+  .example-card.severity-high { border-left: 4px solid var(--severity-high); }
+  .example-card.severity-medium { border-left: 4px solid var(--severity-medium); }
+  .example-card.severity-low { border-left: 4px solid var(--severity-low); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-header:hover { background: rgba(255,255,255,0.02); }
+
+  .card-title-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .example-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 28px;
+  }
+
+  .severity-badge {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .severity-badge.critical { background: var(--severity-critical-bg); color: var(--severity-critical); }
+  .severity-badge.high { background: var(--severity-high-bg); color: var(--severity-high); }
+  .severity-badge.medium { background: var(--severity-medium-bg); color: var(--severity-medium); }
+  .severity-badge.low { background: var(--severity-low-bg); color: var(--severity-low); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .industry-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(20,184,166,0.15);
+    color: var(--accent-cyan);
+    white-space: nowrap;
+  }
+
+  .expand-icon {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .example-card.open .expand-icon { transform: rotate(180deg); }
+
+  .card-body {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .example-card.open .card-body { display: block; }
+
+  .section {
+    margin-top: 20px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-teal);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: block;
+    width: 3px;
+    height: 14px;
+    background: var(--accent-teal);
+    border-radius: 2px;
+  }
+
+  .context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .context-grid { grid-template-columns: 1fr; }
+    .header { padding: 24px 16px; }
+    .container { padding: 16px; }
+    .nav-bar { padding: 12px 16px; }
+  }
+
+  .context-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .context-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .context-box .field {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  .context-box .field-label {
+    color: var(--text-secondary);
+    min-width: 90px;
+    font-weight: 500;
+  }
+
+  .context-box .field-value { color: var(--text-primary); }
+
+  .risk-factors {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .risk-factor {
+    font-size: 12px;
+    color: var(--severity-high);
+    padding: 2px 0;
+  }
+
+  .risk-factor::before { content: '! '; font-weight: 700; }
+
+  .email-container {
+    background: #1a1a2e;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 13px;
+  }
+
+  .email-header {
+    background: rgba(255,255,255,0.03);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .email-field {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .email-field-label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    min-width: 60px;
+    font-size: 12px;
+  }
+
+  .email-field-value {
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    word-break: break-all;
+  }
+
+  .email-body {
+    padding: 16px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-size: 13px;
+  }
+
+
+  .analysis-box {
+    background: var(--bg-elevated);
+    border: 1px solid rgba(20,184,166,0.2);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .analysis-box p {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+
+  .who-tag {
+    display: inline;
+    font-weight: 700;
+    color: var(--accent-teal);
+  }
+
+  .summary-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 2px solid var(--border);
+  }
+
+  .summary-section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 36px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-card.critical .stat-number { color: var(--severity-critical); }
+  .stat-card.high .stat-number { color: var(--severity-high); }
+  .stat-card.medium .stat-number { color: var(--severity-medium); }
+  .stat-card.low .stat-number { color: var(--severity-low); }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--bg-elevated);
+    color: var(--accent-teal);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1><span>AXIA</span> Severity Classification Test Suite</h1>
+    <div class="header-meta">
+      <span><strong>50</strong> Examples</span>
+      <span><strong>v1.0</strong> Feb 2026</span>
+      <span>WHO / WHAT / WHO</span>
+      <a href="severity-test-examples.md" download style="color: var(--accent-teal); text-decoration: none; font-size: 13px; font-family: 'JetBrains Mono', monospace; border: 1px solid var(--accent-teal); padding: 4px 12px; border-radius: 16px; transition: all 0.2s;" onmouseover="this.style.background='rgba(34,211,238,0.15)'" onmouseout="this.style.background='transparent'">Download MD</a>
+    </div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <button class="filter-btn active" onclick="filterCards('all')">All (50)</button>
+  <button class="filter-btn critical" onclick="filterCards('critical')">Critical (12)</button>
+  <button class="filter-btn high" onclick="filterCards('high')">High (10)</button>
+  <button class="filter-btn medium" onclick="filterCards('medium')">Medium (16)</button>
+  <button class="filter-btn low" onclick="filterCards('low')">Low (12)</button>
+  <span style="color: var(--text-secondary); font-size:13px; margin-left:8px;">|</span>
+  <button class="filter-btn" onclick="filterCards('banking')">Banking</button>
+  <button class="filter-btn" onclick="filterCards('fintech')">Fintech</button>
+  <button class="filter-btn" onclick="expandAll()">Expand All</button>
+  <button class="filter-btn" onclick="collapseAll()">Collapse All</button>
+  <span class="counter">Showing <strong id="visible-count">50</strong> of 50</span>
+</div>
+
+<div class="container" id="examples-container">
+</div>
+
+<script>
+const examples = [
+  {n:1,title:"Pre-Departure Source Code Exfiltration",severity:"critical",industry:"banking",sender:{name:"Marcus Chen",role:"Senior Software Engineer",dept:"Engineering",tenure:"4 years",location:"San Francisco",risks:["Submitted resignation 14 days ago","Accepted offer at DirectCompete Inc. (direct competitor)","Key contributor to authentication module","LinkedIn updated to 'Open to opportunities' 3 weeks ago"]},recipient:{name:"marcus.chen.dev@gmail.com",org:"Personal Gmail",rel:"Personal email"},email:{from:"marcus.chen@globalbank.com",to:"marcus.chen.dev@gmail.com",date:"Tuesday, Feb 18, 2026, 11:47 PM",subject:"Backup - project files",body:"Hi,\n\nSending myself the latest project files before my last day. Here is what I need to keep for reference:\n\nauth-module/\n  oauth2-handler.ts (our custom token refresh logic)\n  session-manager.ts\n  credential-vault.ts (AES-256 key rotation)\n  fraud-detection/\n    transaction-scorer.py (real-time scoring engine)\n    pattern-recognizer.py (behavioral baseline algorithm)\n    model_weights_v3.pkl\n    feature_engineering.py\n\n47 files total, 12,400 lines. These are the modules I built over the past 3 years, especially the fraud detection pipeline and the auth credential handling logic.\n\nThanks,\nMarcus"},analysis:"WHO \u2014 Departing engineer joining a direct competitor, 340% volume increase in data access over last 5 days. WHAT \u2014 Proprietary source code containing trade secrets (fraud detection algorithms, auth modules with embedded credentials). WHO RECEIVED \u2014 Personal Gmail account. The combination of departure timing, competitor destination, sensitive content type, and personal email destination makes this unambiguously Critical. A DLP tool would see 'engineer emails code' \u2014 AXIA sees a departing employee systematically collecting IP before joining a competitor."},
+
+  {n:2,title:"Encrypted Archive Bypassing DLP",severity:"critical",industry:"fintech",sender:{name:"David Park",role:"Product Manager",dept:"Product",tenure:"4.5 years",location:"Seattle",risks:["First time sending encrypted file externally","Recipient domain not in CRM or approved vendor list"]},recipient:{name:"Jennifer Wu",org:"TechVentures Capital (VC firm)",rel:"No prior business relationship"},email:{from:"david.park@neofinance.io",to:"jennifer.wu@techventures-capital.com",date:"Wednesday, Feb 19, 2026, 9:35 AM",subject:"Following up - materials for review",body:"Hi Jennifer,\n\nGreat speaking with you yesterday. As discussed, here are the materials you requested. I have encrypted the file with the password I mentioned on the call.\n\nContents include:\n- 2026 Product Roadmap (full, with competitive response plans)\n- Feature timeline through Q4 with release dates\n- Pricing strategy revision for enterprise tier\n- Competitive positioning analysis vs. Stripe, Adyen, and Checkout.com\n\nPassword is the one from our conversation. Did not want to include it in writing.\n\nBest,\nDavid"},analysis:"WHO \u2014 Product Manager with roadmap access, first-ever encrypted external file share. WHAT \u2014 Password-protected archive named 'product-roadmap-2026,' containing strategic plans. Encryption specifically defeats content scanning. WHO RECEIVED \u2014 VC firm with no existing business relationship. Deliberate encryption to bypass DLP elevates from High to Critical."},
+
+  {n:3,title:"M&A Documents Shared Before Board Approval",severity:"critical",industry:"banking",sender:{name:"Jonathan Burke",role:"VP Corporate Development",dept:"Finance",tenure:"6.5 years",location:"New York",risks:["Pre-board approval sharing","M&A confidential data","Has authority for M&A but not pre-approval disclosure"]},recipient:{name:"Richard Stevens",org:"Stevens & Partners (M&A advisory)",rel:"Previously engaged, current engagement NOT yet approved by board"},email:{from:"jonathan.burke@meridianbank.com",to:"r.stevens@stevenspartners.com",cc:"lisa.wang@stevenspartners.com",date:"Monday, Feb 17, 2026, 12:50 PM",subject:"Project Falcon - preliminary analysis",body:"Richard,\n\nFollowing our conversation last week, here is the preliminary analysis for Project Falcon.\n\nTarget: Vertex Financial Solutions\nEstimated valuation: ~$340M (12.8x revenue multiple)\nSynergy model: $47M annual cost savings by Year 3\nIntegration timeline: 18 months, three phases\nKey risk: Their Series C investors have anti-dilution provisions\n\nFull 48-page analysis covers target financials, synergy models, valuation scenarios, and integration plan. We would like your team's independent assessment before we present to the board next Thursday.\n\nPlease keep this strictly confidential and do not share beyond your immediate deal team.\n\nRegards,\nJonathan Burke\nVP Corporate Development\nMeridian Bank"},analysis:"WHO \u2014 VP Corp Dev, authorized for M&A but sharing BEFORE board approval. WHAT \u2014 Material non-public information: acquisition target at $340M, valuation models. Premature disclosure could trigger SEC Regulation FD requirements. WHO RECEIVED \u2014 External advisor not yet formally engaged. MNPI exposure and SEC implications make this Critical."},
+
+  {n:4,title:"Pre-Earnings Financial Data to Investment Firm",severity:"critical",industry:"fintech",sender:{name:"Fiona Mitchell",role:"Finance Manager",dept:"Finance",tenure:"5.5 years",location:"New York",risks:["No external communication authority","Pre-release financials during quiet period","Personal relationship with recipient (university alumni)"]},recipient:{name:"Robert Hayes",org:"AlphaHedge Partners (hedge fund)",rel:"Personal connection via university alumni network, NOT on IR approved list"},email:{from:"fiona.mitchell@swiftpay.com",to:"robert.hayes@alphahedge-partners.com",date:"Tuesday, Feb 18, 2026, 7:20 AM",subject:"Quick look - Q4 numbers",body:"Hey Rob,\n\nHere's a preview of where Q4 landed. Revenue came in 12% above street estimates. Don't share this obviously \u2014 earnings call is Thursday morning.\n\nLet's catch up at the alumni dinner next month.\n\nFiona"},analysis:"WHO \u2014 Finance Manager with NO authority for external communication. Personal relationship with recipient. WHAT \u2014 Pre-release Q4 earnings during quiet period with specific revenue beats. WHO RECEIVED \u2014 Hedge fund manager, personal network connection. This is textbook insider trading facilitation under SEC Regulation FD."},
+
+  {n:5,title:"Wire Transfer Instructions Modification",severity:"critical",industry:"banking",sender:{name:"Thomas Reed",role:"Treasury Operations Analyst",dept:"Treasury & Payments",tenure:"2 years",location:"New York",risks:["Recently passed over for promotion","Accessed wire template at 2:14 AM","First time modifying this client's beneficiary details"]},recipient:{name:"Wire Processing Unit",org:"Same bank (internal)",rel:"Internal operations team"},email:{from:"thomas.reed@centraltrustbank.com",to:"wire-processing@centraltrustbank.com",cc:"ops-manager@centraltrustbank.com",date:"Wednesday, Feb 19, 2026, 2:37 AM",subject:"URGENT: Updated beneficiary details - Henderson Industries wire",body:"Team,\n\nHenderson Industries has notified us of updated beneficiary banking details for the recurring monthly wire (ref: WT-2026-00847). Please update the standing instructions effective immediately:\n\nNew beneficiary: Henderson Industries LLC\nNew bank: First Caribbean International Bank\nAccount: 8847291034\nSWIFT: FCIBBSNA\n\nThe client confirmed these changes by phone this afternoon. I've attached the updated authorization form. Please process the February wire using these new details.\n\nThanks,\nThomas Reed\nTreasury Operations"},analysis:"WHO \u2014 Junior analyst, off-hours (2:37 AM), promotion grievance, first time modifying this client. WHAT \u2014 Wire redirection to offshore Caribbean account. Auth form created minutes before email (likely fabricated). WHO RECEIVED \u2014 Internal wire processing team (attempt at internal fraud). This is potential wire fraud with insider threat signals."},
+
+  {n:6,title:"Trading Algorithm Source Code Exfiltration",severity:"critical",industry:"fintech",sender:{name:"Dr. Lena Volkov",role:"Lead Quantitative Researcher",dept:"Systematic Trading",tenure:"3 years",location:"New York",risks:["LinkedIn: 'Exploring new opportunities' 5 days ago","Calendar: 'Coffee with Sarah - Citadel' (competitor recruiter)","Filed company patent 8 months ago (knows most valuable IP)"]},recipient:{name:"lena.v.research@protonmail.com",org:"ProtonMail (encrypted personal email)",rel:"Personal encrypted email"},email:{from:"lena.volkov@quantumtrade.io",to:"lena.v.research@protonmail.com",date:"Monday, Feb 17, 2026, 10:23 PM",subject:"Research backup",body:"Backing up my research notebooks before the laptop refresh next week. These are the core strategy files:\n\nmomentum_signal_generator.py - live production signal pipeline\nmean_reversion_v4.ipynb - current mean reversion strategy (Sharpe 2.4)\npairs_trading_params.json - all active pair weightings and entry/exit thresholds\nbacktest_framework/run_strategy.py - backtesting engine with slippage model\nposition_sizing_model.pkl - trained ML model for dynamic position sizing\nlive_parameters.yaml - PRODUCTION parameters including current position limits, risk budgets, and execution timing windows\n\n34 notebooks total with all proprietary strategies, signal generation logic, and live model parameters."},analysis:"WHO \u2014 Lead quant researcher with departure signals and competitor recruiter contact. Filed company patent (knows which IP is most valuable). WHAT \u2014 Production trading algorithms and live model parameters. Core competitive advantage worth potentially hundreds of millions. WHO RECEIVED \u2014 ProtonMail (encrypted, untraceable). The combination of departure signals + competitor contact + core IP + anonymous email = maximum severity."},
+
+  {n:7,title:"KYC/AML Data Export",severity:"critical",industry:"banking",sender:{name:"Raj Patel",role:"AML Compliance Analyst",dept:"Financial Crime & Compliance",tenure:"1.5 years",location:"London",risks:["Access to SAR database","No prior bulk exports","Workplace grievance against manager","Browser: WikiLeaks and whistleblower sites"]},recipient:{name:"raj.p.documents@outlook.com",org:"Personal Outlook",rel:"Personal email"},email:{from:"raj.patel@unionfinancial.com",to:"raj.p.documents@outlook.com",date:"Thursday, Feb 13, 2026, 6:42 PM",subject:"Compliance research files",body:"Sending these compliance research files so I can work on the regulatory reporting project from home this weekend.\n\nIncluded:\n- 147 Suspicious Activity Report narratives (pending FinCEN filing)\n- Customer due diligence files for 89 high-risk accounts\n- 12 active investigation summaries (including 3 under law enforcement referral)\n- Correspondent banking risk assessments for MENA region relationships\n\nI need to cross-reference these against the new FinCEN guidance before Monday's filing deadline."},analysis:"WHO \u2014 AML analyst with grievance and potential whistleblower intent. First bulk SAR export. WHAT \u2014 SARs are federally protected (BSA). Unauthorized disclosure is a federal crime. WHO RECEIVED \u2014 Personal email. Whether whistleblowing or data theft, unauthorized SAR removal requires immediate legal and compliance intervention."},
+
+  {n:8,title:"Customer Credit Card Data Exfiltration",severity:"critical",industry:"fintech",sender:{name:"Viktor Sokolov",role:"Database Administrator",dept:"Infrastructure",tenure:"8 months (contractor)",location:"Remote",risks:["Contract employee via staffing agency","Previous dismissal (sealed reason: 'policy violation')","After-hours queries on cardholder data (11:47 PM)"]},recipient:{name:"v_sokolov_tech@yahoo.com",org:"Personal Yahoo email",rel:"Personal email"},email:{from:"viktor.sokolov@paynext.io",to:"v_sokolov_tech@yahoo.com",date:"Tuesday, Feb 18, 2026, 11:52 PM",subject:"DB performance logs",body:"Here are the performance analysis logs from tonight\'s optimization run.\n\nOutput file: db_perf_analysis_feb2026.csv.gz\nRecords exported: 23,400\nFields: customer_id, full_name, email, last_four_cc, transaction_history (12mo), billing_address, account_balance\nSource: Production cardholder data environment\nExport time: 11:47 PM - 11:52 PM\n\nNeed to analyze query performance patterns across these customer segments for the indexing optimization."},analysis:"WHO \u2014 Contract DBA, sealed prior dismissal, after-hours activity. WHAT \u2014 PCI DSS scope customer payment data DISGUISED as performance logs. 23,400 records. Misrepresentation suggests deliberate concealment. WHO RECEIVED \u2014 Personal Yahoo email. PCI DSS breach + fraud (disguised filenames) + multiple sender risk signals = Critical."},
+
+  {n:9,title:"Payment Processing API Keys Exfiltration",severity:"critical",industry:"fintech",sender:{name:"Nina Chakraborty",role:"Senior DevOps Engineer",dept:"Platform Engineering",tenure:"2.5 years",location:"San Francisco",risks:["Submitted resignation yesterday","Moving to competing payments platform","Admin access to production infrastructure and secret vaults"]},recipient:{name:"nina.c.work@gmail.com",org:"Personal Gmail",rel:"Personal email"},email:{from:"nina.chakraborty@rapidpay.com",to:"nina.c.work@gmail.com",date:"Wednesday, Feb 19, 2026, 8:15 AM",subject:"Infrastructure docs for handover",body:"Putting together handover documentation. Here are the infrastructure configs I have been maintaining:\n\nProduction Stripe Keys:\n  sk_live_51Hx...dKjP (payment processing)\n  rk_live_51Hx...mN7q (restricted, refunds only)\n\nAWS IAM:\n  Access Key: AKIA4MTWSI...\n  Secret: wJalrXUtnFE...\n  Region: us-east-1, eu-west-1\n\nDatabase:\n  Host: prod-db-cluster.us-east-1.rds.amazonaws.com\n  User: app_service / Pass: Kj$8mP2nQ\n\nVault Root Token: hvs.CAESIJx7ZB...\nSSL Certs: Located in /etc/ssl/private/ (including .key files)\n\nAll production systems I manage. Make sure the next person has these before my access is revoked."},analysis:"WHO \u2014 Departing DevOps engineer with admin access, day 1 of departure window, going to competitor. WHAT \u2014 Production credentials controlling payment processing, cloud infrastructure, and secrets. Compromised keys could enable unauthorized transactions or sabotage. WHO RECEIVED \u2014 Personal Gmail. Requires immediate credential rotation and access revocation."},
+
+  {n:10,title:"Regulatory Examination Response Leaked to Media",severity:"critical",industry:"banking",sender:{name:"Catherine Holt",role:"Chief Compliance Officer",dept:"Legal & Compliance",tenure:"7 years",location:"Charlotte",risks:["Conflict with CEO over compliance findings","Board member pressured her to 'be more flexible'","Bypassing all internal escalation channels"]},recipient:{name:"Martin Kressel",org:"Financial Times (journalist)",rel:"No prior contact. Verified media outlet."},email:{from:"catherine.holt@atlasbank.com",to:"martin.kressel@ft.com",date:"Friday, Feb 14, 2026, 7:08 PM",subject:"Information you should see",body:"Mr. Kressel,\n\nI am writing because I believe the public has a right to know about significant compliance deficiencies at Atlas Bank that senior leadership is attempting to conceal from regulators.\n\nBelow is a comparison of what we actually found versus what was submitted to the OCC's consent order findings, including the sections that the CEO instructed me to remove before submission. The removed sections detail material weaknesses in our BSA/AML program that affect approximately 14,000 customer accounts.\n\nI am prepared to provide additional documentation if needed.\n\nRegards,\nA concerned employee"},analysis:"WHO \u2014 CCO with legitimate grievance about regulatory concealment, but going directly to media instead of OCC whistleblower program. WHAT \u2014 Active regulatory examination documents and evidence of regulatory fraud. Privileged, regulatory confidential. WHO RECEIVED \u2014 FT journalist. Media disclosure could trigger bank run risk. Legal must address both the leak and the underlying compliance concealment."},
+
+  {n:11,title:"UHNW Client Portfolio to Personal Device",severity:"critical",industry:"banking",sender:{name:"Amanda Torres",role:"Private Banking Relationship Manager",dept:"Wealth Management",tenure:"6 years",location:"Miami",risks:["Resignation effective in 10 days","Rumored to join rival private bank","Manages 67 UHNW clients, $4.2B AUM"]},recipient:{name:"amanda.torres.private@icloud.com",org:"Personal iCloud",rel:"Personal email"},email:{from:"amanda.torres@premierwealth.com",to:"amanda.torres.private@icloud.com",date:"Monday, Feb 17, 2026, 9:12 PM",subject:"Client notes",body:"Quick reference notes on my client book:\n\nHarrison Family Office - $340M AUM, reviewing alternatives after our fee increase. Anniversary dinner April 12.\nOsei Trust - $275M, 3rd gen wealth transfer in progress. Patriarch (82) prefers bonds, son wants crypto allocation.\nChen Holdings - $410M, IPO of subsidiary planned Q3. Tax-loss harvesting opportunity in the PE portfolio.\nBlackwell Group - $180M, NDA with competitor bank (I saw the pitch deck). Retention risk HIGH.\nTorres Family - $295M, relocating to Florida, needs trust restructuring.\nKim Ventures - $198M, recently divorced, assets being re-titled.\nPatel Industries - $520M, patriarch in declining health, succession planning urgent.\n\n67 UHNW clients total, $4.2B AUM. Full details for each: net worth, investment allocations, risk profiles, liquidity events, estate plans, and personal relationship notes."},analysis:"WHO \u2014 Departing RM with $4.2B AUM, likely joining competitor. In wealth management, the relationship IS the asset. WHAT \u2014 Complete UHNW client profiles including net worth and personal relationship notes. Reg S-P protected. WHO RECEIVED \u2014 Personal iCloud. Classic wealth management departure play: take the client book. Board-level event given AUM at risk."},
+
+  {n:12,title:"Credit Risk Model with Customer SSNs",severity:"critical",industry:"banking",sender:{name:"Derek Okafor",role:"Credit Risk Analyst",dept:"Risk Management",tenure:"3 years",location:"Chicago",risks:["Recently published academic paper on credit scoring","In discussions with fintech startup about consulting (detected via calendar)"]},recipient:{name:"Dr. Martinez",org:"University (academic collaboration)",rel:"Former advisor, academic research collaboration"},email:{from:"derek.okafor@firstnationalbank.com",to:"derek.okafor@university-research.edu",date:"Thursday, Feb 13, 2026, 3:45 PM",subject:"Dataset for research collaboration",body:"Dr. Martinez,\n\nAs discussed, here is the dataset for our joint research paper on credit scoring optimization. I've included the model parameters and a sample dataset for validation.\n\nLooking forward to our collaboration.\n\nBest,\nDerek"},analysis:"WHO \u2014 Credit analyst with academic ambitions and consulting conflict. WHAT \u2014 Proprietary credit model (core bank IP) AND 45,000 un-anonymized customer records with SSNs. Multiple regulatory violations (GLBA, state breach notification). WHO RECEIVED \u2014 University (academic intent, but PII must never leave without anonymization). Reportable data breach."},
+
+  {n:13,title:"Client Loan Portfolio Forwarded to Competitor",severity:"high",industry:"banking",sender:{name:"Steven Blackwell",role:"Commercial Lending Officer",dept:"Commercial Banking",tenure:"8 years",location:"Portland",risks:["Spouse relocating to competitor bank's HQ city","Performance review noted 'exploring external opportunities'","Sending data to former colleague at competitor"]},recipient:{name:"Patricia Nowak",org:"Pacific Commerce Bank (competitor)",rel:"Former colleague, left 2 years ago"},email:{from:"steven.blackwell@meridianbank.com",to:"patricia.nowak@pacificcommerce.com",date:"Wednesday, Feb 19, 2026, 12:34 PM",subject:"Lunch next week?",body:"Hi Pat,\n\nGreat to hear about the new role. Would love to catch up over lunch next week \u2014 been too long!\n\nBy the way, I pulled together that market overview you asked about. Some interesting trends in the mid-market lending space around here. Top accounts by exposure:\n- Henderson Industries: $12.4M term loan, 4.2% fixed, matures Dec 2027, 1.35x DSCR\n- TechNova Corp: $8.7M revolver, SOFR+225bps, covenant-lite\n- Pacific Timber: $6.1M equipment finance, cross-collateralized\n- Greenfield Medical: $15.2M construction loan, 60% drawn\n\n84 commercial clients total with loan sizes, rates, maturity dates, and covenant structures.\n\nBest,\nSteve"},analysis:"WHO \u2014 Senior lending officer with indirect departure signals, sending to former colleague at competitor. WHAT \u2014 Commercial loan portfolio disguised as market overview. Enough data for competitor to systematically poach clients. WHO RECEIVED \u2014 Competitor bank employee who specifically requested this. High because commercial loan data is less regulated than consumer data, but the competitive intelligence value is significant."},
+
+  {n:14,title:"CRM Bulk Export by Departing Sales Rep",severity:"high",industry:"fintech",sender:{name:"Ryan Torres",role:"Senior Sales Representative",dept:"Sales",tenure:"4 years",location:"Chicago",risks:["Resignation effective next Friday","Moving to CompetitorCorp","Exported 4,200 accounts (territory is only 200)","140x normal daily export volume"]},recipient:{name:"ryan.torres.work@gmail.com",org:"Personal Gmail",rel:"Personal email"},email:{from:"ryan.torres@neofinance.io",to:"ryan.torres.work@gmail.com",date:"Wednesday, Feb 12, 2026, 6:30 AM",subject:"Contact backup",body:"Backing up my contacts before my last day. Full export from the CRM:\n\nRecords: 4,200 (my territory is only 200, but grabbed everything for reference)\nFields: company_name, primary_contact, email, phone, contract_value, renewal_date, deal_stage, pricing_tier, account_notes\n\nSome key accounts:\n- Acme Corp: $340K/yr, renews March, considering CompetitorCorp\n- TechVault: $180K/yr, expansion opportunity, CTO is the decision maker\n- DataFlow Inc: $520K/yr, at-risk, pricing complaint logged last week\n- NovaStar: $410K/yr, just signed 2-year extension at 15% discount"},analysis:"WHO \u2014 Confirmed departing rep going to named competitor, one week before last day. WHAT \u2014 Complete CRM export far exceeding territory (4,200 vs 200 assigned), including pricing and renewal dates (trade secrets). WHO RECEIVED \u2014 Personal Gmail. High rather than Critical because data is commercial (not regulated PII/financial), and export used standard CRM tools."},
+
+  {n:15,title:"Customer PII Exported via API Automation",severity:"high",industry:"fintech",sender:{name:"Dana Anderson",role:"Data Engineer",dept:"Analytics",tenure:"3 years",location:"Austin",risks:["Used service account credentials (audit trail evasion)","420% above normal API volume","Off-hours extraction","No open project requiring this volume"]},recipient:{name:"dana.anderson@rapidpay.com",org:"Self-email (staging)",rel:"Self-email"},email:{from:"dana.anderson@rapidpay.com",to:"dana.anderson@rapidpay.com",date:"Wednesday, Feb 19, 2026, 4:35 AM",subject:"Analytics pipeline output - Feb batch",body:"Saving the February batch processing output for the cross-reference project.\n\nBatch summary:\n- 8,400 customer records extracted\n- Fields: full_name, email, phone, purchase_history_12mo, payment_method_type, last_four_digits, account_balance\n- Source: Production customer API (used svc_analytics service account)\n- Extraction window: 3:15 AM - 4:35 AM\n- Format: JSON compressed\n\nSample record:\n{"name": "Sarah Mitchell", "email": "s.mitchell@email.com", "phone": "+1-555-0147", "balance": 12847.50, "payment": "visa_4242", "purchases": 47}\n\nWill cross-reference with the segmentation model tomorrow."},analysis:"WHO \u2014 Data engineer using service account (potential audit evasion), off-hours, massive volume anomaly. WHAT \u2014 8,400 PII records including payment data. API extraction bypasses file monitoring. WHO RECEIVED \u2014 Self-email (still within company systems). High rather than Critical because data stayed within corporate email. But service account usage and timing require investigation."},
+
+  {n:16,title:"CRM Data Synced to Personal Cloud Storage",severity:"high",industry:"fintech",sender:{name:"Kevin Martinez",role:"Account Manager",dept:"Sales",tenure:"3.5 years",location:"Los Angeles",risks:["Configured unauthorized third-party integration","Personal Dropbox as destination","Continuous sync (not one-time)"]},recipient:{name:"Personal Dropbox (via Zapier)",org:"Personal cloud storage",rel:"Unauthorized personal storage"},email:{from:"kevin.martinez@swiftpay.com",to:"jennifer.walsh@swiftpay.com",date:"Wednesday, Feb 19, 2026, 2:00 AM",subject:"FW: My CRM workflow setup",body:"Hey Jen,\n\nQuick FYI \u2014 I set up a Zapier automation to keep my deal pipeline synced to Dropbox so I can review opportunities on my iPad during client meetings. Works great for prep. Let me know if you want me to set one up for the team.\n\n---------- Forwarded message ----------\nFrom: notifications@zapier.com\nSubject: Your Zap is running: Salesforce \u2192 Dropbox\n'New/Updated Opportunity in Salesforce \u2192 Create File in Dropbox' has been running successfully. 847 files created in the last 7 days."},analysis:"WHO \u2014 Account manager, no malicious intent (actively told his manager!), but created unauthorized data flow. WHAT \u2014 CRM opportunities continuously synced to unmanaged personal storage. 847 files. WHO RECEIVED \u2014 Personal Dropbox (no enterprise controls, no DLP). High because persistent unmonitored data channel. The lack of malicious intent means coaching should accompany enforcement."},
+
+  {n:17,title:"SAR Data Shared Beyond Contract Scope",severity:"high",industry:"banking",sender:{name:"Michelle DeSilva",role:"BSA Officer",dept:"Compliance",tenure:"5 years",location:"Boston",risks:["Under pressure to clear regulatory backlog","Working 60+ hour weeks","Bypassing contract scope for operational efficiency"]},recipient:{name:"Sarah Wright",org:"RegTech Solutions (contracted AML advisory)",rel:"Active contract, but SAR data NOT in scope"},email:{from:"michelle.desilva@unionfinancial.com",to:"sarah.wright@regtechsolutions.com",date:"Monday, Feb 17, 2026, 8:15 PM",subject:"Cases for review - priority batch",body:"Sarah,\n\nWe're drowning in the backlog and need your team's help prioritizing. Here is the current queue \u2014 can your analysts do a first-pass triage so we can focus on the most urgent filings?\n\nI know this isn't in the standard SOW but we'll sort out the paperwork with procurement next week. Need to get these moving.\n\nThanks,\nMichelle"},analysis:"WHO \u2014 BSA Officer under operational pressure, well-intentioned but bypassing contract scope. WHAT \u2014 Pending SAR narratives (federally protected under BSA). WHO RECEIVED \u2014 Contracted firm with existing relationship (some trust) but outside contract scope. High rather than Critical because recipient is a trusted regulated entity, intent is operational, but SAR confidentiality violations are still serious."},
+
+  {n:18,title:"Internal Audit Findings to Board Member's Personal Email",severity:"high",industry:"banking",sender:{name:"Gregory Tran",role:"Internal Audit Director",dept:"Internal Audit",tenure:"4 years",location:"Charlotte",risks:["Bypassing board communication portal","Concern about executive interference (governance breakdown)"]},recipient:{name:"Margaret Chen",org:"Board of Directors (Audit Committee Chair)",rel:"Legitimate recipient, but using personal Gmail instead of board portal"},email:{from:"gregory.tran@atlasbank.com",to:"m.chen.personal@gmail.com",date:"Tuesday, Feb 18, 2026, 5:47 PM",subject:"Audit findings - for your eyes only",body:"Margaret,\n\nI wanted you to see these findings before the formal committee presentation next week. I'm concerned the executive team may try to downplay the severity. The technology infrastructure audit found 14 critical control deficiencies.\n\nI'm sending this to your personal email because I want to ensure it reaches you without going through executive assistants.\n\nPlease treat as strictly confidential.\n\nGreg"},analysis:"WHO \u2014 Internal Audit Director, legitimate sender, but bypassing channels due to governance concern. WHAT \u2014 Draft audit findings including a 90-day unresolved data breach. WHO RECEIVED \u2014 Audit Committee Chair (legitimate) via personal Gmail (unmanaged). High because relationship is legitimate, but sending to personal email creates security gap. The underlying breach finding may itself require regulatory reporting."},
+
+  {n:19,title:"Payment Fraud Investigation Files Shared Beyond Scope",severity:"high",industry:"fintech",sender:{name:"Yuki Tanaka",role:"Fraud Operations Lead",dept:"Trust & Safety",tenure:"4 years",location:"San Francisco",risks:["Recently presented at industry conference on fraud patterns","Well-intentioned but sharing beyond vendor scope"]},recipient:{name:"Daniel Ko",org:"FinGuard Analytics (fraud detection vendor)",rel:"Active vendor, NDA in place, but investigation data NOT in scope"},email:{from:"yuki.tanaka@paynext.io",to:"daniel.ko@finguard-analytics.com",date:"Thursday, Feb 13, 2026, 2:30 PM",subject:"Fraud pattern samples for model improvement",body:"Dan,\n\nHere are some real-world examples from our recent investigations. These should help your team improve the detection models for our use case. I've included the transaction details and outcomes so your ML team can use them for training.\n\nThanks for the quick turnaround on the last model update.\n\nYuki"},analysis:"WHO \u2014 Fraud Ops Lead, legitimate vendor relationship, well-intentioned (improving detection). WHAT \u2014 Active fraud investigation data including cases under law enforcement referral. Sharing could compromise ongoing cases. WHO RECEIVED \u2014 Active vendor with NDA (some trust), but outside contractual scope. High because active investigations under law enforcement referral have strict handling requirements."},
+
+  {n:20,title:"Merger Integration Plan via Encrypted Messaging",severity:"high",industry:"fintech",sender:{name:"Robert Zhang",role:"VP of Strategy",dept:"Corporate Development",tenure:"5 years",location:"San Francisco",risks:["Just returned from CEO/board meeting","Known relationship with TechCrunch journalist covering fintech M&A","Using Signal (deliberately opaque channel)"]},recipient:{name:"robert.zhang.private@signal.me",org:"Signal messaging bridge (encrypted)",rel:"Personal encrypted channel"},email:{from:"robert.zhang@rapidpay.com",to:"robert.zhang.private@signal.me",date:"Wednesday, Feb 19, 2026, 6:45 PM",subject:"Notes from today's meeting",body:"Sending myself the notes from today's strategy session.\n\nBoard meeting key decisions:\n- Acquisition of PayFlow Technologies approved: $175M cash + stock\n- Target close date: March 15 announcement, April 30 regulatory filing\n- Integration plan: 18 months, 3 phases\n- PayFlow engineering team: 40% reduction planned (keep top 5 with $2M retention packages each)\n- CEO/CFO of PayFlow: termination at close, 12-month severance\n- Code name: Project Atlas (board confidential, pre-announcement MNPI)\n\nNeed to review the integration timeline before Friday's follow-up with the board."},analysis:"WHO \u2014 VP Strategy with journalist relationship in fintech M&A space. WHAT \u2014 Board-confidential acquisition: target, price, timeline, personnel decisions, announcement date. MNPI. WHO RECEIVED \u2014 Signal (encrypted, deliberately opaque). High rather than Critical because 'sending to self' could be personal backup. If Signal address connects to anyone other than Robert, escalate to Critical immediately."},
+
+  {n:21,title:"Product Roadmap in Public Teams Channel",severity:"medium",industry:"fintech",sender:{name:"Priya Desai",role:"Product Manager",dept:"Product",tenure:"3 years",location:"Seattle",risks:["None. Likely accidental \u2014 similar channel names."]},recipient:{name:"Product-Updates channel",org:"Internal Teams (340 members, 12 external guests)",rel:"Internal channel with external partner guests"},email:{from:"priya.desai@neofinance.io",to:"Product-Updates channel (340 members, 12 external)",date:"Wednesday, Feb 19, 2026, 12:05 PM",subject:"[Teams] 2026 Product Roadmap - Q2 Planning",body:"Hey team! Here's the finalized 2026 roadmap for Q2 planning discussions. Please review before Thursday's meeting.\n\nLet me know if you have questions."},analysis:"WHO \u2014 Product Manager, role-appropriate, no risk factors. WHAT \u2014 Confidential roadmap shared to channel with external guests. AXIA sees intent is clearly benign (accidental wrong channel). WHO RECEIVED \u2014 328 internal (OK) + 12 external partner guests (not OK). Medium because accidental, limited external exposure, existing partners. Coach on channel selection."},
+
+  {n:22,title:"Engineering Oversharing Pattern (6 Users)",severity:"medium",industry:"fintech",sender:{name:"Engineering Team (6 individuals)",role:"Various Engineers",dept:"Engineering (3 teams)",tenure:"Various",location:"Multiple",risks:["Team-wide pattern suggests process gap","All shares to same 3 external domains","New contractor onboarding may have caused confusion"]},recipient:{name:"cloudintegrations.io team",org:"Potential new vendor (not yet on approved list)",rel:"Same 3 unapproved domains across all 6 engineers"},email:{from:"james.liu@swiftpay.com",to:"dev-team@cloudintegrations.io",date:"Tuesday, Feb 18, 2026, 3:22 PM",subject:"API specs for integration",body:"Hi CloudIntegrations team,\n\nHere are the API specifications and architecture diagrams you need for the payment gateway integration:\n\n- REST API spec (OpenAPI 3.1): All endpoints, request/response schemas, error codes\n- System architecture diagram: Microservice topology, message queues, database connections\n- Data flow diagrams: Payment processing pipeline, PCI scope boundary\n- Authentication flow: OAuth2 implementation details, token lifecycle\n\nLet me know if you need the webhook integration docs too.\n\nBest,\nJames"},analysis:"WHO \u2014 6 engineers across 3 teams, pattern = process gap not malice. WHAT \u2014 Technical docs (API specs, architecture). Reveals system design but no customer data. WHO RECEIVED \u2014 Same 3 domains consistently = likely a legitimate new project partner not yet onboarded. Medium because pattern is explainable, content is technical not sensitive, team training is the fix."},
+
+  {n:23,title:"Compensation Data Export for Benchmarking",severity:"medium",industry:"banking",sender:{name:"Rachel Green",role:"HR Analyst",dept:"Human Resources",tenure:"4.5 years",location:"Denver",risks:["Skipped required approval workflow","Data not anonymized before export"]},recipient:{name:"CompBench Consulting",org:"Compensation benchmarking firm",rel:"Active engagement, NDA signed, VP HR approved engagement but not specific export"},email:{from:"rachel.green@globalbank.com",to:"analytics@compbench-consulting.com",date:"Thursday, Feb 13, 2026, 10:15 AM",subject:"Compensation data for market analysis",body:"Hi CompBench team,\n\nHere's the compensation dataset for our market competitiveness study. Please handle per our NDA terms. I need the benchmark report by end of month for our annual review cycle.\n\nThanks,\nRachel"},analysis:"WHO \u2014 HR Analyst, role-appropriate access, legitimate purpose. WHAT \u2014 Compensation data with names (not anonymized). 842 records. WHO RECEIVED \u2014 Contracted firm with NDA (authorized at business level). Medium because purpose is legitimate, recipient is authorized, but approval was skipped and data wasn't anonymized. Coach on workflow and anonymization."},
+
+  {n:24,title:"Account Statements Emailed to Wrong Client",severity:"medium",industry:"banking",sender:{name:"Laura Simmons",role:"Client Services Associate",dept:"Retail Banking",tenure:"2 years",location:"Dallas",risks:["None. Email autocomplete error."]},recipient:{name:"Michael Harrison (wrong recipient)",org:"Existing bank customer (different client)",rel:"Another bank customer \u2014 NOT the intended recipient"},email:{from:"laura.simmons@centraltrustbank.com",to:"m.harrison@email.com",date:"Monday, Feb 17, 2026, 2:45 PM",subject:"Your February account statements - Henderson Industries",body:"Dear Mr. Henderson,\n\nHere are your February account statements as requested.\n\nHenderson Industries - Business Checking (#****4821)\n  Opening Balance: $847,291.34\n  Deposits: $1,247,500.00 (includes payroll funding $312,000)\n  Withdrawals: $983,147.22\n  Closing Balance: $1,111,644.12\n\nHenderson Industries - Business Savings (#****7733)\n  Balance: $2,340,000.00\n  Interest Earned: $4,875.00\n\nKey transactions this month:\n  02/03 - Vendor payment, Acme Supply Co: -$127,400.00\n  02/07 - Payroll disbursement (47 employees): -$312,000.00\n  02/14 - Client payment, Pacific Retail: +$485,000.00\n\nIf you have any questions about the figures, please don't hesitate to reach out.\n\nBest regards,\nLaura Simmons\nClient Services Associate\nCentral Trust Bank"},analysis:"WHO \u2014 Junior associate, clear human error (greeting says Henderson but sent to Harrison). WHAT \u2014 Financial statements (GLBA protected) but limited scope. WHO RECEIVED \u2014 Another bank customer (lower risk than unknown external). Medium because it's a misdirected email (human error), data is financial but limited, recipient is a known customer. Contact wrong recipient for deletion. Potentially reportable under breach notification laws."},
+
+  {n:25,title:"Vendor Rate Sheet Shared with Competing Vendor",severity:"medium",industry:"fintech",sender:{name:"Alex Rivera",role:"Procurement Manager",dept:"Operations",tenure:"3 years",location:"Austin",risks:["Recently began vendor negotiation cycle","Sharing confidential vendor pricing with competitor"]},recipient:{name:"Lisa Chang",org:"DataStream Technologies (competing vendor)",rel:"Active RFP participant bidding against incumbent"},email:{from:"alex.rivera@rapidpay.com",to:"lisa.chang@datastream-tech.com",date:"Tuesday, Feb 18, 2026, 11:30 AM",subject:"RFP context - current pricing structure",body:"Lisa,\n\nTo help you prepare a competitive proposal, I'm sharing our current vendor rate sheet so you can benchmark your pricing accordingly. This should help you understand what we're currently paying and where we'd like to see improvement.\n\nLooking forward to your proposal.\n\nAlex"},analysis:"WHO \u2014 Procurement manager, legitimate negotiation context. WHAT \u2014 Incumbent vendor's confidential rate sheet shared with their competitor. Likely violates NDA with incumbent. WHO RECEIVED \u2014 Competing vendor in active RFP. Medium because intent is cost optimization, data is vendor pricing (not customer data), but NDA violation is concerning. Coach on RFP information sharing practices."},
+
+  {n:26,title:"Underwriting Criteria Shared on Industry Forum",severity:"medium",industry:"banking",sender:{name:"Patricia Wong",role:"Senior Underwriter",dept:"Credit Risk",tenure:"7 years",location:"San Francisco",risks:["Active in industry associations","Previously presented at conferences with approval"]},recipient:{name:"Commercial Lending Forum",org:"Industry mailing list (semi-public)",rel:"Industry professional association"},email:{from:"patricia.wong@firstnationalbank.com",to:"commercial-lending-forum@bankingprofessionals.org",date:"Wednesday, Feb 19, 2026, 9:15 AM",subject:"RE: [Forum] Best practices for CRE underwriting in 2026",body:"Great discussion everyone. At First National, we've found success with these criteria for CRE loans:\n\n- LTV caps at 75% for office, 80% for multifamily\n- DSCR minimum 1.25x (we moved from 1.20x after the 2024 adjustments)\n- Sponsor net worth requirement: 25% of loan amount minimum\n- Interest rate stress test: +200bps from base rate\n- Cap rate floor assumptions: 6.5% office, 5.0% multifamily\n\nWe also recently tightened our concentration limits \u2014 no more than 15% of total CRE exposure to any single submarket. Happy to discuss further offline.\n\nPat"},analysis:"WHO \u2014 Senior underwriter, industry networking, no malicious intent. WHAT \u2014 Specific underwriting thresholds and recent policy changes posted to semi-public forum. Competitors can map the bank's credit appetite. WHO RECEIVED \u2014 Industry forum including competitor professionals. Medium because industry sharing is common, but specific thresholds (LTV caps, concentration limits) are proprietary. Coach on shareable best practices vs. proprietary parameters."},
+
+  {n:27,title:"Internal Rate Card Shared with Client",severity:"medium",industry:"fintech",sender:{name:"Aisha Patel",role:"Business Development Manager",dept:"Partnerships",tenure:"2 years",location:"London",risks:["New to role","Eager to close deal","Shared INTERNAL card instead of customer-facing version"]},recipient:{name:"Carlos Mendez",org:"RetailPay (potential enterprise client)",rel:"Active sales cycle, proposal stage"},email:{from:"aisha.patel@rapidpay.com",to:"carlos.mendez@retailpay.com",date:"Tuesday, Feb 18, 2026, 4:30 PM",subject:"Pricing details for your review",body:"Hi Carlos,\n\nAs promised, here's our full pricing breakdown. I want to be fully transparent so we can find the right fit for RetailPay.\n\nLet me know if you'd like to discuss the enterprise tier options.\n\nBest,\nAisha"},analysis:"WHO \u2014 Junior BD, new to role, no malicious intent. WHAT \u2014 Internal rate card revealing margin structure and negotiation limits. NOT the customer-facing version. WHO RECEIVED \u2014 Prospective client in active negotiation. Medium because intent is transparency, data is commercial (not PII), damage is financial (margin erosion). Coach on internal vs. customer-facing documents."},
+
+  {n:28,title:"Mortgage Application Data for Marketing (Un-anonymized)",severity:"medium",industry:"banking",sender:{name:"David Kim",role:"Marketing Analyst",dept:"Marketing",tenure:"3 years",location:"Atlanta",risks:["Failed to anonymize data before export","Legitimate project but poor data handling"]},recipient:{name:"AdTarget Analytics",org:"Marketing analytics vendor",rel:"Active vendor, likely has DPA"},email:{from:"david.kim@premierwealth.com",to:"insights@adtarget-analytics.com",date:"Monday, Feb 17, 2026, 10:00 AM",subject:"Customer segmentation data for targeting model",body:"Hi AdTarget team,\n\nHere's the dataset for building our mortgage prospect targeting model. We need the segments ready for the spring campaign launch in March.\n\nThanks,\nDavid"},analysis:"WHO \u2014 Marketing analyst, legitimate project, no risk factors. WHAT \u2014 Mortgage data with PII (GLBA + fair lending implications). Failed to anonymize. WHO RECEIVED \u2014 Marketing vendor (legitimate relationship). Medium because project is legitimate, vendor exists, but anonymization failure creates privacy and fair lending risk. Retrieve un-anonymized file, send properly anonymized version."},
+
+  {n:29,title:"Board Minutes Sent to Conflicted Members",severity:"medium",industry:"banking",sender:{name:"Elena Vasquez",role:"Corporate Secretary",dept:"Legal & Governance",tenure:"6 years",location:"New York",risks:["None. Rushing to meet filing deadline."]},recipient:{name:"Board Distribution List",org:"Board of Directors (includes 3 recused members)",rel:"Mostly legitimate, but 3 members recused from executive session"},email:{from:"elena.vasquez@atlasbank.com",to:"board-distribution@atlasbank.com",date:"Friday, Feb 14, 2026, 4:55 PM",subject:"February Board Meeting Minutes - DRAFT for review",body:"Dear Board Members,\n\nPlease find attached the draft minutes from last Thursday's board meeting, including the executive session. I need your review comments by Wednesday for filing.\n\nKind regards,\nElena"},analysis:"WHO \u2014 Corporate Secretary, legitimate role, rushing for deadline. WHAT \u2014 Board minutes with executive session content sent to conflicted members. Governance breach. WHO RECEIVED \u2014 Board members (mostly legitimate) but 3 were recused due to conflicts. Medium because distribution is mostly correct, intent is administrative, all recipients are trusted insiders. Recall and redistribute without executive session sections to conflicted members."},
+
+  {n:30,title:"Transaction Monitoring Rules Shared via Email",severity:"medium",industry:"banking",sender:{name:"Ahmed Hassan",role:"Financial Crime Analyst",dept:"AML/CFT",tenure:"2 years",location:"London",risks:["Shared via regular email instead of secure channel","Complete rule set exceeds what's needed for migration"]},recipient:{name:"TM Solutions implementation team",org:"Transaction monitoring vendor",rel:"Selected vendor, contract signed, implementation in progress"},email:{from:"ahmed.hassan@unionfinancial.com",to:"implementation@tm-solutions.com",date:"Wednesday, Feb 19, 2026, 11:45 AM",subject:"Current rule set for migration",body:"TM Solutions team,\n\nHere's our complete current transaction monitoring rule set for migration to your platform. This includes all detection scenarios, thresholds, and tuning parameters from our existing system.\n\nLet me know if you need the historical alert data too for model calibration.\n\nAhmed"},analysis:"WHO \u2014 Financial crime analyst, legitimate project context. WHAT \u2014 Complete AML detection rules. If leaked, bad actors could structure transactions to avoid detection. WHO RECEIVED \u2014 Contracted vendor (legitimate, NDA), but via email instead of secure channel. Medium because vendor is authorized, project is real, but TM rules should use encrypted channels and minimum necessary data sharing principle."},
+
+  {n:31,title:"Customer Contact List for Event Planning",severity:"low",industry:"fintech",sender:{name:"Sarah Chen",role:"Events Coordinator",dept:"Marketing",tenure:"2 years",location:"Chicago",risks:["None."]},recipient:{name:"Premier Events Group",org:"Contracted event planner",rel:"Active vendor, NDA/DPA in place"},email:{from:"sarah.chen@swiftpay.com",to:"planning@premierevents.com",date:"Monday, Feb 17, 2026, 9:30 AM",subject:"Guest list for April client event",body:"Hi Premier Events team,\n\nHere's the guest list for our April client appreciation dinner. Please use this for name badges, seating arrangements, and catering dietary preferences.\n\nThanks,\nSarah"},analysis:"WHO \u2014 Events coordinator, role-appropriate, no risk factors. WHAT \u2014 Client names and companies for event logistics. Minimal PII, no financial data. WHO RECEIVED \u2014 Contracted vendor with proper agreements. Low because purpose is legitimate, data is minimal, vendor is authorized. Auto-resolve."},
+
+  {n:32,title:"Open Source Code Contribution (Pre-Approved)",severity:"low",industry:"fintech",sender:{name:"Alex Thompson",role:"Staff Engineer",dept:"Engineering",tenure:"6 years",location:"Seattle",risks:["None. Designated OSS maintainer."]},recipient:{name:"Public GitHub repository",org:"company-utils/logging-framework",rel:"Pre-approved open source project"},email:{from:"alex.thompson@rapidpay.com",to:"opensource-review@rapidpay.com",date:"Wednesday, Feb 12, 2026, 3:40 PM",subject:"FW: [GitHub] Push to company-utils/logging-framework",body:"Team,\n\nFYI \u2014 pushed the latest logging framework updates to the public repo. Changes include the retry logic improvements we discussed in last week's architecture review.\n\nAll changes are within the pre-approved OSS scope (Apache 2.0, cleared by Legal in November).\n\nAlex"},analysis:"WHO \u2014 Designated OSS maintainer, clean record. WHAT \u2014 Pre-approved logging utility, not core IP. WHO RECEIVED \u2014 Public repo (pre-approved). Low because pre-approved by Legal, utility framework (not core IP), designated maintainer. Auto-verify and close."},
+
+  {n:33,title:"NDA Sent to Wrong Email Address",severity:"low",industry:"fintech",sender:{name:"Maria Santos",role:"Legal Assistant",dept:"Legal",tenure:"4 years",location:"Chicago",risks:["None. Email autocomplete error (.net vs .com)."]},recipient:{name:"john.smith@acme-corp.net (WRONG)",org:"Wrong domain \u2014 should be .com",rel:"Wrong recipient due to autocomplete"},email:{from:"maria.santos@neofinance.io",to:"john.smith@acme-corp.net",date:"Tuesday, Feb 11, 2026, 11:00 AM",subject:"NDA for review and signature - NeoFinance & Acme Corp",body:"Dear Mr. Smith,\n\nPlease find attached the mutual NDA for the proposed partnership between NeoFinance and Acme Corp. We'd appreciate your review and signature by end of week.\n\nKind regards,\nMaria Santos\nLegal Assistant\nNeoFinance"},analysis:"WHO \u2014 Legal assistant, no risk factors, clear typo. WHAT \u2014 Standard mutual NDA template. Low sensitivity. WHO RECEIVED \u2014 Wrong person at similar domain. Low because content is a standard NDA template, exposure is limited, fix is straightforward. Auto-resolve after deletion confirmation."},
+
+  {n:34,title:"Meeting Recording Shared with Approved Consultant",severity:"low",industry:"banking",sender:{name:"James Wilson",role:"Project Manager",dept:"Operations",tenure:"5.5 years",location:"Boston",risks:["None."]},recipient:{name:"Sarah Martinez",org:"Apex Consulting (contracted)",rel:"Active engagement, NDA signed, assigned to project"},email:{from:"james.wilson@globalbank.com",to:"sarah.martinez@apexconsulting.com",date:"Wednesday, Feb 12, 2026, 2:50 PM",subject:"Last week's project standup recording",body:"Hi Sarah,\n\nHere's the recording from last Thursday's standup since you couldn't attend. Main discussion was the API integration timeline \u2014 starts around minute 15.\n\nSee you at next week's review.\n\nJames"},analysis:"WHO \u2014 Project manager, standard behavior. WHAT \u2014 Operational meeting recording, no sensitive content. WHO RECEIVED \u2014 Authorized consultant assigned to the project. Low because recipient is authorized, content is operational, sharing is role-appropriate. Auto-verify and close."},
+
+  {n:35,title:"Personal Financial Spreadsheet by Bank Employee",severity:"low",industry:"banking",sender:{name:"Rebecca Liu",role:"Wealth Advisor",dept:"Wealth Management",tenure:"5 years",location:"San Francisco",risks:["None. Personal finance during lunch."]},recipient:{name:"rebecca.liu.personal@gmail.com",org:"Personal Gmail",rel:"Personal email"},email:{from:"rebecca.liu@premierwealth.com",to:"rebecca.liu.personal@gmail.com",date:"Tuesday, Feb 18, 2026, 12:15 PM",subject:"Budget spreadsheet",body:"Here is my updated personal budget for 2026:\n\nMonthly Income: $8,200 (after tax)\nRent: $2,400\nCar Payment: $385\nStudent Loans: $620\nGroceries: $500\nUtilities: $180\nRetirement (401k match): $650\nEmergency Fund: $400\nDiscretionary: $1,065\n\nSavings goal: $45,000 by December for house down payment.\nCurrent savings: $28,400.\n\nNo client data here, just my personal finances using the bank's Excel template."},analysis:"WHO \u2014 Wealth advisor, no risk factors. WHAT \u2014 Personal financial plan with NO client data. Uses bank template but content is entirely personal. WHO RECEIVED \u2014 Personal Gmail. Low because content is exclusively personal. DLP would flag 'bank template + financial figures to personal email' but AXIA's judgment recognizes personal data. Auto-resolve. Prime example of judgment over enforcement."},
+
+  {n:36,title:"Published Industry Report Shared with Client",severity:"low",industry:"banking",sender:{name:"Mark Johnson",role:"Relationship Manager",dept:"Commercial Banking",tenure:"8 years",location:"Portland",risks:["None."]},recipient:{name:"David Chen",org:"TechCorp Inc. (existing client)",rel:"Active lending relationship, 4-year client"},email:{from:"mark.johnson@centraltrustbank.com",to:"david.chen@techcorp.com",date:"Wednesday, Feb 19, 2026, 10:30 AM",subject:"Industry report you might find useful",body:"David,\n\nSaw this report from our research team and thought of your expansion plans. Some interesting data on the Southeast market that might help your site selection process.\n\nLet's touch base next week about the credit facility renewal.\n\nMark"},analysis:"WHO \u2014 Senior RM, standard client activity. WHAT \u2014 Published report marked 'For Client Distribution.' No proprietary data. WHO RECEIVED \u2014 Long-standing client. Low because document is designed for sharing, role-appropriate, established relationship. Auto-resolve."},
+
+  {n:37,title:"Regulatory Filing Draft to External Counsel",severity:"low",industry:"banking",sender:{name:"Christine Palmer",role:"Senior Compliance Officer",dept:"Regulatory Compliance",tenure:"6 years",location:"New York",risks:["None."]},recipient:{name:"Robert Kim",org:"Baker & McKenzie (engaged law firm)",rel:"Long-standing external counsel, current engagement letter"},email:{from:"christine.palmer@atlasbank.com",to:"robert.kim@bakermckenzie.com",date:"Monday, Feb 17, 2026, 3:30 PM",subject:"Draft Call Report - Q4 2025 review",body:"Robert,\n\nPlease review the attached draft Call Report before we file with the FDIC next week. Specifically, I'd like your input on the loan loss reserve methodology section \u2014 we made some changes this quarter.\n\nThanks,\nChristine"},analysis:"WHO \u2014 Senior Compliance Officer, standard workflow. WHAT \u2014 Draft Call Report (will be public upon filing). WHO RECEIVED \u2014 Engaged law firm (attorney-client privilege). Low because data will soon be public, recipient is privileged counsel, workflow is standard. Auto-resolve."},
+
+  {n:38,title:"Anonymized Data for Approved Research",severity:"low",industry:"fintech",sender:{name:"Dr. Amara Osei",role:"Data Scientist",dept:"Analytics",tenure:"3 years",location:"San Francisco",risks:["None. Approved collaboration with proper anonymization."]},recipient:{name:"Stanford University research team",org:"Stanford University",rel:"Active collaboration, DPA signed, anonymization protocol approved by Privacy team"},email:{from:"amara.osei@paynext.io",to:"fintech-research@stanford.edu",date:"Thursday, Feb 13, 2026, 2:00 PM",subject:"Anonymized transaction dataset - Q3/Q4",body:"Hi Stanford team,\n\nHere's the anonymized transaction dataset for the financial inclusion research. All data has been through our standard anonymization pipeline (k-anonymity with k=10, as specified in our DPA).\n\nLet me know if the sample size is sufficient for your analysis.\n\nBest,\nAmara"},analysis:"WHO \u2014 Data scientist, approved project. WHAT \u2014 Properly anonymized data (k-anonymity, no PII recoverable). WHO RECEIVED \u2014 University under DPA. Low because properly anonymized, authorized, DPA in place. Auto-verify anonymization standard and close."},
+
+  {n:39,title:"Customer Complaint Forwarded to Product Team",severity:"low",industry:"fintech",sender:{name:"Jason Park",role:"Customer Support Manager",dept:"Customer Experience",tenure:"3 years",location:"Austin",risks:["None."]},recipient:{name:"Product Feedback Team",org:"Internal",rel:"Internal escalation"},email:{from:"jason.park@swiftpay.com",to:"product-feedback@swiftpay.com",date:"Wednesday, Feb 19, 2026, 11:00 AM",subject:"FW: Customer feedback - recurring payment issues",body:"Product team,\n\nForwarding a customer complaint about our recurring payment feature. This is the 4th similar complaint this week \u2014 might indicate a systematic issue.\n\nKey issue: customers report payments failing silently without notification.\n\n---------- Forwarded ----------\nFrom: michael.ross@techstartup.io\nSubject: Recurring payment failures\n\nHi SwiftPay Support,\n\nOur recurring payments have failed 3 times this month with no error notification. We only noticed when our vendor called about unpaid invoices. This is causing serious operational issues.\n\nCan you look into this urgently?\n\nMichael Ross\nCOO, TechStartup.io"},analysis:"WHO \u2014 Support manager, standard escalation. WHAT \u2014 Customer complaint (voluntarily provided to support). WHO RECEIVED \u2014 Internal product team. Low because entirely internal, standard support workflow, customer provided info voluntarily. Auto-resolve."},
+
+  {n:40,title:"Departing Employee Downloads Personal Files Only",severity:"low",industry:"fintech",sender:{name:"Tom Bradley",role:"Marketing Specialist",dept:"Marketing",tenure:"3 years",location:"Denver",risks:["Departing in 2 weeks \u2014 but downloads limited to personal files only"]},recipient:{name:"tom.bradley.personal@gmail.com",org:"Personal Gmail",rel:"Personal email"},email:{from:"tom.bradley@neofinance.io",to:"tom.bradley.personal@gmail.com",date:"Tuesday, Feb 18, 2026, 5:30 PM",subject:"Personal files from work machine",body:"Backing up my personal stuff before my last day. Just the files I need from my work laptop:\n\n- My resume (updated last month)\n- Photos from the team offsite in September\n- Tax documents I had saved on the desktop\n- My performance reviews from the past 3 years (my own reviews as employee)\n- Award certificate from the Q3 innovation challenge\n\nNothing work-related. Just personal files that accumulated over 3 years."},analysis:"WHO \u2014 Departing employee (normally elevates concern). WHAT \u2014 Content analysis confirms genuinely personal files: resume, photos, tax docs, own reviews. No company IP. WHO RECEIVED \u2014 Personal Gmail. Low DESPITE departure flag because content is personal. DLP would flag 'departing employee + personal email' as High. AXIA's judgment correctly identifies harmless content. Prime example of judgment over enforcement."},
+
+  {n:41,title:"Accidental Reply-All with Salary Discussion",severity:"medium",industry:"banking",sender:{name:"Karen Phillips",role:"VP, Human Resources",dept:"HR",tenure:"8 years",location:"Chicago",risks:["Accidental reply-all (not malicious)"]},recipient:{name:"All-Directors distribution list",org:"Internal (32 department directors)",rel:"Internal management \u2014 broader than intended"},email:{from:"karen.phillips@meridianbank.com",to:"All-Directors@meridianbank.com",date:"Monday, Feb 17, 2026, 4:15 PM",subject:"RE: Q2 Hiring Plan",body:"Thanks for the update, Robert. Quick thoughts on the proposed salaries:\n\n- The Trading desk analyst role at $185K base is above our band for L6. I'd recommend $170K max with a sign-on bonus to bridge the gap.\n- The compliance hire at $145K is reasonable given the market.\n- For the VP Risk role, we can go to $240K but I'd need CHRO approval above $225K.\n\nAlso, we should discuss James Morton's promotion \u2014 he's been at band minimum for 18 months and his manager is pushing for an exception. Let's take this offline.\n\nKaren\n\nNOTE: Karen intended to reply only to Robert Chen (Head of Talent Acquisition) but hit Reply All."},analysis:"WHO \u2014 VP HR, accidental reply-all. WHAT \u2014 Salary bands, specific compensation figures, named employee discussion, budget thresholds. WHO RECEIVED \u2014 32 department directors (all internal management, but many shouldn't see cross-department salary details). Medium because exposure is internal and recipients are management-level, but salary information creates equity concerns and the named employee discussion is sensitive."},
+
+  {n:42,title:"Product Screenshots Posted on LinkedIn",severity:"medium",industry:"banking",sender:{name:"Jennifer Obi",role:"Digital Banking Product Manager",dept:"Digital Channels",tenure:"2 years",location:"Atlanta",risks:["Building professional brand on LinkedIn","Screenshots contain internal metrics and system architecture"]},recipient:{name:"LinkedIn public post",org:"Public social media",rel:"Public audience (competitors, threat actors)"},email:{from:"jennifer.obi@centraltrustbank.com",to:"LinkedIn public post",date:"Tuesday, Feb 18, 2026, 8:00 AM",subject:"[LinkedIn] 'Proud of what we're building at Central Trust Bank!'",body:"Proud of what we're building at Central Trust Bank! Our new digital lending platform has cut loan approval times from 5 days to under 4 hours. Here's a peek at the journey we've been on over the past 6 months.\n\n[4 Screenshots: internal dashboard with metrics, system architecture diagram, before/after comparison, UI mockup with visible test account data]"},analysis:"WHO \u2014 Digital PM, professional pride, no malicious intent. WHAT \u2014 Internal metrics, architecture diagram (reveals tech stack), test account data. WHO RECEIVED \u2014 LinkedIn public audience. Medium because intent is professional (not malicious), data is operational (not PII), but architecture reveals security-relevant information. Coach, request removal of architecture screenshots."},
+
+  {n:43,title:"Payroll File Sent to Wrong Department",severity:"medium",industry:"banking",sender:{name:"Wei Chen",role:"Payroll Administrator",dept:"HR Operations",tenure:"4 years",location:"New York",risks:["Misdirected internal email"]},recipient:{name:"Finance Operations team",org:"Internal (wrong department)",rel:"Internal but unauthorized for payroll data"},email:{from:"wei.chen@atlasbank.com",to:"finance-ops@atlasbank.com",date:"Wednesday, Feb 19, 2026, 9:00 AM",subject:"February payroll batch - ready for processing",body:"Team,\n\nFebruary payroll batch is ready for processing. Please review and confirm by 2 PM for the Friday pay run.\n\nThanks,\nWei"},analysis:"WHO \u2014 Payroll admin, routine task, misdirected email. WHAT \u2014 Complete payroll with salary, banking, and partial SSN data. Highly sensitive. WHO RECEIVED \u2014 Finance Ops (internal but unauthorized for payroll). Medium because exposure is internal (lower risk), but 1,247 employees' salary and banking data is significant. Recall email, confirm deletion."},
+
+  {n:44,title:"API Credentials Shared in Slack Channel",severity:"medium",industry:"fintech",sender:{name:"Chris Park",role:"Integration Engineer",dept:"Platform Engineering",tenure:"1.5 years",location:"San Francisco",risks:["Junior engineer, likely doesn't know credential sharing policy"]},recipient:{name:"#dev-integrations Slack channel",org:"Internal (47 members)",rel:"Internal channel, broader than necessary"},email:{from:"chris.park@paynext.io",to:"#dev-integrations (47 members)",date:"Wednesday, Feb 19, 2026, 2:15 PM",subject:"[Slack] Sandbox API keys for Stripe integration",body:"Hey everyone \u2014 for those working on the Stripe integration, here are the sandbox credentials:\n\nAPI Key: sk_test_XXXX_EXAMPLE_NOT_REAL_KEY\nSecret: whsec_5d7aef73e1a8b33c2fe490d56ec7b\nWebhook URL: https://staging.paynext.io/api/webhooks/stripe\n\nThese are sandbox only, NOT production. Let me know if you need help with the integration setup!"},analysis:"WHO \u2014 Junior engineer, helpful intent. WHAT \u2014 API credentials in plaintext Slack. Labeled sandbox but normalizes credential sharing. WHO RECEIVED \u2014 47-member internal channel (broader than needed). Medium because sandbox (lower risk than production), internal, but plaintext credential sharing is a security anti-pattern. Coach on secret management tools, rotate credentials."},
+
+  {n:45,title:"Compliance Training Records to LMS Vendor",severity:"low",industry:"banking",sender:{name:"Nicole Torres",role:"Training Coordinator",dept:"Learning & Development",tenure:"3 years",location:"Dallas",risks:["None."]},recipient:{name:"ComplianceTrack (LMS vendor)",org:"LMS vendor",rel:"Active vendor, DPA in place, annual reporting contract"},email:{from:"nicole.torres@firstnationalbank.com",to:"reporting@compliancetrack.com",date:"Monday, Feb 17, 2026, 11:00 AM",subject:"Q4 2025 training completion data for audit report",body:"Julia,\n\nHere's the Q4 training completion data for the regulatory audit report. Same format as last quarter.\n\nThanks,\nNicole"},analysis:"WHO \u2014 Training coordinator, routine task. WHAT \u2014 Training completion records. Operational data, minimal sensitivity. WHO RECEIVED \u2014 Contracted LMS vendor with DPA. Low because operational, vendor authorized, standard reporting. Auto-verify DPA and close."},
+
+  {n:46,title:"KYC Documents for EDD Review (Internal)",severity:"low",industry:"banking",sender:{name:"Michael Rivera",role:"KYC Analyst",dept:"Client Onboarding",tenure:"2 years",location:"London",risks:["None. Standard workflow."]},recipient:{name:"EDD Review Team",org:"Internal",rel:"Internal team authorized for EDD"},email:{from:"michael.rivera@atlasbank.com",to:"edd-review@atlasbank.com",date:"Wednesday, Feb 19, 2026, 10:00 AM",subject:"EDD package - New corporate account: Horizon Technologies",body:"EDD Team,\n\nPlease find attached the enhanced due diligence package for new corporate account application: Horizon Technologies Ltd (UK).\n\nThe automated screening flagged a partial name match on the beneficial owner. I've included the supporting documentation for your review.\n\nThanks,\nMichael"},analysis:"WHO \u2014 KYC analyst, standard workflow. WHAT \u2014 KYC documents (sensitive but standard EDD process). WHO RECEIVED \u2014 Internal EDD team (authorized). Low because entirely internal, standard regulatory process, authorized recipient. Auto-resolve."},
+
+  {n:47,title:"Branch Performance Report to Regional Manager",severity:"low",industry:"banking",sender:{name:"Amy Foster",role:"Branch Manager",dept:"Retail Banking",tenure:"10 years",location:"Dallas",risks:["None."]},recipient:{name:"Regional Manager (David)",org:"Internal (direct supervisor)",rel:"Direct management reporting"},email:{from:"amy.foster@centraltrustbank.com",to:"regional.manager@centraltrustbank.com",date:"Tuesday, Feb 18, 2026, 4:00 PM",subject:"January branch performance - Westside location",body:"Hi David,\n\nHere's the January performance report for the Westside branch. We exceeded our new account targets by 15% but are slightly behind on mortgage originations.\n\nI'd like to discuss staffing for the spring campaign at our next one-on-one.\n\nAmy"},analysis:"WHO \u2014 Branch manager reporting to supervisor. WHAT \u2014 Aggregated branch metrics, no customer data. WHO RECEIVED \u2014 Direct manager. Low because standard management reporting, no sensitive data, appropriate recipient. Auto-resolve."},
+
+  {n:48,title:"ALCO Materials with Unauthorized BCC to Academic",severity:"medium",industry:"banking",sender:{name:"Daniel Nguyen",role:"Treasury Analyst",dept:"Asset-Liability Management",tenure:"3 years",location:"New York",risks:["BCC'd external academic (former graduate advisor)","ALCO materials reveal interest rate risk position","BCC suggests awareness that sharing might be questioned"]},recipient:{name:"ALCO Members (legitimate) + Prof. Williams (unauthorized BCC)",org:"Internal ALCO + University (unauthorized)",rel:"Internal distribution legitimate; university professor NOT authorized for ALCO data"},email:{from:"daniel.nguyen@meridianbank.com",to:"alco-members@meridianbank.com",bcc:"prof.williams@university-finance.edu",date:"Monday, Feb 17, 2026, 3:00 PM",subject:"Q1 ALCO Materials - Interest Rate Sensitivity & Liquidity Analysis",body:"ALCO Members,\n\nPlease find attached the Q1 materials for Thursday's ALCO meeting. Key highlights:\n\n- NIM compression of 12bps under the +200bps shock scenario\n- Liquidity coverage ratio at 118% (above 100% minimum)\n- Duration gap narrowing from 2.3 years to 1.8 years\n- Proposed hedge strategy for the mortgage portfolio\n\nSee you Thursday.\n\nDaniel\n\n[AXIA NOTE: BCC detected to prof.williams@university-finance.edu \u2014 Daniel's former graduate advisor. Not an authorized recipient.]"},analysis:"WHO \u2014 Treasury analyst with academic relationship, BCC (deliberate concealment). WHAT \u2014 ALCO materials: interest rate risk, liquidity, hedging strategy. Highly sensitive bank strategic information. WHO RECEIVED \u2014 Legitimate ALCO members PLUS unauthorized BCC to university professor. Medium (bordering High) because the BCC to an academic suggests intentional sharing. If professor has financial industry connections, escalate to High."},
+
+  {n:49,title:"Customer Database Migration on Public Shared Drive",severity:"high",industry:"fintech",sender:{name:"Automated (configured by Sam Okafor)",role:"Senior Systems Administrator",dept:"IT Infrastructure",tenure:"N/A (automated)",location:"N/A",risks:["Misconfigured destination path","Unencrypted export","Public shared drive accessible to ALL employees","Sam has been working overtime (configuration error likely)"]},recipient:{name:"Public shared drive (all employees)",org:"Internal but massively over-broad access",rel:"Accessible to hundreds of employees, not just authorized team"},email:{from:"migration-service@paynext.io",to:"sam.okafor@paynext.io",cc:"it-ops@paynext.io",date:"Wednesday, Feb 19, 2026, 3:00 AM",subject:"Migration batch complete - Customer DB export",body:"Migration batch completed successfully.\n\nSource: Production Customer Database (PostgreSQL)\nDestination: \\\\shared-drive\\public\\migrations\\customer_db_export_feb2026\\\nRecords: 847,000 customer records\nStatus: Complete\nDuration: 4h 23m\n\nFile manifest:\n- customers_full.csv (847,000 records)\n- transactions_2025.csv (12.4M records)\n- payment_methods.csv (1.2M records)\n- account_balances.csv (847,000 records)\n\nAll files exported without encryption per migration configuration."},analysis:"WHO \u2014 Automated process misconfigured by overworked admin. WHAT \u2014 Complete customer database: 847K records, payment methods (PCI DSS), unencrypted. WHO RECEIVED \u2014 Public shared drive accessible to ALL employees. High because massive data volume, PCI DSS scope, unencrypted, broadly accessible. Every minute increases exposure. If shared drive has any external access, escalate to Critical immediately."},
+
+  {n:50,title:"Vendor Contract Terms Shared with Board Candidate",severity:"medium",industry:"fintech",sender:{name:"Helen Park",role:"General Counsel",dept:"Legal",tenure:"5 years",location:"San Francisco",risks:["Board candidate not yet officially appointed","Vendor contract contains exclusivity and pricing terms","Sharing for legitimate due diligence but premature"]},recipient:{name:"James Morton",org:"Board candidate (not yet appointed)",rel:"Final-stage board candidate, confidentiality agreement signed but board appointment pending"},email:{from:"helen.park@rapidpay.com",to:"james.morton@techexecutives.com",date:"Tuesday, Feb 18, 2026, 3:30 PM",subject:"Due diligence materials - vendor agreements",body:"James,\n\nAs part of your due diligence ahead of the board vote next month, I'm sharing our key vendor agreements. These will give you context on our operational dependencies and cost structure.\n\nPlease note these are confidential and should not be shared further.\n\nBest,\nHelen"},analysis:"WHO \u2014 General Counsel, legitimate purpose (board candidate due diligence). WHAT \u2014 Vendor contracts with exclusivity terms and pricing. Commercially sensitive. WHO RECEIVED \u2014 Board candidate with confidentiality agreement, but NOT yet appointed. Medium because the purpose is legitimate, confidentiality agreement exists, but sharing before formal appointment is premature. If the candidate doesn't join the board, they'll have proprietary vendor pricing information. Coach on timing of due diligence material sharing."}
+];
+
+function renderExamples(filter) {
+  const container = document.getElementById('examples-container');
+  let html = '';
+  let count = 0;
+
+  examples.forEach(ex => {
+    let show = true;
+    if (filter && filter !== 'all') {
+      if (filter === 'banking' || filter === 'fintech') {
+        show = ex.industry === filter;
+      } else {
+        show = ex.severity === filter;
+      }
+    }
+    if (!show) return;
+    count++;
+
+    const riskHtml = ex.sender.risks.map(r => `<div class="risk-factor">${r}</div>`).join('');
+
+    const recipientHtml = ex.recipient ? `
+      <div class="context-box">
+        <h4>Recipient Context</h4>
+        <div class="field"><span class="field-label">Name</span><span class="field-value">${ex.recipient.name}</span></div>
+        <div class="field"><span class="field-label">Organization</span><span class="field-value">${ex.recipient.org}</span></div>
+        <div class="field"><span class="field-label">Relationship</span><span class="field-value">${ex.recipient.rel}</span></div>
+      </div>` : '';
+
+    const ccLine = ex.email.cc ? `<div class="email-field"><span class="email-field-label">CC:</span><span class="email-field-value">${ex.email.cc}</span></div>` : '';
+    const bccLine = ex.email.bcc ? `<div class="email-field"><span class="email-field-label">BCC:</span><span class="email-field-value" style="color:var(--severity-critical)">${ex.email.bcc} (DETECTED BY AXIA)</span></div>` : '';
+
+    html += `
+    <div class="example-card severity-${ex.severity}" data-severity="${ex.severity}" data-industry="${ex.industry}" id="example-${ex.n}">
+      <div class="card-header" onclick="toggleCard(${ex.n})">
+        <div class="card-title-section">
+          <span class="example-number">#${ex.n}</span>
+          <span class="severity-badge ${ex.severity}">${ex.severity}</span>
+          <span class="card-title">${ex.title}</span>
+          <span class="industry-tag">${ex.industry}</span>
+        </div>
+        <span class="expand-icon">\u25BC</span>
+      </div>
+      <div class="card-body">
+        <div class="section">
+          <div class="section-title">Context</div>
+          <div class="context-grid">
+            <div class="context-box">
+              <h4>Sender (WHO)</h4>
+              <div class="field"><span class="field-label">Name</span><span class="field-value">${ex.sender.name}</span></div>
+              <div class="field"><span class="field-label">Role</span><span class="field-value">${ex.sender.role}</span></div>
+              <div class="field"><span class="field-label">Department</span><span class="field-value">${ex.sender.dept}</span></div>
+              <div class="field"><span class="field-label">Tenure</span><span class="field-value">${ex.sender.tenure}</span></div>
+              <div class="field"><span class="field-label">Location</span><span class="field-value">${ex.sender.location}</span></div>
+              <div class="risk-factors">${riskHtml}</div>
+            </div>
+            ${recipientHtml}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Email Content</div>
+          <div class="email-container">
+            <div class="email-header">
+              <div class="email-field"><span class="email-field-label">From:</span><span class="email-field-value">${ex.email.from}</span></div>
+              <div class="email-field"><span class="email-field-label">To:</span><span class="email-field-value">${ex.email.to}</span></div>
+              ${ccLine}${bccLine}
+              <div class="email-field"><span class="email-field-label">Date:</span><span class="email-field-value">${ex.email.date}</span></div>
+              <div class="email-field"><span class="email-field-label">Subject:</span><span class="email-field-value" style="font-weight:600">${ex.email.subject}</span></div>
+            </div>
+            <div class="email-body">${ex.email.body}</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">AXIA Severity Analysis</div>
+          <div class="analysis-box">
+            <p>${ex.analysis}</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+  document.getElementById('visible-count').textContent = count;
+}
+
+function toggleCard(n) {
+  const card = document.getElementById('example-' + n);
+  card.classList.toggle('open');
+}
+
+function expandAll() {
+  document.querySelectorAll('.example-card').forEach(c => c.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.example-card').forEach(c => c.classList.remove('open'));
+}
+
+function filterCards(filter) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderExamples(filter);
+}
+
+// Initial render
+renderExamples('all');
+</script>
+
+</body>
+</html>
