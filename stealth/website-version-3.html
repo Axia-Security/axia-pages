@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>AXIA - Rethinking Insider Risk</title>
+    <meta name="description" content="Insider risk isn't a detection problem. It's a decision problem. AXIA is rethinking insider risk from first principles."/>
+    <meta property="og:title" content="AXIA - Rethinking Insider Risk"/>
+    <meta property="og:description" content="Insider risk isn't a detection problem. It's a decision problem."/>
+    <meta property="og:type" content="website"/>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='36' fill='%2309434e'/%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23fff'/%3E%3Cline x1='40' y1='8' x2='40' y2='18' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='40' y1='62' x2='40' y2='72' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='8' y1='40' x2='18' y2='40' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='62' y1='40' x2='72' y2='40' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #0D9488;
+            --primary-hover: #14B8A6;
+            --primary-light: rgba(13, 148, 136, 0.08);
+            --primary-medium: rgba(13, 148, 136, 0.15);
+            --surface-page: #0D1117;
+            --surface-card: #161B22;
+            --surface-elevated: #1C2128;
+            --surface-hover: #21262D;
+            --border-default: #30363D;
+            --border-subtle: #21262D;
+            --border-strong: #484F58;
+            --text-primary: #E6EDF3;
+            --text-secondary: #8B949E;
+            --text-muted: #484F58;
+            --accent-teal: #14B8A6;
+            --accent-cyan: #22D3EE;
+            --accent-orange: #F97316;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+            /* P1 #5: tinted section contrast */
+            --surface-tinted: #13171E;
+            /* P0 #4: elastic easing */
+            --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: var(--surface-page);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        ::selection { background: var(--accent-cyan); color: #0D1117; }
+
+        /* ---- SCROLL-PROGRESS BAR (P1 #6) ---- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, #0D9488, #22D3EE);
+            z-index: 100;
+            transition: width 0.1s linear;
+        }
+
+        /* ---- SCROLL REVEAL ---- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* V3: Animation variety — slide from left */
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* V3: Animation variety — slide from right */
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* V3: Animation variety — scale in */
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Stagger children for card grids */
+        .reveal-stagger > .reveal,
+        .reveal-stagger > .reveal-left,
+        .reveal-stagger > .reveal-right,
+        .reveal-stagger > .reveal-scale {
+            /* Delay applied via JS */
+        }
+
+        /* ---- HERO ENTRANCE ANIMATION (P0 #1) ---- */
+        @keyframes heroFadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-badge,
+        .hero h1,
+        .hero-sub,
+        .hero-ctas {
+            opacity: 0;
+            animation: heroFadeUp 0.7s ease-out forwards;
+        }
+        .hero-badge { animation-delay: 0.3s; }
+        .hero h1 { animation-delay: 0.6s; }
+        .hero-sub { animation-delay: 0.9s; }
+        .hero-ctas { animation-delay: 1.2s; }
+
+        /* ---- NAVIGATION ---- */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: rgba(13, 17, 23, 0.7);
+            backdrop-filter: blur(20px) saturate(1.3);
+            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            border-bottom: 1px solid var(--border-default);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .nav.nav-scrolled {
+            background: rgba(13, 17, 23, 0.92);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            text-decoration: none;
+        }
+        .nav-logo span {
+            font-size: 1.375rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--text-primary);
+        }
+        .nav-logo-mark { flex-shrink: 0; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, #0D9488, #22D3EE);
+            color: #0D1117 !important;
+            font-weight: 700;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 12px rgba(13, 148, 136, 0.3);
+        }
+        .nav-cta:hover { box-shadow: 0 4px 20px rgba(34, 211, 238, 0.4); transform: translateY(-1px); }
+
+        /* ---- MOBILE HAMBURGER (P0 #3) ---- */
+        .nav-hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 60;
+        }
+        .nav-hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .nav-hamburger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .nav-hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav-hamburger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 55;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+        .nav-mobile.open { display: flex; }
+        .nav-mobile a {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav-mobile a:hover { color: var(--text-primary); }
+        .nav-mobile .nav-cta {
+            font-size: 1rem;
+            padding: 0.875rem 1.75rem;
+        }
+
+        /* ---- HERO ---- */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(13, 148, 136, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(34, 211, 238, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 20% 40%, rgba(9, 67, 78, 0.15) 0%, transparent 50%);
+            overflow: hidden;
+        }
+
+        /* ---- SCANNING LENS: HERO (primary, large) ---- */
+        .scanning-lens {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 900px;
+            height: 900px;
+            pointer-events: none;
+            z-index: 0;
+            will-change: transform;
+        }
+        /* P0 #2: boosted ring opacity */
+        .scanning-lens .lens-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border-style: solid;
+            border-color: rgba(13, 148, 136, 0.15);
+        }
+        .lens-ring-1 {
+            width: 900px;
+            height: 900px;
+            margin-top: -450px;
+            margin-left: -450px;
+            border-width: 1.5px;
+            animation: lens-rotate-cw 40s linear infinite;
+            border-style: dashed !important;
+            border-color: rgba(13, 148, 136, 0.22) !important;
+        }
+        .lens-ring-2 {
+            width: 650px;
+            height: 650px;
+            margin-top: -325px;
+            margin-left: -325px;
+            border-width: 1px;
+            animation: lens-rotate-ccw 30s linear infinite;
+            border-color: rgba(34, 211, 238, 0.20) !important;
+        }
+        .lens-ring-3 {
+            width: 400px;
+            height: 400px;
+            margin-top: -200px;
+            margin-left: -200px;
+            border-width: 1px;
+            animation: lens-rotate-cw 20s linear infinite;
+            border-color: rgba(13, 148, 136, 0.25) !important;
+        }
+
+        /* Ring tick marks */
+        .lens-ring-1::before,
+        .lens-ring-2::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            width: 1px;
+            height: 24px;
+            background: rgba(34, 211, 238, 0.25);
+            transform: translateX(-50%);
+        }
+        .lens-ring-1::after,
+        .lens-ring-2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            width: 1px;
+            height: 24px;
+            background: rgba(34, 211, 238, 0.25);
+            transform: translateX(-50%);
+        }
+
+        /* P0 #2: boosted crosshair opacity */
+        .lens-crosshair-h,
+        .lens-crosshair-v {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+        .lens-crosshair-h {
+            width: 900px;
+            height: 1px;
+            margin-left: -450px;
+            background: linear-gradient(90deg, transparent 0%, rgba(13, 148, 136, 0.20) 20%, rgba(13, 148, 136, 0.20) 80%, transparent 100%);
+            animation: crosshair-drift-h 14s ease-in-out infinite;
+        }
+        .lens-crosshair-v {
+            width: 1px;
+            height: 900px;
+            margin-top: -450px;
+            background: linear-gradient(180deg, transparent 0%, rgba(34, 211, 238, 0.20) 20%, rgba(34, 211, 238, 0.20) 80%, transparent 100%);
+            animation: crosshair-drift-v 18s ease-in-out infinite;
+        }
+
+        /* P0 #2: boosted center dot opacity */
+        .lens-center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            margin-top: -4px;
+            margin-left: -4px;
+            border-radius: 50%;
+            background: rgba(34, 211, 238, 0.40);
+            animation: lens-center-pulse 3s ease-in-out infinite;
+        }
+        .lens-center-dot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
+            margin-top: -16px;
+            margin-left: -16px;
+            border-radius: 50%;
+            border: 1px solid rgba(34, 211, 238, 0.20);
+            animation: lens-center-pulse 3s ease-in-out infinite reverse;
+        }
+
+        /* ---- SCANNING LENS: PAGE ECHOES ---- */
+        .lens-echo {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* P1 #7: boosted echo opacity + glow */
+        .lens-echo .echo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(13, 148, 136, 0.25);
+        }
+        .lens-echo .echo-ring-outer {
+            width: 400px;
+            height: 400px;
+            margin-top: -200px;
+            margin-left: -200px;
+            animation: lens-rotate-cw 35s linear infinite;
+            box-shadow: 0 0 30px rgba(13, 148, 136, 0.06);
+        }
+        .lens-echo .echo-ring-inner {
+            width: 240px;
+            height: 240px;
+            margin-top: -120px;
+            margin-left: -120px;
+            border-style: solid;
+            border-color: rgba(34, 211, 238, 0.20);
+            animation: lens-rotate-ccw 25s linear infinite;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.05);
+        }
+        .lens-echo .echo-crosshair-h {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 1px;
+            margin-left: -200px;
+            background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.20) 25%, rgba(13, 148, 136, 0.20) 75%, transparent);
+            animation: crosshair-drift-h 16s ease-in-out infinite;
+        }
+        .lens-echo .echo-crosshair-v {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 400px;
+            margin-top: -200px;
+            background: linear-gradient(180deg, transparent, rgba(34, 211, 238, 0.20) 25%, rgba(34, 211, 238, 0.20) 75%, transparent);
+            animation: crosshair-drift-v 20s ease-in-out infinite;
+        }
+        .lens-echo .echo-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin-top: -3px;
+            margin-left: -3px;
+            border-radius: 50%;
+            background: rgba(34, 211, 238, 0.35);
+            animation: lens-center-pulse 3.5s ease-in-out infinite;
+        }
+
+        /* Echo placement */
+        .lens-echo-1 { top: 15%; right: 2%; width: 400px; height: 400px; }
+        .lens-echo-2 { top: 10%; left: 2%; width: 400px; height: 400px; }
+        .lens-echo-3 { top: 20%; right: 5%; width: 400px; height: 400px; }
+        .lens-echo-4 { top: 25%; left: 3%; width: 400px; height: 400px; }
+
+        @keyframes lens-rotate-cw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes lens-rotate-ccw {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+        @keyframes crosshair-drift-h {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(12px); }
+        }
+        @keyframes crosshair-drift-v {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-10px); }
+        }
+        @keyframes lens-center-pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.6); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            background: rgba(13, 148, 136, 0.1);
+            border: 1px solid rgba(13, 148, 136, 0.25);
+            box-shadow: 0 2px 12px rgba(13, 148, 136, 0.1);
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        /* P1 #8: JetBrains Mono on badge text */
+        .hero-badge-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--accent-teal);
+            letter-spacing: 0.02em;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 5.5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            max-width: 800px;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #E6EDF3 30%, #22D3EE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-sub {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: var(--text-secondary);
+            max-width: 620px;
+            line-height: 1.65;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.625rem;
+            background: linear-gradient(135deg, #0D9488, #22D3EE);
+            color: #0D1117;
+            font-weight: 700;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: 0 2px 12px rgba(13, 148, 136, 0.3), 0 0 0 1px rgba(34, 211, 238, 0.15);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(34, 211, 238, 0.4), 0 0 0 1px rgba(34, 211, 238, 0.3); }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border-radius: 0.625rem;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            border: 1px solid var(--border-strong);
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { color: var(--text-primary); border-color: var(--accent-teal); background: rgba(13, 148, 136, 0.05); }
+
+
+        /* ---- SECTIONS ---- */
+        section { padding: 6rem 2rem; }
+        .section-bordered { border-top: 1px solid var(--border-default); }
+        /* P1 #5: section tinted with stronger contrast */
+        .section-tinted {
+            background: var(--surface-tinted);
+            background-image: linear-gradient(180deg, rgba(22, 27, 34, 0.5) 0%, rgba(19, 23, 30, 1) 15%, rgba(19, 23, 30, 1) 85%, rgba(22, 27, 34, 0.5) 100%);
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #E6EDF3 0%, #22D3EE 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ---- SCENARIO INTERLUDE ---- */
+        .scenario-interlude {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2.5rem;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.06), rgba(34, 211, 238, 0.04));
+            border-left: 4px solid transparent;
+            border-image: linear-gradient(to bottom, #0D9488, #22D3EE) 1;
+            border-radius: 0 0.75rem 0.75rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* V3: Interactive scan sweep on scenario interludes */
+        .scenario-interlude::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, transparent 45%, rgba(34,211,238,0.15) 49%, rgba(34,211,238,0.4) 50%, rgba(34,211,238,0.15) 51%, transparent 55%, transparent 100%);
+            background-size: 200% 100%;
+            background-position: 200% 0;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+        .scenario-interlude:hover::after {
+            opacity: 1;
+            animation: scanSweep 1.5s ease-in-out forwards;
+        }
+        @keyframes scanSweep {
+            from { background-position: 200% 0; }
+            to   { background-position: -100% 0; }
+        }
+        .scenario-interlude:hover p {
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
+            transition: text-shadow 0.3s ease;
+        }
+        .scenario-interlude p {
+            font-size: 1.125rem;
+            line-height: 1.85;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        /* P1 #8: JetBrains Mono on scenario label */
+        .scenario-interlude .scenario-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-teal);
+            margin-bottom: 1rem;
+        }
+
+        /* ---- STATS BAR ---- */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            max-width: 1000px;
+            margin: 4rem auto 0;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 1.75rem 1.25rem;
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #0D9488, #22D3EE);
+        }
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #14B8A6, #22D3EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.5; }
+        /* P1 #8: JetBrains Mono on stat source */
+        .stat-source {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* ---- PROBLEM CARDS ---- */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        /* P0 #4: elastic easing on problem cards */
+        .problem-card {
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.4s var(--ease-elastic), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .problem-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34, 211, 238, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(34, 211, 238, 0.15);
+        }
+        .problem-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.625rem;
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(34, 211, 238, 0.1));
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+        }
+        .problem-icon .material-symbols-outlined { font-size: 1.5rem; color: var(--accent-teal); }
+        .problem-card h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .problem-card p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- WRONG DIRECTION ---- */
+        .wrong-direction-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        /* P0 #4: elastic easing on wrong-direction items */
+        .wrong-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.4s var(--ease-elastic), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .wrong-item:hover { transform: translateY(-3px); border-color: rgba(249, 115, 22, 0.3); box-shadow: var(--shadow-hover); }
+        .wrong-number {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.875rem;
+            color: var(--accent-orange);
+        }
+        .wrong-content h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.625rem; color: var(--text-primary); }
+        .wrong-content p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- THREE QUESTIONS CALLOUT ---- */
+        .three-questions {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            padding: 2rem 2.5rem;
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+        }
+        .three-questions p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+        .three-questions strong { color: var(--accent-cyan); }
+
+        /* ---- DIFFERENT LENS ---- */
+        .lens-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        /* P0 #4: elastic easing on lens cards */
+        .lens-card {
+            padding: 2.25rem;
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.4s var(--ease-elastic), border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .lens-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #09434e, #0D9488, #22D3EE);
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .lens-card:hover::before { opacity: 1; }
+        .lens-card:hover { transform: translateY(-4px); border-color: rgba(34, 211, 238, 0.2); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 20px rgba(13, 148, 136, 0.08); }
+        .lens-card h3 {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--accent-cyan);
+        }
+        .lens-card p { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+
+        /* ---- NARRATIVE BRIDGE (P1 #14) ---- */
+        .narrative-bridge {
+            max-width: 700px;
+            margin: 4rem auto 0;
+            text-align: center;
+        }
+        .narrative-bridge p {
+            font-size: 1.375rem;
+            font-weight: 700;
+            font-style: italic;
+            color: var(--accent-cyan);
+            line-height: 1.6;
+        }
+
+        /* ---- FOUNDERS ---- */
+        /* P1 #12: aggregate credential line */
+        .founders-credential {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .founders-credential p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.01em;
+        }
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+        }
+        /* P0 #4: elastic easing on founder cards */
+        .founder-card {
+            background: var(--surface-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            text-align: center;
+            padding: 2.5rem 1.75rem;
+            transition: transform 0.4s var(--ease-elastic), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .founder-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34, 211, 238, 0.2);
+            box-shadow: var(--shadow-hover);
+        }
+        .founder-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(34, 211, 238, 0.25);
+            margin: 0 auto 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(13, 148, 136, 0.15);
+        }
+        .founder-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .founder-card h3 { font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .founder-card .founder-role { font-size: 0.8125rem; font-weight: 600; color: var(--accent-teal); margin-bottom: 1rem; }
+        .founder-card .founder-bio { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.65; }
+        .founder-card .founder-linkedin {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-top: 1.25rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .founder-card .founder-linkedin:hover { opacity: 0.7; }
+
+        /* P1 #13: background bar */
+        .founders-background {
+            text-align: center;
+            margin: 2rem auto 3rem;
+            max-width: 700px;
+        }
+        .founders-background-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .founders-background-orgs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .founders-background-orgs span {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+        }
+        .founders-background-orgs .bg-separator {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--border-strong);
+            flex-shrink: 0;
+        }
+
+        /* P2 #16: CSS marquee for credibility */
+        .credibility-marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+        }
+        .credibility-marquee-track {
+            display: inline-block;
+            animation: marqueeScroll 30s linear infinite;
+        }
+        .credibility-marquee-track span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            padding: 0 2rem;
+        }
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ---- CTA SECTION ---- */
+        .cta-section {
+            text-align: center;
+            padding: 7rem 2rem;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 100%, rgba(13, 148, 136, 0.1) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 30% at 20% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, transparent 0%, rgba(9, 67, 78, 0.08) 100%);
+        }
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.25rem;
+            background: linear-gradient(135deg, #E6EDF3, #22D3EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .cta-section p {
+            font-size: 1.0625rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* ---- FOOTER ---- */
+        footer {
+            border-top: 1px solid var(--border-default);
+            padding: 3rem 2rem;
+            background: var(--surface-card);
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .footer-brand { font-size: 1.25rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.25rem; }
+        /* P1 #8: JetBrains Mono on footer tagline */
+        .footer-tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
+        .footer-right { display: flex; align-items: center; gap: 1.5rem; }
+        .footer-right a { font-size: 0.8125rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .footer-right a:hover { color: var(--text-secondary); }
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-default);
+        }
+
+        /* ============================================================
+           DATA STREAMS
+           ============================================================ */
+
+        .data-gutter {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+        }
+        .data-gutter--left {
+            left: 0;
+            width: calc((100vw - 1200px) / 2);
+        }
+        .data-gutter--right {
+            right: 0;
+            width: calc((100vw - 1200px) / 2);
+        }
+
+        .data-stream {
+            position: absolute;
+            top: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 2.0;
+            color: #14B8A6;
+            opacity: 0.28;
+            white-space: pre;
+            letter-spacing: 0.04em;
+            user-select: none;
+            animation: streamDown var(--stream-speed, 35s) linear infinite;
+        }
+
+        .data-stream .ds-hi {
+            opacity: 2.2;
+        }
+
+        .data-gutter--left .data-stream:nth-child(1) { left: 22%; }
+        .data-gutter--left .data-stream:nth-child(2) { left: 55%; }
+        .data-gutter--left .data-stream:nth-child(3) { left: 82%; }
+
+        .data-gutter--right .data-stream:nth-child(1) { left: 18%; }
+        .data-gutter--right .data-stream:nth-child(2) { left: 62%; }
+
+        @keyframes streamDown {
+            from { transform: translateY(-50%); }
+            to   { transform: translateY(0); }
+        }
+
+        /* ---- RESPONSIVE: hide gutters on narrow screens ---- */
+        @media (max-width: 1440px) {
+            .data-gutter { display: none; }
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 768px) {
+            /* P0 #3: hide desktop nav, show hamburger */
+            .nav-links { display: none; }
+            .nav-hamburger { display: flex; }
+
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .problem-grid { grid-template-columns: 1fr; }
+            .lens-grid { grid-template-columns: 1fr; }
+            .founders-grid { grid-template-columns: 1fr; }
+            .founder-photo { width: 100px; height: 100px; }
+            .wrong-item { flex-direction: column; gap: 1rem; }
+            section { padding: 4rem 1.25rem; }
+            .hero { padding: 7rem 1.25rem 4rem; }
+            .scenario-interlude { padding: 2rem 1.5rem; }
+            .scanning-lens {
+                width: 500px;
+                height: 500px;
+            }
+            .lens-ring-1 {
+                width: 500px;
+                height: 500px;
+                margin-top: -250px;
+                margin-left: -250px;
+            }
+            .lens-ring-2 {
+                width: 350px;
+                height: 350px;
+                margin-top: -175px;
+                margin-left: -175px;
+            }
+            .lens-ring-3 {
+                width: 200px;
+                height: 200px;
+                margin-top: -100px;
+                margin-left: -100px;
+            }
+            .lens-crosshair-h {
+                width: 500px;
+                margin-left: -250px;
+            }
+            .lens-crosshair-v {
+                height: 500px;
+                margin-top: -250px;
+            }
+            .lens-echo { display: none; }
+            .founders-background-orgs { gap: 1rem; }
+        }
+
+        /* ---- ACCESSIBILITY: Reduced Motion ---- */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal,
+            .reveal-left,
+            .reveal-right,
+            .reveal-scale {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+            .scenario-interlude::after {
+                display: none;
+            }
+            /* P0 #1: disable hero entrance animation */
+            .hero-badge,
+            .hero h1,
+            .hero-sub,
+            .hero-ctas {
+                opacity: 1;
+                animation: none;
+            }
+            .scanning-lens,
+            .lens-ring-1,
+            .lens-ring-2,
+            .lens-ring-3,
+            .lens-crosshair-h,
+            .lens-crosshair-v,
+            .lens-center-dot,
+            .lens-center-dot::after {
+                animation: none !important;
+            }
+            .lens-echo { display: none; }
+            .hero-badge-dot {
+                animation: none;
+            }
+            .data-stream {
+                animation: none !important;
+            }
+            .credibility-marquee-track {
+                animation: none !important;
+            }
+            .nav {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- P1 #6: Scroll-progress bar -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- ============================================================
+         DATA STREAM GUTTERS (ambient side animations)
+         ============================================================ -->
+
+    <!-- Left Gutter — 3 columns -->
+    <div class="data-gutter data-gutter--left" aria-hidden="true">
+        <!-- Column L1: slow (45s) -->
+        <div class="data-stream" style="--stream-speed: 45s;">0xA7
+CTX:
+<span class="ds-hi">AUTH</span>
+0.94
+FF
+SCAN
+14:23
+LOW
+4C
+0x3E
+PASS
+0.37
+09:41
+<span class="ds-hi">DENY</span>
+B2
+HIGH
+CTX:
+0xF1
+0.81
+SCAN
+A7C3
+LOW
+22:07
+AUTH
+0x9D
+<span class="ds-hi">0.94</span>
+PASS
+3E
+MED
+16:55
+0xFF
+CTX:
+SCAN
+0.62
+<span class="ds-hi">HIGH</span>
+4A
+AUTH
+0xB2
+LOW
+03:18
+DENY
+0.47
+F1C8
+PASS
+<span class="ds-hi">CTX:</span>
+0x7A
+MED
+SCAN
+0.88
+AUTH
+0xA7
+CTX:
+<span class="ds-hi">AUTH</span>
+0.94
+FF
+SCAN
+14:23
+LOW
+4C
+0x3E
+PASS
+0.37
+09:41
+<span class="ds-hi">DENY</span>
+B2
+HIGH
+CTX:
+0xF1
+0.81
+SCAN
+A7C3
+LOW
+22:07
+AUTH
+0x9D
+<span class="ds-hi">0.94</span>
+PASS
+3E
+MED
+16:55
+0xFF
+CTX:
+SCAN
+0.62
+<span class="ds-hi">HIGH</span>
+4A
+AUTH
+0xB2
+LOW
+03:18
+DENY
+0.47
+F1C8
+PASS
+<span class="ds-hi">CTX:</span>
+0x7A
+MED
+SCAN
+0.88
+AUTH</div>
+
+        <!-- Column L2: medium (35s) -->
+        <div class="data-stream" style="--stream-speed: 35s;">0.71
+<span class="ds-hi">0xE4</span>
+MED
+AUTH
+17:30
+0x5B
+PASS
+CTX:
+<span class="ds-hi">LOW</span>
+0.29
+D8
+SCAN
+0xAC
+HIGH
+0.56
+<span class="ds-hi">DENY</span>
+08:15
+3F
+MED
+0x1D
+PASS
+0.83
+CTX:
+AUTH
+<span class="ds-hi">0xF7</span>
+SCAN
+LOW
+21:44
+0.41
+6B
+HIGH
+0xC2
+<span class="ds-hi">0.67</span>
+PASS
+MED
+AUTH
+11:09
+0x8E
+CTX:
+DENY
+0.95
+<span class="ds-hi">SCAN</span>
+A3
+LOW
+0x4F
+0.71
+<span class="ds-hi">0xE4</span>
+MED
+AUTH
+17:30
+0x5B
+PASS
+CTX:
+<span class="ds-hi">LOW</span>
+0.29
+D8
+SCAN
+0xAC
+HIGH
+0.56
+<span class="ds-hi">DENY</span>
+08:15
+3F
+MED
+0x1D
+PASS
+0.83
+CTX:
+AUTH
+<span class="ds-hi">0xF7</span>
+SCAN
+LOW
+21:44
+0.41
+6B
+HIGH
+0xC2
+<span class="ds-hi">0.67</span>
+PASS
+MED
+AUTH
+11:09
+0x8E
+CTX:
+DENY
+0.95
+<span class="ds-hi">SCAN</span>
+A3
+LOW
+0x4F</div>
+
+        <!-- Column L3: fast (25s) -->
+        <div class="data-stream" style="--stream-speed: 25s;">4A
+<span class="ds-hi">FF</span>
+0x2C
+B7
+<span class="ds-hi">0.52</span>
+E1
+09
+<span class="ds-hi">AUTH</span>
+3D
+C6
+0x8A
+<span class="ds-hi">LOW</span>
+F4
+7E
+0x1B
+<span class="ds-hi">PASS</span>
+A2
+5F
+0xD9
+<span class="ds-hi">MED</span>
+83
+1C
+0x6E
+<span class="ds-hi">CTX:</span>
+B0
+4A
+<span class="ds-hi">FF</span>
+0x2C
+B7
+<span class="ds-hi">0.52</span>
+E1
+09
+<span class="ds-hi">AUTH</span>
+3D
+C6
+0x8A
+<span class="ds-hi">LOW</span>
+F4
+7E
+0x1B
+<span class="ds-hi">PASS</span>
+A2
+5F
+0xD9
+<span class="ds-hi">MED</span>
+83
+1C
+0x6E
+<span class="ds-hi">CTX:</span>
+B0</div>
+    </div>
+
+    <!-- Right Gutter — 2 columns -->
+    <div class="data-gutter data-gutter--right" aria-hidden="true">
+        <!-- Column R1: medium-slow (40s) -->
+        <div class="data-stream" style="--stream-speed: 40s;">06:12
+<span class="ds-hi">DENY</span>
+0xB3
+0.78
+CTX:
+AUTH
+<span class="ds-hi">HIGH</span>
+0x5C
+SCAN
+0.33
+<span class="ds-hi">E9</span>
+LOW
+PASS
+0xA1
+14:57
+MED
+0.69
+<span class="ds-hi">0x7F</span>
+DENY
+CTX:
+AUTH
+0.91
+3A
+<span class="ds-hi">SCAN</span>
+HIGH
+0xD4
+19:28
+LOW
+0.44
+<span class="ds-hi">PASS</span>
+8C
+MED
+0xE2
+CTX:
+0.86
+AUTH
+<span class="ds-hi">0x6B</span>
+DENY
+SCAN
+02:35
+06:12
+<span class="ds-hi">DENY</span>
+0xB3
+0.78
+CTX:
+AUTH
+<span class="ds-hi">HIGH</span>
+0x5C
+SCAN
+0.33
+<span class="ds-hi">E9</span>
+LOW
+PASS
+0xA1
+14:57
+MED
+0.69
+<span class="ds-hi">0x7F</span>
+DENY
+CTX:
+AUTH
+0.91
+3A
+<span class="ds-hi">SCAN</span>
+HIGH
+0xD4
+19:28
+LOW
+0.44
+<span class="ds-hi">PASS</span>
+8C
+MED
+0xE2
+CTX:
+0.86
+AUTH
+<span class="ds-hi">0x6B</span>
+DENY
+SCAN
+02:35</div>
+
+        <!-- Column R2: slow (50s) -->
+        <div class="data-stream" style="--stream-speed: 50s;">0x9E
+CTX:
+<span class="ds-hi">0.73</span>
+AUTH
+LOW
+0xF5
+SCAN
+<span class="ds-hi">DENY</span>
+23:41
+MED
+0x2A
+0.58
+<span class="ds-hi">PASS</span>
+HIGH
+B4
+CTX:
+0x7C
+<span class="ds-hi">AUTH</span>
+0.82
+SCAN
+0xD1
+LOW
+<span class="ds-hi">10:06</span>
+DENY
+4E
+MED
+0x3F
+0.45
+PASS
+<span class="ds-hi">HIGH</span>
+CTX:
+0xA8
+AUTH
+0.97
+<span class="ds-hi">SCAN</span>
+LOW
+0x6D
+15:33
+MED
+0x9E
+CTX:
+<span class="ds-hi">0.73</span>
+AUTH
+LOW
+0xF5
+SCAN
+<span class="ds-hi">DENY</span>
+23:41
+MED
+0x2A
+0.58
+<span class="ds-hi">PASS</span>
+HIGH
+B4
+CTX:
+0x7C
+<span class="ds-hi">AUTH</span>
+0.82
+SCAN
+0xD1
+LOW
+<span class="ds-hi">10:06</span>
+DENY
+4E
+MED
+0x3F
+0.45
+PASS
+<span class="ds-hi">HIGH</span>
+CTX:
+0xA8
+AUTH
+0.97
+<span class="ds-hi">SCAN</span>
+LOW
+0x6D
+15:33
+MED</div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="nav" id="main-nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <svg class="nav-logo-mark" viewBox="0 0 80 80" width="28" height="28">
+                    <circle cx="40" cy="40" r="28" fill="none" stroke="#0D9488" stroke-width="2"/>
+                    <circle cx="40" cy="40" r="18" fill="none" stroke="#22D3EE" stroke-width="1.5"/>
+                    <circle cx="40" cy="40" r="8" fill="#22D3EE" opacity="0.2"/>
+                    <circle cx="40" cy="40" r="3" fill="#22D3EE"/>
+                    <line x1="40" y1="12" x2="40" y2="18" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="40" y1="62" x2="40" y2="72" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="8" y1="40" x2="18" y2="40" stroke="#0D9488" stroke-width="2"/>
+                    <line x1="62" y1="40" x2="72" y2="40" stroke="#0D9488" stroke-width="2"/>
+                </svg>
+                <span>AXIA</span>
+            </a>
+            <!-- Desktop nav -->
+            <nav class="nav-links">
+                <a href="#problem">The Problem</a>
+                <a href="#wrong-direction">Wrong Direction</a>
+                <a href="#different-lens">A Different Lens</a>
+                <a href="#who-we-are">Who We Are</a>
+                <a href="#join" class="nav-cta">Talk to Us</a>
+            </nav>
+            <!-- P0 #3: Mobile hamburger -->
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- P0 #3: Mobile nav overlay -->
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="#problem" class="nav-mobile-link">The Problem</a>
+        <a href="#wrong-direction" class="nav-mobile-link">Wrong Direction</a>
+        <a href="#different-lens" class="nav-mobile-link">A Different Lens</a>
+        <a href="#who-we-are" class="nav-mobile-link">Who We Are</a>
+        <a href="#join" class="nav-cta nav-mobile-link">Talk to Us</a>
+    </div>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <!-- Scanning Lens Background Element -->
+            <div class="scanning-lens" id="scanning-lens" aria-hidden="true">
+                <div class="lens-ring lens-ring-1"></div>
+                <div class="lens-ring lens-ring-2"></div>
+                <div class="lens-ring lens-ring-3"></div>
+                <div class="lens-crosshair-h"></div>
+                <div class="lens-crosshair-v"></div>
+                <div class="lens-center-dot"></div>
+            </div>
+
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span class="hero-badge-text">Rethinking Insider Risk</span>
+            </div>
+            <h1>Insider risk isn't a detection problem. It's a decision problem.</h1>
+            <!-- P1 #9: Sharper subhead — assertion, not question -->
+            <p class="hero-sub">
+                Your tools generate thousands of alerts. But the decision layer is missing: who to involve, what actually matters, and what to do next. That gap is where insider incidents become crises.
+            </p>
+            <div class="hero-ctas">
+                <a href="#join" class="btn-primary">
+                    <span class="material-symbols-outlined" style="font-size:18px">chat_bubble</span>
+                    Talk to Us
+                </a>
+            </div>
+        </section>
+
+        <!-- CINEMATIC HOOK -->
+        <section class="section-bordered" style="padding: 4rem 2rem;">
+            <div class="scenario-interlude reveal-left">
+                <span class="scenario-label">
+                    <span class="material-symbols-outlined" style="font-size:14px">schedule</span>
+                    Monday Morning
+                </span>
+                <p>
+                    1,247 DLP alerts from the weekend. One of them is a departing engineer exfiltrating your IP. Which one? Your team has eight hours and no way to tell. This is the reality of insider risk today.
+                </p>
+            </div>
+        </section>
+
+        <!-- THE PROBLEM -->
+        <section id="problem" class="section-tinted section-bordered" style="position:relative;overflow:hidden;">
+            <div class="lens-echo lens-echo-1" aria-hidden="true">
+                <div class="echo-ring echo-ring-outer"></div>
+                <div class="echo-ring echo-ring-inner"></div>
+                <div class="echo-crosshair-h"></div>
+                <div class="echo-crosshair-v"></div>
+                <div class="echo-dot"></div>
+            </div>
+            <div class="container" style="position:relative;z-index:1;">
+                <div class="section-header reveal">
+                    <h2>Three truths the industry isn't ready to hear</h2>
+                    <p>Security teams are drowning. Not in threats. In noise.</p>
+                </div>
+                <div class="problem-grid reveal-stagger">
+                    <div class="problem-card reveal">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">hearing_disabled</span>
+                        </div>
+                        <h3>Detection without understanding is just noise</h3>
+                        <p>Your security stack can flag a file download in milliseconds. But it can't tell you whether that action was a mistake, a workaround, or a genuine threat. That distinction is the only one that matters.</p>
+                    </div>
+                    <div class="problem-card reveal">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">rule</span>
+                        </div>
+                        <h3>Policies don't prevent. They generate tickets.</h3>
+                        <p>Every new rule you write creates a new category of alerts. Most are false positives. Your analysts know it. Your employees know it. The only people who don't seem to know it are the vendors selling you more rules.</p>
+                    </div>
+                    <div class="problem-card reveal">
+                        <div class="problem-icon">
+                            <span class="material-symbols-outlined">speed</span>
+                        </div>
+                        <h3>You're measuring speed to alert, not speed to resolution</h3>
+                        <p>The average insider incident costs $16.2M and takes nearly three months to contain. Not because teams are slow. Because the tools they rely on surface volume, not clarity.</p>
+                    </div>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="stats-bar reveal-stagger" id="stats-section">
+                    <div class="stat-card reveal-scale">
+                        <div class="stat-number" data-target="85" data-suffix="%">85%</div>
+                        <div class="stat-label">of insider incidents involve employees with legitimate access</div>
+                        <div class="stat-source">Ponemon Institute</div>
+                    </div>
+                    <div class="stat-card reveal-scale">
+                        <div class="stat-number" data-target="86" data-suffix="">86</div>
+                        <div class="stat-label">days average time to contain an insider incident</div>
+                        <div class="stat-source">IBM Cost of a Data Breach</div>
+                    </div>
+                    <div class="stat-card reveal-scale">
+                        <div class="stat-number" data-target="90" data-suffix="%">90%</div>
+                        <div class="stat-label">of insider data theft occurs in the 90 days before departure</div>
+                        <div class="stat-source">CERT / Ponemon</div>
+                    </div>
+                    <div class="stat-card reveal-scale">
+                        <div class="stat-number" data-target="72" data-suffix="%">72%</div>
+                        <div class="stat-label">of organizations run 2+ DLP solutions with no unified view</div>
+                        <div class="stat-source">Industry Research</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- STORY INTERLUDE -->
+        <section class="section-bordered" style="padding: 4rem 2rem;">
+            <div class="scenario-interlude reveal-left">
+                <span class="scenario-label">
+                    <span class="material-symbols-outlined" style="font-size:14px">menu_book</span>
+                    A Story You've Heard Before
+                </span>
+                <p>
+                    A senior developer downloads 200 files on a Tuesday afternoon. Alert fires. Analyst investigates. Marks it as a false positive. Three weeks later, the developer resigns and takes the source code to a competitor. The alert was right. The context was missing. HR knew the developer was leaving. The manager knew. The security team found out 86 days too late.
+                </p>
+            </div>
+        </section>
+
+        <!-- WRONG DIRECTION -->
+        <section id="wrong-direction" class="section-tinted section-bordered" style="position:relative;overflow:hidden;">
+            <div class="lens-echo lens-echo-2" aria-hidden="true">
+                <div class="echo-ring echo-ring-outer"></div>
+                <div class="echo-ring echo-ring-inner"></div>
+                <div class="echo-crosshair-h"></div>
+                <div class="echo-crosshair-v"></div>
+                <div class="echo-dot"></div>
+            </div>
+            <div class="container" style="position:relative;z-index:1;">
+                <div class="section-header reveal">
+                    <h2>Detection is solved. Judgment is not.</h2>
+                    <p>The industry keeps building better detection. The problem was never detection.</p>
+                </div>
+                <div class="wrong-direction-list reveal-stagger">
+                    <div class="wrong-item reveal">
+                        <div class="wrong-number">1</div>
+                        <div class="wrong-content">
+                            <h3>More pattern matching, applied faster</h3>
+                            <p>Legacy approaches treat insider risk like a keyword search problem. Match a regex, fire an alert. The result: false positive rates between 70% and 90%, year-long deployments, and a system that treats a new hire and a departing executive identically. Speed doesn't fix a broken premise.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item reveal">
+                        <div class="wrong-number">2</div>
+                        <div class="wrong-content">
+                            <h3>Tracking movement without understanding meaning</h3>
+                            <p>A new generation of tools can tell you exactly where a file went. What they can't tell you is whether it mattered. Monitoring data movement without understanding data context produces an expensive inventory of events, not an actionable picture of risk.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item reveal">
+                        <div class="wrong-number">3</div>
+                        <div class="wrong-content">
+                            <h3>Network-first thinking in a people-first problem</h3>
+                            <p>Cloud security platforms were built to protect perimeters. When they bolt on insider risk capabilities, those capabilities inherit a network mindset: policies, proxies, and packet inspection. Insider risk isn't a network problem. It's a judgment problem. Architecture designed for one can't solve the other.</p>
+                        </div>
+                    </div>
+                    <div class="wrong-item reveal">
+                        <div class="wrong-number">4</div>
+                        <div class="wrong-content">
+                            <h3>Autonomous blocking, sold as intelligence</h3>
+                            <p>The latest pitch from the industry is faster automated blocking. But faster blocking is still just blocking. It still doesn't explain why something was risky. It still doesn't engage the person involved. It replaces one form of blunt force with a slightly faster one and calls it progress.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Three Questions Callout -->
+                <div class="three-questions reveal-right">
+                    <p>
+                        Current tools focus exclusively on <strong>what</strong> was shared. They never ask <strong>who</strong> sent it, <strong>why</strong> they sent it, or <strong>who</strong> received it. Those three questions are the difference between a false positive and a real incident.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- A DIFFERENT LENS -->
+        <section id="different-lens" class="section-bordered" style="position:relative;overflow:hidden;">
+            <div class="lens-echo lens-echo-3" aria-hidden="true">
+                <div class="echo-ring echo-ring-outer"></div>
+                <div class="echo-ring echo-ring-inner"></div>
+                <div class="echo-crosshair-h"></div>
+                <div class="echo-crosshair-v"></div>
+                <div class="echo-dot"></div>
+            </div>
+            <div class="container" style="position:relative;z-index:1;">
+                <div class="section-header reveal">
+                    <h2>What if we've been asking the wrong questions?</h2>
+                    <p>The next evolution in insider risk won't be more detection, faster blocking, or bigger alert queues. It will require a fundamentally different way of thinking.</p>
+                </div>
+                <div class="lens-grid reveal-stagger">
+                    <div class="lens-card reveal">
+                        <h3>What if risk isn't binary?</h3>
+                        <p>Security tools classify actions as allowed or blocked. But human behavior exists on a spectrum. Context, intent, and circumstance all shape whether the same action is routine or dangerous. Any system that ignores the spectrum will always over-alert and under-protect.</p>
+                    </div>
+                    <div class="lens-card reveal">
+                        <h3>What if the right people were involved at the right time?</h3>
+                        <p>Today's tools operate behind the scenes, generating alerts for analysts to investigate days later. The manager is never looped in. HR finds out weeks too late. Legal gets involved after the damage is done. What would change if the response engaged the right stakeholders in the moment, not just flagged an alert for someone to triage?</p>
+                    </div>
+                    <div class="lens-card reveal">
+                        <h3>What if "why" matters more than "what"?</h3>
+                        <p>Every current tool in the market is optimized to answer what happened. Very few attempt to answer why it happened. And almost none use that understanding to shape what happens next. The gap between detection and comprehension is where insider incidents grow from moments into crises.</p>
+                    </div>
+                    <div class="lens-card reveal">
+                        <h3>What if every incident made your security permanently smarter?</h3>
+                        <p>The end state of every current approach is a report, a remediation, and the same policies that failed in the first place. Nothing changes. What if each resolved case actually improved your organization's ability to prevent the next one?</p>
+                    </div>
+                </div>
+
+                <!-- P1 #14: Narrative bridge -->
+                <div class="narrative-bridge reveal-right">
+                    <p>"We didn't just study this problem. We lived it."</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- WHO WE ARE -->
+        <section id="who-we-are" class="section-tinted section-bordered">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>We've spent our careers in this space. We see what's broken.</h2>
+                    <p>AXIA was founded by security and product leaders who spent years on both sides of the insider risk problem.</p>
+                </div>
+
+                <!-- P1 #12: Aggregate founder credential -->
+                <div class="founders-credential reveal-scale">
+                    <p>65+ years combined in national cyber defense, AI research, and enterprise security.</p>
+                </div>
+
+                <div class="founders-grid reveal-stagger">
+                    <div class="founder-card reveal-scale">
+                        <div class="founder-photo">
+                            <img src="images/asaf-massuri.jpg" alt="Asaf Massuri"/>
+                        </div>
+                        <h3>Asaf Massuri</h3>
+                        <p class="founder-role">CEO & Co-Founder</p>
+                        <p class="founder-bio">20+ years of executive leadership in cybersecurity and system engineering. Former Head of IT Engineering & Cybersecurity Branch, Israeli Air Force. MBA, Bar-Ilan University.</p>
+                        <a href="https://www.linkedin.com/in/asafmassuri/" class="founder-linkedin" target="_blank" rel="noopener">
+                            <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+                            LinkedIn
+                        </a>
+                    </div>
+                    <div class="founder-card reveal-scale">
+                        <div class="founder-photo">
+                            <img src="images/guy-hindi.jpg" alt="Guy Hindi"/>
+                        </div>
+                        <h3>Guy Hindi</h3>
+                        <p class="founder-role">CPO & Co-Founder</p>
+                        <p class="founder-bio">25+ years in senior technology roles. Former Colonel & Head of System Engineering, Israeli Air Force. Led R&D and IT operations with 250+ engineers. M.Sc. Industrial Engineering.</p>
+                        <a href="https://www.linkedin.com/in/guyhindi/" class="founder-linkedin" target="_blank" rel="noopener">
+                            <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+                            LinkedIn
+                        </a>
+                    </div>
+                    <div class="founder-card reveal-scale">
+                        <div class="founder-photo">
+                            <img src="images/orr-levy.jpg" alt="Dr. Orr Levy"/>
+                        </div>
+                        <h3>Dr. Orr Levy</h3>
+                        <p class="founder-role">CTO & Co-Founder</p>
+                        <p class="founder-bio">PhD in Physics, Senior Lecturer at Bar-Ilan University. Former Associate Research Scientist, Yale. Expert in AI-driven cybersecurity, network systems, and complex systems analysis.</p>
+                        <a href="https://www.linkedin.com/in/orr-levy-5b5a3b51/" class="founder-linkedin" target="_blank" rel="noopener">
+                            <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
+
+                <!-- P1 #13: Background bar -->
+                <div class="founders-background reveal-scale">
+                    <div class="founders-background-label">Previously at</div>
+                    <div class="founders-background-orgs">
+                        <span>Israeli Air Force</span>
+                        <span class="bg-separator"></span>
+                        <span>Yale University</span>
+                        <span class="bg-separator"></span>
+                        <span>Bar-Ilan University</span>
+                    </div>
+                </div>
+
+                <!-- P2 #16: Credibility marquee -->
+                <div class="credibility-marquee" aria-hidden="true">
+                    <div class="credibility-marquee-track">
+                        <span>National Cyber Defense</span>
+                        <span>AI-Driven Security Research</span>
+                        <span>Enterprise System Engineering</span>
+                        <span>Complex Systems Analysis</span>
+                        <span>250+ Engineers Led</span>
+                        <span>20+ Years Cybersecurity</span>
+                        <span>National Cyber Defense</span>
+                        <span>AI-Driven Security Research</span>
+                        <span>Enterprise System Engineering</span>
+                        <span>Complex Systems Analysis</span>
+                        <span>250+ Engineers Led</span>
+                        <span>20+ Years Cybersecurity</span>
+                    </div>
+                </div>
+
+                <div class="reveal" style="max-width:700px; margin:2rem auto 0; text-align:center;">
+                    <p style="font-size:1.0625rem; color:var(--text-secondary); line-height:1.75; margin-bottom:2rem;">
+                        We've built the tools, used the tools, and watched the gap between what they promised and what they delivered grow wider every year. We believe the insider risk industry is at an inflection point. The old playbook of "detect and block" has reached its limit. What comes next requires a fundamentally different approach.
+                    </p>
+                    <p style="font-size:1.25rem; font-weight:700; color:var(--accent-cyan);">We're building it.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA / JOIN — P1 #10 & #11: video placeholder and form hint REMOVED -->
+        <section id="join" class="cta-section section-bordered" style="position:relative;overflow:hidden;">
+            <div class="lens-echo lens-echo-4" aria-hidden="true">
+                <div class="echo-ring echo-ring-outer"></div>
+                <div class="echo-ring echo-ring-inner"></div>
+                <div class="echo-crosshair-h"></div>
+                <div class="echo-crosshair-v"></div>
+                <div class="echo-dot"></div>
+            </div>
+            <div class="reveal" style="position:relative;z-index:1;">
+                <h2>This conversation is just starting.</h2>
+                <p>
+                    If you're a security leader who feels the tension between what the industry sells and what your organization actually needs, we'd like to hear from you. Not to sell you something. To build something worth buying.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn-primary" style="padding:1rem 2.25rem; font-size:1rem;">
+                        <span class="material-symbols-outlined" style="font-size:20px">calendar_today</span>
+                        Request a Private Briefing
+                    </a>
+                    <a href="#" class="btn-secondary" style="padding:1rem 2.25rem; font-size:1rem;">
+                        <span class="material-symbols-outlined" style="font-size:20px">edit_note</span>
+                        Share Your Insider Risk Story
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <svg viewBox="0 0 80 80" width="22" height="22" style="vertical-align: middle; margin-right: 0.5rem;">
+                        <circle cx="40" cy="40" r="28" fill="none" stroke="#0D9488" stroke-width="2"/>
+                        <circle cx="40" cy="40" r="18" fill="none" stroke="#22D3EE" stroke-width="1.5"/>
+                        <circle cx="40" cy="40" r="8" fill="#22D3EE" opacity="0.2"/>
+                        <circle cx="40" cy="40" r="3" fill="#22D3EE"/>
+                        <line x1="40" y1="12" x2="40" y2="18" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="40" y1="62" x2="40" y2="72" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="8" y1="40" x2="18" y2="40" stroke="#0D9488" stroke-width="2"/>
+                        <line x1="62" y1="40" x2="72" y2="40" stroke="#0D9488" stroke-width="2"/>
+                    </svg>
+                    AXIA
+                </div>
+                <div class="footer-tagline">A stealth-stage company rethinking insider risk from first principles.</div>
+            </div>
+            <div class="footer-right">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-copyright">&copy; 2026 AXIA. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // ============================================================
+        // 1. SCROLL-REVEAL ANIMATIONS (IntersectionObserver)
+        // ============================================================
+        if (!reducedMotion) {
+            var revealSelector = '.reveal, .reveal-left, .reveal-right, .reveal-scale';
+            var revealObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        var el = entry.target;
+                        var parent = el.parentElement;
+                        if (parent && parent.classList.contains('reveal-stagger')) {
+                            var siblings = parent.querySelectorAll(revealSelector);
+                            var index = Array.prototype.indexOf.call(siblings, el);
+                            el.style.transitionDelay = (index * 110) + 'ms';
+                        }
+                        el.classList.add('revealed');
+                        revealObserver.unobserve(el);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            document.querySelectorAll(revealSelector).forEach(function(el) {
+                revealObserver.observe(el);
+            });
+        } else {
+            document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+                el.classList.add('revealed');
+            });
+        }
+
+        // ============================================================
+        // 2. STAT COUNTER ANIMATION
+        // ============================================================
+        var statsAnimated = false;
+
+        function easeOutQuart(t) {
+            return 1 - Math.pow(1 - t, 4);
+        }
+
+        function animateCounters() {
+            if (statsAnimated) return;
+            statsAnimated = true;
+
+            var statNumbers = document.querySelectorAll('#stats-section .stat-number[data-target]');
+            var duration = 1500;
+
+            statNumbers.forEach(function(el) {
+                var target = parseInt(el.getAttribute('data-target'), 10);
+                var suffix = el.getAttribute('data-suffix') || '';
+                var startTime = null;
+
+                function step(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    var elapsed = timestamp - startTime;
+                    var progress = Math.min(elapsed / duration, 1);
+                    var easedProgress = easeOutQuart(progress);
+                    var current = Math.round(easedProgress * target);
+
+                    el.textContent = current + suffix;
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = target + suffix;
+                    }
+                }
+
+                el.textContent = '0' + suffix;
+                requestAnimationFrame(step);
+            });
+        }
+
+        if (!reducedMotion) {
+            var statsObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.3
+            });
+
+            var statsSection = document.getElementById('stats-section');
+            if (statsSection) {
+                statsObserver.observe(statsSection);
+            }
+        }
+
+        // ============================================================
+        // 3. NAV BACKGROUND TRANSITION
+        // ============================================================
+        var nav = document.getElementById('main-nav');
+        var scrollThreshold = 100;
+
+        function updateNav() {
+            if (window.scrollY > scrollThreshold) {
+                nav.classList.add('nav-scrolled');
+            } else {
+                nav.classList.remove('nav-scrolled');
+            }
+        }
+
+        window.addEventListener('scroll', updateNav, { passive: true });
+        updateNav();
+
+        // ============================================================
+        // 4. SCROLL-PROGRESS BAR (P1 #6)
+        // ============================================================
+        var progressBar = document.getElementById('scroll-progress');
+
+        function updateProgress() {
+            var scrollTop = window.scrollY;
+            var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = progress + '%';
+        }
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        // ============================================================
+        // 5. MOBILE HAMBURGER NAVIGATION (P0 #3)
+        // ============================================================
+        var hamburger = document.getElementById('nav-hamburger');
+        var mobileNav = document.getElementById('nav-mobile');
+
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            mobileNav.classList.toggle('open');
+            document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+        });
+
+        // Close mobile nav when a link is clicked
+        var mobileLinks = document.querySelectorAll('.nav-mobile-link');
+        mobileLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                mobileNav.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ============================================================
+        // 6. HERO LENS PARALLAX (P2 #15)
+        // ============================================================
+        if (!reducedMotion && window.innerWidth > 768) {
+            var lens = document.getElementById('scanning-lens');
+            var hero = document.querySelector('.hero');
+
+            hero.addEventListener('mousemove', function(e) {
+                var rect = hero.getBoundingClientRect();
+                var centerX = rect.width / 2;
+                var centerY = rect.height / 2;
+                var mouseX = e.clientX - rect.left;
+                var mouseY = e.clientY - rect.top;
+                var dx = (mouseX - centerX) / centerX;
+                var dy = (mouseY - centerY) / centerY;
+                var maxDrift = 20;
+
+                lens.style.transform = 'translate(calc(-50% + ' + (dx * maxDrift) + 'px), calc(-50% + ' + (dy * maxDrift) + 'px))';
+            });
+
+            hero.addEventListener('mouseleave', function() {
+                lens.style.transform = 'translate(-50%, -50%)';
+                lens.style.transition = 'transform 0.5s ease-out';
+                setTimeout(function() { lens.style.transition = ''; }, 500);
+            });
+        }
+
+    })();
+    </script>
+</body>
+</html>
