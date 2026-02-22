@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>AXIA Interactive Demo - FundGuard V6.28</title>
+    <title>AXIA Interactive Demo - FundGuard V6.28.1</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='36' fill='%2309434e'/%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23fff'/%3E%3Cline x1='40' y1='8' x2='40' y2='18' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='40' y1='62' x2='40' y2='72' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='8' y1='40' x2='18' y2='40' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='62' y1='40' x2='72' y2='40' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -12,7 +12,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // AXIA Demo V6.28 - Removed FG-008/FG-010 from cases (DLP FPs belong in False Alerts panel only), all Dana lab observations verified utilized
+        // AXIA Demo V6.28.1 - Removed FG-008/FG-010 from cases (DLP FPs belong in False Alerts panel only), all Dana lab observations verified utilized
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -115,6 +115,11 @@
         /* V6.9: Dark mode overrides - Brand-aligned colors */
         .dark {
             --tw-bg-opacity: 1;
+            /* V6.28.1: CSS custom properties for dark mode (used by inline styles in charts/heatmaps) */
+            --color-surface-elevated: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #94a3b8;
+            --color-text-muted: #64748b;
         }
         .dark body {
             background-color: #0f172a;
@@ -184,6 +189,13 @@
         }
         .dark label span.text-text-primary,
         .dark label span.text-xs.text-text-primary {
+            color: #e2e8f0 !important;
+        }
+        /* V6.28.1: Enforce tab expanded card dark mode fix */
+        .dark details[data-rule-id] > div {
+            background-color: rgba(51, 65, 85, 0.3) !important;
+        }
+        .dark details[data-rule-id] .scenario-value {
             color: #e2e8f0 !important;
         }
 
@@ -392,6 +404,11 @@
         .chat-content ul, .chat-content ol { margin: 0.5rem 0; padding-left: 1.25rem; }
         .chat-content li { margin-bottom: 0.25rem; }
         .chat-content code { background: #F3F4F6; padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.85em; }
+        /* V6.28.1: Chat dark mode fixes */
+        .dark .chat-content strong { color: #f1f5f9; }
+        .dark .chat-content code { background: #334155; color: #e2e8f0; }
+        .dark .chat-content a { color: #22d3ee; }
+        .dark .chat-content li { color: #e2e8f0; }
 
         /* Channel card status indicators */
         .channel-status-connected { color: #22C55E; }
@@ -1133,6 +1150,11 @@
                 <div id="widget-true-incidents" class="col-span-12 sm:col-span-6 lg:col-span-3 dashboard-widget bg-white rounded-xl p-3 border border-border-subtle shadow-sm flex flex-col" data-widget="true-incidents">
                     <!-- True Incidents Found - same width as Top Case Types above -->
                 </div>
+                <!-- V6.28.1: Add Widget card -->
+                <div id="widget-add-new" class="col-span-12 sm:col-span-6 lg:col-span-3 dashboard-widget bg-white rounded-xl p-3 border-2 border-dashed border-border-subtle shadow-sm flex flex-col items-center justify-center cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group" onclick="showAddWidgetToast()" style="min-height: 120px;">
+                    <span class="material-symbols-outlined text-4xl text-text-muted group-hover:text-primary/60 transition-colors mb-2">add_circle</span>
+                    <span class="text-xs font-medium text-text-muted group-hover:text-primary/60 transition-colors">Add Widget</span>
+                </div>
             </main>
         </section>
 
@@ -1614,7 +1636,7 @@ const DEMO_DATA = {
     // 7d: Week view includes recent + resolved cases
     // 30d/90d: Full history
     casesByTimeframe: {
-        // V6.28: FG-008/FG-010 removed (DLP FPs). FG-014/FG-015/FG-016 added to correct time ranges.
+        // V6.28.1: FG-008/FG-010 removed (DLP FPs). FG-014/FG-015/FG-016 added to correct time ranges.
         "1d": ["CASE-FG-001", "CASE-FG-002", "CASE-FG-003", "CASE-FG-004", "CASE-FG-005", "CASE-FG-011", "CASE-FG-014"],
         "7d": ["CASE-FG-001", "CASE-FG-002", "CASE-FG-003", "CASE-FG-004", "CASE-FG-005", "CASE-FG-006", "CASE-FG-007", "CASE-FG-009", "CASE-FG-011", "CASE-FG-012", "CASE-FG-013", "CASE-FG-014", "CASE-FG-015", "CASE-FG-016"],
         "30d": ["CASE-FG-001", "CASE-FG-002", "CASE-FG-003", "CASE-FG-004", "CASE-FG-005", "CASE-FG-006", "CASE-FG-007", "CASE-FG-009", "CASE-FG-011", "CASE-FG-012", "CASE-FG-013", "CASE-FG-014", "CASE-FG-015", "CASE-FG-016"],
@@ -2035,24 +2057,28 @@ const DEMO_DATA = {
     // V6.21: Real date labels (based on demo date ~Feb 2026)
     falseAlarmsTrend: {
         "1d": {
+            // V6.28.1: ~3% noise reduction (today - DLPs now well-tuned, almost all alerts are real)
             labels: ['6h', '12h', '18h', '24h'],
             dlpAlerts: [38, 42, 35, 40],
-            axiaTrueAlerts: [2, 3, 1, 2]
+            axiaTrueAlerts: [37, 40, 34, 39]
         },
         "7d": {
+            // V6.28.1: 5% noise reduction (this week - DLPs generating mostly true alerts now)
             labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
             dlpAlerts: [145, 138, 152, 141, 148, 139, 142],
-            axiaTrueAlerts: [5, 3, 6, 4, 5, 3, 4]
+            axiaTrueAlerts: [137, 131, 144, 134, 141, 132, 136]
         },
         "30d": {
+            // V6.28.1: 30% noise reduction (last month - AXIA still training DLP rules)
             labels: ['Jan 10', 'Jan 17', 'Jan 24', 'Jan 31'],
             dlpAlerts: [612, 548, 492, 445],
-            axiaTrueAlerts: [32, 28, 24, 21]
+            axiaTrueAlerts: [428, 384, 344, 312]
         },
         "90d": {
+            // V6.28.1: 95% noise reduction (full quarter - includes early noisy period before AXIA tuned DLPs)
             labels: ['Nov', 'Dec', 'Jan'],
             dlpAlerts: [2847, 1923, 1412],
-            axiaTrueAlerts: [145, 110, 85]
+            axiaTrueAlerts: [142, 96, 71]
         }
     },
 
@@ -2737,7 +2763,7 @@ const DEMO_DATA = {
     //    FG-015: ML fraud-model training dataset [VALIDATED: Safe 0.0]
     //    FG-016: Payment decline simulation file [VALIDATED: Safe 0.0]
     //
-    // MOVED TO FALSE ALERTS PANEL ONLY (V6.28 — not AXIA cases, pure DLP FPs):
+    // MOVED TO FALSE ALERTS PANEL ONLY (V6.28.1 — not AXIA cases, pure DLP FPs):
     //    FG-008: Custodian API test credentials in CI/CD → FP-DLP-003 [VALIDATED: Safe 0.0]
     //    FG-010: Synthetic transaction load-test data → FP-DLP-008
     //
@@ -2796,7 +2822,8 @@ const DEMO_DATA = {
                 does: 'Downloads or syncs more than 50 repository files in 7 days',
                 through: 'Any channel including personal cloud sync',
                 to: 'Any personal storage destination'
-            }
+            },
+            monitorTypes: ['NAV calculation engine', 'Valuation models', 'Reconciliation algorithms']
         },
 
         {
@@ -2841,7 +2868,8 @@ const DEMO_DATA = {
                 does: 'Exports more than 50 client fund records via API',
                 through: 'Internal reporting API',
                 to: 'Local storage or personal destinations'
-            }
+            },
+            monitorTypes: ['Client fund data', 'Fee structures', 'Investor allocations']
         },
 
         {
@@ -2888,7 +2916,8 @@ const DEMO_DATA = {
                 does: 'Forwards internal documents to personal email that are subsequently forwarded externally',
                 through: 'Email (multi-hop chain)',
                 to: 'Known competitor domains'
-            }
+            },
+            monitorTypes: ['Migration documents', 'Client data', 'Satisfaction scores']
         },
 
         // ========== HIGH CASES (3 open) ==========
@@ -3072,7 +3101,7 @@ const DEMO_DATA = {
             canEnforce: false
         },
 
-        // CASE-FG-008 removed in V6.28 — DLP false positive, belongs in False Alerts panel only (FP-DLP-003)
+        // CASE-FG-008 removed in V6.28.1 — DLP false positive, belongs in False Alerts panel only (FP-DLP-003)
 
         {
             id: 'CASE-FG-012',
@@ -3185,7 +3214,7 @@ const DEMO_DATA = {
             canEnforce: false
         },
 
-        // CASE-FG-010 removed in V6.28 — DLP false positive, belongs in False Alerts panel only (FP-DLP-008)
+        // CASE-FG-010 removed in V6.28.1 — DLP false positive, belongs in False Alerts panel only (FP-DLP-008)
 
         {
             id: 'CASE-FG-013',
@@ -6757,7 +6786,7 @@ function renderHeatmapGrid(departments, severities = ['critical', 'high', 'mediu
             const alpha = val === 0 ? 0 : Math.max(0.25, Math.min(0.95, intensity * 0.75 + 0.25));
             const hexAlpha = val === 0 ? '' : Math.round(alpha * 255).toString(16).padStart(2, '0');
             const bgStyle = val === 0 ? 'background: var(--color-surface-elevated, #f1f5f9)' : `background-color: ${bg}${hexAlpha}`;
-            const textColor = alpha > 0.5 ? '#fff' : (val === 0 ? 'var(--color-text-muted,#cbd5e1)' : '#1e293b');
+            const textColor = alpha > 0.5 ? '#fff' : (val === 0 ? 'var(--color-text-muted,#cbd5e1)' : 'var(--color-text-primary,#1e293b)');
             return `<div class="flex items-center justify-center rounded-sm" style="${bgStyle}; height: 26px;">
                 <span style="font-size:10px;font-weight:700;color:${textColor}">${val > 0 ? val : ''}</span>
             </div>`;
@@ -7892,14 +7921,15 @@ function showSmartControlModal(caseData) {
         <div class="bg-surface-card rounded-lg p-3 border border-border-subtle mb-4">
             <div class="text-xs text-text-secondary mb-2">Smart Control will monitor:</div>
             <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 bg-severity-critical/10 text-severity-critical text-xs rounded">Source code</span>
-                <span class="px-2 py-1 bg-severity-high/10 text-severity-high text-xs rounded">Customer data</span>
-                <span class="px-2 py-1 bg-severity-medium/10 text-severity-medium text-xs rounded">Internal docs</span>
+                ${(caseData.monitorTypes || ['Source code', 'Customer data', 'Internal docs']).map((t, i) => {
+                    const colors = ['severity-critical', 'severity-high', 'severity-medium'];
+                    return `<span class="px-2 py-1 bg-${colors[i % colors.length]}/10 text-${colors[i % colors.length]} text-xs rounded">${t}</span>`;
+                }).join('')}
                 <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded">+ Learn patterns</span>
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="confirmSmartControl()" class="flex-1 px-4 py-2 bg-status-blocked text-white rounded-lg font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2">
+            <button onclick="confirmSmartControl('${caseData.id}')" class="flex-1 px-4 py-2 bg-status-blocked text-white rounded-lg font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-lg">shield</span>
                 Activate Protection
             </button>
@@ -7927,23 +7957,37 @@ function confirmAdjustPolicies() {
     showPolicyToast('DLP Rule adjustments saved', 'tune', 'ops-purple');
 }
 
-function confirmSmartControl() {
+function confirmSmartControl(caseId) {
     closePolicyModal();
     showPolicyToast('Smart Block activated', 'shield', 'status-blocked');
-    // V6.20: Navigate to Enforce tab and scroll to the first smart block policy
+    // V6.28.1: Navigate to Enforce tab and scroll to the SPECIFIC policy matching this case
     setTimeout(() => {
         navigateTo('connections');
         setTimeout(() => {
-            const firstPolicy = document.querySelector('[data-rule-id]');
-            if (firstPolicy) {
-                firstPolicy.setAttribute('open', '');
-                firstPolicy.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstPolicy.style.outline = '2px solid var(--status-blocked)';
-                firstPolicy.style.outlineOffset = '2px';
-                setTimeout(() => { firstPolicy.style.outline = ''; firstPolicy.style.outlineOffset = ''; }, 3000);
+            // Find the enforcement rule linked to this case
+            const matchingRule = DEMO_DATA.enforcementRules.find(r => r.sourceCase === caseId);
+            let targetPolicy;
+            if (matchingRule) {
+                targetPolicy = document.querySelector(`[data-rule-id="${matchingRule.id}"]`);
+            }
+            // Fallback to first policy if no match found
+            if (!targetPolicy) {
+                targetPolicy = document.querySelector('[data-rule-id]');
+            }
+            if (targetPolicy) {
+                targetPolicy.setAttribute('open', '');
+                targetPolicy.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetPolicy.style.outline = '2px solid var(--status-blocked)';
+                targetPolicy.style.outlineOffset = '2px';
+                setTimeout(() => { targetPolicy.style.outline = ''; targetPolicy.style.outlineOffset = ''; }, 3000);
             }
         }, 300);
     }, 1000);
+}
+
+// V6.28.1: Add Widget toast
+function showAddWidgetToast() {
+    showPolicyToast('Widget library coming soon — choose from 12 additional risk widgets', 'widgets', 'primary');
 }
 
 function showPolicyToast(message, icon, colorClass) {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>AXIA Interactive Demo - Valley Bank V6.28</title>
+    <title>AXIA Interactive Demo - Valley Bank V6.28.1</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='36' fill='%2309434e'/%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23fff'/%3E%3Cline x1='40' y1='8' x2='40' y2='18' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='40' y1='62' x2='40' y2='72' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='8' y1='40' x2='18' y2='40' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='62' y1='40' x2='72' y2='40' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -12,7 +12,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // AXIA Demo V6.28-Valley - Removed VB-008/VB-010 from cases (DLP FPs belong in False Alerts panel only), all Dana lab observations verified utilized
+        // AXIA Demo V6.28.1-Valley - Removed VB-008/VB-010 from cases (DLP FPs belong in False Alerts panel only), all Dana lab observations verified utilized
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -115,6 +115,11 @@
         /* V6.9: Dark mode overrides - Brand-aligned colors */
         .dark {
             --tw-bg-opacity: 1;
+            /* V6.28.1: CSS custom properties for dark mode (used by inline styles in charts/heatmaps) */
+            --color-surface-elevated: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #94a3b8;
+            --color-text-muted: #64748b;
         }
         .dark body {
             background-color: #0f172a;
@@ -184,6 +189,13 @@
         }
         .dark label span.text-text-primary,
         .dark label span.text-xs.text-text-primary {
+            color: #e2e8f0 !important;
+        }
+        /* V6.28.1: Enforce tab expanded card dark mode fix */
+        .dark details[data-rule-id] > div {
+            background-color: rgba(51, 65, 85, 0.3) !important;
+        }
+        .dark details[data-rule-id] .scenario-value {
             color: #e2e8f0 !important;
         }
 
@@ -392,6 +404,11 @@
         .chat-content ul, .chat-content ol { margin: 0.5rem 0; padding-left: 1.25rem; }
         .chat-content li { margin-bottom: 0.25rem; }
         .chat-content code { background: #F3F4F6; padding: 0.125rem 0.375rem; border-radius: 4px; font-size: 0.85em; }
+        /* V6.28.1: Chat dark mode fixes */
+        .dark .chat-content strong { color: #f1f5f9; }
+        .dark .chat-content code { background: #334155; color: #e2e8f0; }
+        .dark .chat-content a { color: #22d3ee; }
+        .dark .chat-content li { color: #e2e8f0; }
 
         /* Channel card status indicators */
         .channel-status-connected { color: #22C55E; }
@@ -1133,6 +1150,11 @@
                 <div id="widget-true-incidents" class="col-span-12 sm:col-span-6 lg:col-span-3 dashboard-widget bg-white rounded-xl p-3 border border-border-subtle shadow-sm flex flex-col" data-widget="true-incidents">
                     <!-- True Incidents Found - same width as Top Case Types above -->
                 </div>
+                <!-- V6.28.1: Add Widget card -->
+                <div id="widget-add-new" class="col-span-12 sm:col-span-6 lg:col-span-3 dashboard-widget bg-white rounded-xl p-3 border-2 border-dashed border-border-subtle shadow-sm flex flex-col items-center justify-center cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group" onclick="showAddWidgetToast()" style="min-height: 120px;">
+                    <span class="material-symbols-outlined text-4xl text-text-muted group-hover:text-primary/60 transition-colors mb-2">add_circle</span>
+                    <span class="text-xs font-medium text-text-muted group-hover:text-primary/60 transition-colors">Add Widget</span>
+                </div>
             </main>
         </section>
 
@@ -1470,8 +1492,8 @@ const DEFAULT_API_KEY = '';
 // V5.17: Case data alignment - fixed timeframes, severity counts, added 4 new cases
 // V5.16: Design polish - transitions, shadows, contrast, pressed states
 // V5.14: Severity cards + case list by timeframe, Chart type persistence
-// Purview: Microsoft ecosystem (Office 365, SharePoint, OneDrive, Teams)
-// Netskope: Non-Microsoft (Gmail, Slack, other cloud apps)
+// Forcepoint: Endpoint and network DLP (Office 365, SharePoint, OneDrive, Teams)
+// Proofpoint: Email and cloud DLP (Gmail, Slack, other cloud apps)
 
 const DEMO_DATA = {
 
@@ -1549,25 +1571,25 @@ const DEMO_DATA = {
     // V5.9: Showing declining FP rate as AXIA learns
     falsePositivesByConnection: {
         "1d": {
-            "Purview": 1,
+            "Forcepoint": 1,
             "Office 365": 1,
             "Gmail": 0,
             "Slack": 0
         },
         "7d": {
-            "Purview": 8,
+            "Forcepoint": 8,
             "Office 365": 6,
             "Gmail": 3,
             "Slack": 1
         },
         "30d": {
-            "Purview": 32,
+            "Forcepoint": 32,
             "Office 365": 24,
             "Gmail": 9,
             "Slack": 3
         },
         "90d": {
-            "Purview": 89,
+            "Forcepoint": 89,
             "Office 365": 62,
             "Gmail": 28,
             "Slack": 10
@@ -1614,7 +1636,7 @@ const DEMO_DATA = {
     // 7d: Week view includes recent + resolved cases
     // 30d/90d: Full history
     casesByTimeframe: {
-        // V6.28: FG-008/FG-010 removed (DLP FPs). FG-014/FG-015/FG-016 added to correct time ranges.
+        // V6.28.1: FG-008/FG-010 removed (DLP FPs). FG-014/FG-015/FG-016 added to correct time ranges.
         "1d": ["CASE-VB-001", "CASE-VB-002", "CASE-VB-003", "CASE-VB-004", "CASE-VB-005", "CASE-VB-011", "CASE-VB-014"],
         "7d": ["CASE-VB-001", "CASE-VB-002", "CASE-VB-003", "CASE-VB-004", "CASE-VB-005", "CASE-VB-006", "CASE-VB-007", "CASE-VB-009", "CASE-VB-011", "CASE-VB-012", "CASE-VB-013", "CASE-VB-014", "CASE-VB-015", "CASE-VB-016"],
         "30d": ["CASE-VB-001", "CASE-VB-002", "CASE-VB-003", "CASE-VB-004", "CASE-VB-005", "CASE-VB-006", "CASE-VB-007", "CASE-VB-009", "CASE-VB-011", "CASE-VB-012", "CASE-VB-013", "CASE-VB-014", "CASE-VB-015", "CASE-VB-016"],
@@ -1629,29 +1651,29 @@ const DEMO_DATA = {
     // For combined channel+DLP posture cards
     connectionStatsByTimeframe: {
         "1d": {
-            "ms-purview": { interactions: 0, alerts: { critical: 0, high: 1, medium: 2, low: 1 }, totalAlerts: 4, dlpBlocked: 3, falsePositives: 0, policyUpdates: 1 },
-            "netskope": { interactions: 0, alerts: { critical: 0, high: 0, medium: 1, low: 1 }, totalAlerts: 2, dlpBlocked: 2, falsePositives: 0, policyUpdates: 0 },
+            "forcepoint": { interactions: 0, alerts: { critical: 0, high: 1, medium: 2, low: 1 }, totalAlerts: 4, dlpBlocked: 3, falsePositives: 0, policyUpdates: 1 },
+            "proofpoint": { interactions: 0, alerts: { critical: 0, high: 0, medium: 1, low: 1 }, totalAlerts: 2, dlpBlocked: 2, falsePositives: 0, policyUpdates: 0 },
             "ms-365": { interactions: 41596, alerts: { critical: 0, high: 1, medium: 1, low: 1 }, blocked: { critical: 0, high: 1, medium: 0, low: 1 }, totalAlerts: 3, openCases: 1, closedCases: 2, engagementsBreakdown: { employee: 2, manager: 1, legal: 0, evidence: 1 }, dlpAlerts: 4, falsePositives: 0, smartLeakageBlocks: 2, policyAdjustments: 1 },
             "gmail": { interactions: 11405, alerts: { critical: 0, high: 0, medium: 1, low: 0 }, blocked: { critical: 0, high: 0, medium: 0, low: 0 }, totalAlerts: 1, openCases: 0, closedCases: 1, engagementsBreakdown: { employee: 1, manager: 0, legal: 0, evidence: 0 }, dlpAlerts: 2, falsePositives: 0, smartLeakageBlocks: 0, policyAdjustments: 0 },
             "slack": { interactions: 1608, alerts: { critical: 0, high: 0, medium: 0, low: 1 }, blocked: { critical: 0, high: 0, medium: 0, low: 0 }, totalAlerts: 1, openCases: 0, closedCases: 1, engagementsBreakdown: { employee: 1, manager: 0, legal: 0, evidence: 0 }, dlpAlerts: 0, falsePositives: 0, smartLeakageBlocks: 0, policyAdjustments: 0 }
         },
         "7d": {
-            "ms-purview": { interactions: 0, alerts: { critical: 1, high: 3, medium: 5, low: 3 }, totalAlerts: 12, dlpBlocked: 10, falsePositives: 1, policyUpdates: 2 },
-            "netskope": { interactions: 0, alerts: { critical: 0, high: 2, medium: 3, low: 1 }, totalAlerts: 6, dlpBlocked: 5, falsePositives: 1, policyUpdates: 1 },
+            "forcepoint": { interactions: 0, alerts: { critical: 1, high: 3, medium: 5, low: 3 }, totalAlerts: 12, dlpBlocked: 10, falsePositives: 1, policyUpdates: 2 },
+            "proofpoint": { interactions: 0, alerts: { critical: 0, high: 2, medium: 3, low: 1 }, totalAlerts: 6, dlpBlocked: 5, falsePositives: 1, policyUpdates: 1 },
             "ms-365": { interactions: 291174, alerts: { critical: 1, high: 2, medium: 3, low: 2 }, blocked: { critical: 1, high: 1, medium: 1, low: 1 }, totalAlerts: 8, openCases: 2, closedCases: 6, engagementsBreakdown: { employee: 5, manager: 3, legal: 1, evidence: 2 }, dlpAlerts: 12, falsePositives: 1, smartLeakageBlocks: 4, policyAdjustments: 2 },
             "gmail": { interactions: 79837, alerts: { critical: 0, high: 1, medium: 1, low: 1 }, blocked: { critical: 0, high: 0, medium: 1, low: 0 }, totalAlerts: 3, openCases: 1, closedCases: 2, engagementsBreakdown: { employee: 2, manager: 1, legal: 0, evidence: 1 }, dlpAlerts: 6, falsePositives: 1, smartLeakageBlocks: 1, policyAdjustments: 1 },
             "slack": { interactions: 11255, alerts: { critical: 0, high: 0, medium: 1, low: 1 }, blocked: { critical: 0, high: 0, medium: 0, low: 0 }, totalAlerts: 2, openCases: 1, closedCases: 1, engagementsBreakdown: { employee: 1, manager: 1, legal: 0, evidence: 0 }, dlpAlerts: 0, falsePositives: 0, smartLeakageBlocks: 0, policyAdjustments: 0 }
         },
         "30d": {
-            "ms-purview": { interactions: 0, alerts: { critical: 4, high: 9, medium: 14, low: 5 }, totalAlerts: 32, dlpBlocked: 28, falsePositives: 3, policyUpdates: 5 },
-            "netskope": { interactions: 0, alerts: { critical: 3, high: 6, medium: 9, low: 2 }, totalAlerts: 20, dlpBlocked: 18, falsePositives: 2, policyUpdates: 3 },
+            "forcepoint": { interactions: 0, alerts: { critical: 4, high: 9, medium: 14, low: 5 }, totalAlerts: 32, dlpBlocked: 28, falsePositives: 3, policyUpdates: 5 },
+            "proofpoint": { interactions: 0, alerts: { critical: 3, high: 6, medium: 9, low: 2 }, totalAlerts: 20, dlpBlocked: 18, falsePositives: 2, policyUpdates: 3 },
             "ms-365": { interactions: 1247892, alerts: { critical: 3, high: 6, medium: 10, low: 3 }, blocked: { critical: 2, high: 4, medium: 3, low: 1 }, totalAlerts: 22, openCases: 6, closedCases: 16, engagementsBreakdown: { employee: 14, manager: 10, legal: 2, evidence: 5 }, dlpAlerts: 32, falsePositives: 3, smartLeakageBlocks: 10, policyAdjustments: 5 },
             "gmail": { interactions: 342156, alerts: { critical: 1, high: 2, medium: 3, low: 2 }, blocked: { critical: 1, high: 1, medium: 1, low: 0 }, totalAlerts: 8, openCases: 2, closedCases: 6, engagementsBreakdown: { employee: 5, manager: 3, legal: 1, evidence: 2 }, dlpAlerts: 20, falsePositives: 2, smartLeakageBlocks: 3, policyAdjustments: 3 },
             "slack": { interactions: 48234, alerts: { critical: 1, high: 2, medium: 1, low: 1 }, blocked: { critical: 0, high: 0, medium: 0, low: 0 }, totalAlerts: 5, openCases: 1, closedCases: 4, engagementsBreakdown: { employee: 3, manager: 2, legal: 0, evidence: 1 }, dlpAlerts: 0, falsePositives: 0, smartLeakageBlocks: 0, policyAdjustments: 0 }
         },
         "90d": {
-            "ms-purview": { interactions: 0, alerts: { critical: 12, high: 28, medium: 42, low: 18 }, totalAlerts: 100, dlpBlocked: 85, falsePositives: 12, policyUpdates: 14 },
-            "netskope": { interactions: 0, alerts: { critical: 8, high: 18, medium: 26, low: 8 }, totalAlerts: 60, dlpBlocked: 52, falsePositives: 8, policyUpdates: 9 },
+            "forcepoint": { interactions: 0, alerts: { critical: 12, high: 28, medium: 42, low: 18 }, totalAlerts: 100, dlpBlocked: 85, falsePositives: 12, policyUpdates: 14 },
+            "proofpoint": { interactions: 0, alerts: { critical: 8, high: 18, medium: 26, low: 8 }, totalAlerts: 60, dlpBlocked: 52, falsePositives: 8, policyUpdates: 9 },
             "ms-365": { interactions: 3743676, alerts: { critical: 10, high: 22, medium: 35, low: 13 }, blocked: { critical: 8, high: 15, medium: 10, low: 5 }, totalAlerts: 80, openCases: 12, closedCases: 68, engagementsBreakdown: { employee: 48, manager: 32, legal: 8, evidence: 15 }, dlpAlerts: 100, falsePositives: 12, smartLeakageBlocks: 38, policyAdjustments: 14 },
             "gmail": { interactions: 1026468, alerts: { critical: 4, high: 9, medium: 12, low: 5 }, blocked: { critical: 3, high: 5, medium: 3, low: 1 }, totalAlerts: 30, openCases: 4, closedCases: 26, engagementsBreakdown: { employee: 19, manager: 12, legal: 4, evidence: 6 }, dlpAlerts: 60, falsePositives: 8, smartLeakageBlocks: 12, policyAdjustments: 9 },
             "slack": { interactions: 144702, alerts: { critical: 3, high: 6, medium: 8, low: 3 }, blocked: { critical: 1, high: 2, medium: 1, low: 1 }, totalAlerts: 20, openCases: 3, closedCases: 17, engagementsBreakdown: { employee: 11, manager: 7, legal: 2, evidence: 4 }, dlpAlerts: 0, falsePositives: 0, smartLeakageBlocks: 5, policyAdjustments: 0 }
@@ -1672,7 +1694,7 @@ const DEMO_DATA = {
     // Shows AXIA improvement story - higher cases in 90d (historical), lower in recent periods
     departmentRiskByTimeframe: {
         "1d": {
-            // V6.28: Total = 8 cases — Valley Bank caseTypes
+            // V6.28.1: Total = 8 cases — Valley Bank caseTypes
             "Engineering": { cases: 2, trend: "down", severity: "medium", percentage: 25, critical: 0, high: 1, medium: 1, low: 0, caseTypes: ['Credit model access'] },
             "Commercial Banking": { cases: 2, trend: "down", severity: "low", percentage: 25, critical: 0, high: 0, medium: 1, low: 1, caseTypes: ['Client data export'] },
             "Treasury Solutions": { cases: 2, trend: "stable", severity: "medium", percentage: 25, critical: 1, high: 1, medium: 0, low: 0, caseTypes: ['Treasury configs'] },
@@ -1683,7 +1705,7 @@ const DEMO_DATA = {
             "Executive": { cases: 0, trend: "stable", severity: "low", percentage: 0, critical: 0, high: 0, medium: 0, low: 0, caseTypes: [] }
         },
         "7d": {
-            // V6.28: Total = 30 cases — Valley Bank caseTypes
+            // V6.28.1: Total = 30 cases — Valley Bank caseTypes
             "Engineering": { cases: 7, trend: "down", severity: "medium", percentage: 23, critical: 2, high: 2, medium: 2, low: 1, caseTypes: ['Credit model access', 'API extraction'] },
             "Commercial Banking": { cases: 7, trend: "down", severity: "medium", percentage: 23, critical: 1, high: 2, medium: 2, low: 2, caseTypes: ['Client data export', 'Loan portfolio'] },
             "Treasury Solutions": { cases: 5, trend: "stable", severity: "medium", percentage: 17, critical: 2, high: 1, medium: 2, low: 0, caseTypes: ['Treasury configs', 'Fee structures'] },
@@ -1694,7 +1716,7 @@ const DEMO_DATA = {
             "Executive": { cases: 0, trend: "stable", severity: "low", percentage: 0, critical: 0, high: 0, medium: 0, low: 0, caseTypes: [] }
         },
         "30d": {
-            // V6.28: Total = 105 cases — Valley Bank caseTypes
+            // V6.28.1: Total = 105 cases — Valley Bank caseTypes
             "Engineering": { cases: 26, trend: "down", severity: "high", percentage: 25, critical: 5, high: 8, medium: 9, low: 4, caseTypes: ['IP exfiltration', 'Departure risk'] },
             "Commercial Banking": { cases: 19, trend: "down", severity: "medium", percentage: 18, critical: 3, high: 5, medium: 7, low: 4, caseTypes: ['Client data export', 'Loan portfolio'] },
             "Treasury Solutions": { cases: 16, trend: "stable", severity: "high", percentage: 15, critical: 4, high: 5, medium: 5, low: 2, caseTypes: ['Treasury configs', 'Fee structures'] },
@@ -1705,7 +1727,7 @@ const DEMO_DATA = {
             "Executive": { cases: 5, trend: "stable", severity: "critical", percentage: 5, critical: 2, high: 2, medium: 1, low: 0, caseTypes: ['M&A data', 'Board materials'] }
         },
         "90d": {
-            // V6.28: Total = 340 cases — Valley Bank caseTypes
+            // V6.28.1: Total = 340 cases — Valley Bank caseTypes
             "Engineering": { cases: 74, trend: "down", severity: "high", percentage: 22, critical: 12, high: 22, medium: 28, low: 12, caseTypes: ['IP exfiltration', 'Departure risk', 'Credit model access'] },
             "Commercial Banking": { cases: 68, trend: "down", severity: "high", percentage: 20, critical: 10, high: 18, medium: 26, low: 14, caseTypes: ['Client data export', 'Loan portfolio', 'Client lists'] },
             "Treasury Solutions": { cases: 56, trend: "down", severity: "high", percentage: 16, critical: 10, high: 15, medium: 22, low: 9, caseTypes: ['Treasury configs', 'Fee structures', 'M&A data'] },
@@ -1732,7 +1754,7 @@ const DEMO_DATA = {
     suppressedDlpAlerts: [
         {
             id: 'FP-DLP-001',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PII: SSN + Financial Data in External Attachment',
             triggerTime: '2025-01-13 09:12',
             employee: 'Ben Nakamura',
@@ -1748,7 +1770,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-002',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PII: SSN Pattern + Account Number',
             triggerTime: '2025-01-13 10:22',
             employee: 'Rachel Torres',
@@ -1764,7 +1786,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-003',
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             dlpRule: 'Credentials: API Keys + Secrets Exposure',
             triggerTime: '2025-01-13 11:05',
             employee: 'Daniel Park',
@@ -1780,7 +1802,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-004',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PII: National ID + PII in External Payload',
             triggerTime: '2025-01-13 14:18',
             employee: 'Sophia Kim',
@@ -1796,7 +1818,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-005',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PII: SSN + Account Data in Support Document',
             triggerTime: '2025-01-13 09:45',
             employee: 'Karen Mitchell',
@@ -1812,7 +1834,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-006',
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             dlpRule: 'Banking Data: Account + Routing Numbers',
             triggerTime: '2025-01-13 13:30',
             employee: 'Marcus Webb',
@@ -1828,7 +1850,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-007',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PII: SSN + PCI in Investigation Context',
             triggerTime: '2025-01-12 16:40',
             employee: 'David Reeves',
@@ -1844,7 +1866,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-008',
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             dlpRule: 'PCI-DSS: Bulk Card Numbers + Transaction Data',
             triggerTime: '2025-01-13 08:05',
             employee: 'Amir Hadid',
@@ -1860,7 +1882,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-009',
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             dlpRule: 'Credentials: Auth Tokens + Card Data in Logs',
             triggerTime: '2025-01-13 15:50',
             employee: 'Wei Zhang',
@@ -1876,7 +1898,7 @@ const DEMO_DATA = {
         },
         {
             id: 'FP-DLP-010',
-            dlpSystem: 'Microsoft Purview',
+            dlpSystem: 'Forcepoint DLP',
             dlpRule: 'PCI-DSS: Card Number + CVV + Expiry',
             triggerTime: '2025-01-13 12:15',
             employee: 'Priya Nair',
@@ -2035,24 +2057,28 @@ const DEMO_DATA = {
     // V6.21: Real date labels (based on demo date ~Feb 2026)
     falseAlarmsTrend: {
         "1d": {
+            // V6.28.1: ~3% noise reduction (today - DLPs now well-tuned, almost all alerts are real)
             labels: ['6h', '12h', '18h', '24h'],
             dlpAlerts: [38, 42, 35, 40],
-            axiaTrueAlerts: [2, 3, 1, 2]
+            axiaTrueAlerts: [37, 40, 34, 39]
         },
         "7d": {
+            // V6.28.1: 5% noise reduction (this week - DLPs generating mostly true alerts now)
             labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
             dlpAlerts: [145, 138, 152, 141, 148, 139, 142],
-            axiaTrueAlerts: [5, 3, 6, 4, 5, 3, 4]
+            axiaTrueAlerts: [137, 131, 144, 134, 141, 132, 136]
         },
         "30d": {
+            // V6.28.1: 30% noise reduction (last month - AXIA still training DLP rules)
             labels: ['Jan 10', 'Jan 17', 'Jan 24', 'Jan 31'],
             dlpAlerts: [612, 548, 492, 445],
-            axiaTrueAlerts: [32, 28, 24, 21]
+            axiaTrueAlerts: [428, 384, 344, 312]
         },
         "90d": {
+            // V6.28.1: 95% noise reduction (full quarter - includes early noisy period before AXIA tuned DLPs)
             labels: ['Nov', 'Dec', 'Jan'],
             dlpAlerts: [2847, 1923, 1412],
-            axiaTrueAlerts: [145, 110, 85]
+            axiaTrueAlerts: [142, 96, 71]
         }
     },
 
@@ -2103,7 +2129,7 @@ const DEMO_DATA = {
         "90d": { open: 18, assigned: 12, unassigned: 12, closed: 298 }
     },
 
-    // V6.28: Top Case Types by timeframe — Valley Bank categories
+    // V6.28.1: Top Case Types by timeframe — Valley Bank categories
     caseTypesByTimeframe: {
         "1d": [
             { type: 'IP Exfiltration', count: 2, icon: 'code' },
@@ -2211,16 +2237,16 @@ const DEMO_DATA = {
     connections: [
         // ===== DLP SYSTEMS =====
         {
-            id: 'ms-purview',
-            name: 'Microsoft Purview DLP',
-            shortName: 'Purview',
+            id: 'forcepoint',
+            name: 'Forcepoint DLP',
+            shortName: 'Forcepoint',
             icon: 'shield',
             color: 'purple-500',
             type: 'dlp',
             category: 'system',
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
-            // V5.9: Purview covers Microsoft ecosystem
+            // V6.28.1: Forcepoint covers endpoint and network DLP
             coversChannels: ['ms-365', 'sharepoint', 'onedrive', 'teams'],
             stats: {
                 dataProcessed: '142 alerts ingested',
@@ -2236,7 +2262,7 @@ const DEMO_DATA = {
             },
             policies: [
                 {
-                    id: 'purview-pii',
+                    id: 'forcepoint-pii',
                     name: 'PII Data Protection',
                     enabled: true,
                     triggerCount: 142,
@@ -2256,7 +2282,7 @@ const DEMO_DATA = {
                     ]
                 },
                 {
-                    id: 'purview-financial',
+                    id: 'forcepoint-financial',
                     name: 'Financial Data Controls',
                     enabled: true,
                     triggerCount: 78,
@@ -2270,7 +2296,7 @@ const DEMO_DATA = {
                     ]
                 },
                 {
-                    id: 'purview-source',
+                    id: 'forcepoint-source',
                     name: 'Source Code Protection',
                     enabled: true,
                     triggerCount: 38,
@@ -2286,16 +2312,16 @@ const DEMO_DATA = {
             ]
         },
         {
-            id: 'netskope',
-            name: 'Netskope DLP',
-            shortName: 'Netskope',
+            id: 'proofpoint',
+            name: 'Proofpoint Enterprise DLP',
+            shortName: 'Proofpoint',
             icon: 'shield',
             color: 'teal-500',
             type: 'dlp',
             category: 'system',
             status: 'connected',
             connectedSince: 'Oct 18, 2025',
-            // V5.9: Netskope covers non-Microsoft cloud apps
+            // V6.28.1.1: Proofpoint covers email and cloud DLP
             coversChannels: ['gmail', 'slack', 'dropbox', 'box', 'google-drive'],
             stats: {
                 dataProcessed: '78 alerts ingested',
@@ -2311,7 +2337,7 @@ const DEMO_DATA = {
             },
             policies: [
                 {
-                    id: 'netskope-cloud',
+                    id: 'proofpoint-cloud',
                     name: 'Cloud App Protection',
                     enabled: true,
                     triggerCount: 68,
@@ -2325,7 +2351,7 @@ const DEMO_DATA = {
                     ]
                 },
                 {
-                    id: 'netskope-exfil',
+                    id: 'proofpoint-exfil',
                     name: 'Data Exfiltration Prevention',
                     enabled: true,
                     triggerCount: 42,
@@ -2341,7 +2367,7 @@ const DEMO_DATA = {
             ]
         },
 
-        // ===== CHANNELS - Microsoft Ecosystem (covered by Purview) =====
+        // ===== CHANNELS - Microsoft Ecosystem (covered by Forcepoint) =====
         {
             id: 'ms-365',
             name: 'Microsoft 365 Email',
@@ -2353,7 +2379,7 @@ const DEMO_DATA = {
             channelType: 'email',
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
-            dlpSystem: 'Purview', // V5.9: Explicit DLP mapping
+            dlpSystem: 'Forcepoint', // V5.9: Explicit DLP mapping
             stats: {
                 dataProcessed: '1.2M emails scanned',
                 coverage: '100% of mailboxes',
@@ -2371,7 +2397,7 @@ const DEMO_DATA = {
             policies: [] // V6.9: Email channels don't have policies (just DLPs)
         },
 
-        // ===== CHANNELS - Non-Microsoft (covered by Netskope) =====
+        // ===== CHANNELS - Email/Cloud (covered by Proofpoint) =====
         {
             id: 'gmail',
             name: 'Google Workspace',
@@ -2383,7 +2409,7 @@ const DEMO_DATA = {
             channelType: 'email',
             status: 'connected',
             connectedSince: 'Oct 16, 2025',
-            dlpSystem: 'Netskope', // V5.9: Explicit DLP mapping
+            dlpSystem: 'Proofpoint', // V5.9: Explicit DLP mapping
             stats: {
                 dataProcessed: '340K emails scanned',
                 coverage: '100% of workspace',
@@ -2411,7 +2437,7 @@ const DEMO_DATA = {
             channelType: 'saas',
             status: 'connected',
             connectedSince: 'Oct 17, 2025',
-            dlpSystem: 'Netskope', // V5.9: Explicit DLP mapping
+            dlpSystem: 'Proofpoint', // V5.9: Explicit DLP mapping
             stats: {
                 dataProcessed: '48K messages monitored',
                 coverage: '100% of workspace',
@@ -2581,7 +2607,7 @@ const DEMO_DATA = {
                 through: 'Any channel',
                 to: 'Any destination'
             },
-            channels: ['ms-purview', 'netskope'],  // V6.14: Only DLPs
+            channels: ['forcepoint', 'proofpoint'],  // V6.14: Only DLPs
             action: 'Alert + Silent monitoring',
             triggerCount: 9,
             lastTriggered: '1 day ago',
@@ -2598,7 +2624,7 @@ const DEMO_DATA = {
                 through: 'Email',
                 to: 'Domain not in approved list'
             },
-            channels: ['ms-purview'],  // V6.14: Only DLPs
+            channels: ['forcepoint'],  // V6.14: Only DLPs
             action: 'Block + Manager notification',
             triggerCount: 6,
             lastTriggered: '3 hours ago',
@@ -2615,7 +2641,7 @@ const DEMO_DATA = {
                 through: 'Any channel',
                 to: 'External recipients'
             },
-            channels: ['ms-purview'],  // V6.14: Only DLPs
+            channels: ['forcepoint'],  // V6.14: Only DLPs
             action: 'Block + Legal alert',
             triggerCount: 2,
             lastTriggered: '2 weeks ago',
@@ -2649,7 +2675,7 @@ const DEMO_DATA = {
                 through: 'Email',
                 to: 'Known competitor list'
             },
-            channels: ['ms-purview'],  // V6.14: Only DLPs
+            channels: ['forcepoint'],  // V6.14: Only DLPs
             action: 'Log + Monthly report',
             triggerCount: 23,
             lastTriggered: '2 hours ago',
@@ -2666,7 +2692,7 @@ const DEMO_DATA = {
                 through: 'Any channel',
                 to: 'Any destination'
             },
-            channels: ['ms-purview', 'slack'],  // V6.14: DLPs + direct APIs
+            channels: ['forcepoint', 'slack'],  // V6.14: DLPs + direct APIs
             action: 'Alert + Log for review',
             triggerCount: 12,
             lastTriggered: '1 day ago',
@@ -2683,7 +2709,7 @@ const DEMO_DATA = {
                 through: 'Cloud sync apps',
                 to: 'Personal Dropbox, Google Drive, iCloud'
             },
-            channels: ['netskope'],  // V6.14: Only DLPs
+            channels: ['proofpoint'],  // V6.14: Only DLPs
             action: 'Block + Manager notification',
             triggerCount: 3,
             lastTriggered: '1 week ago',
@@ -2737,7 +2763,7 @@ const DEMO_DATA = {
     //    VB-015: ML fraud-model training dataset [VALIDATED: Safe 0.0]
     //    VB-016: ACH return simulation test file [VALIDATED: Safe 0.0]
     //
-    // MOVED TO FALSE ALERTS PANEL ONLY (V6.28 — not AXIA cases, pure DLP FPs):
+    // MOVED TO FALSE ALERTS PANEL ONLY (V6.28.1 — not AXIA cases, pure DLP FPs):
     //    VB-008: Core banking API test credentials in CI/CD → FP-DLP-003 [VALIDATED: Safe 0.0]
     //    VB-010: Synthetic ACH batch load-test data → FP-DLP-008
     //
@@ -2770,7 +2796,7 @@ const DEMO_DATA = {
                 riskFactors: ['Resignation submitted 10 days ago', 'Accepted offer at M&T Bank', 'Key contributor to credit risk models']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             assignee: { name: 'Alex Rivera', initials: 'AR', role: 'Security Analyst' },
             actions: ['Silent evidence collection', 'HR notified', 'Manager notified'],
             completedActions: ['contact-manager', 'contact-hr'],
@@ -2796,7 +2822,8 @@ const DEMO_DATA = {
                 does: 'Downloads or syncs more than 50 model repository files in 7 days',
                 through: 'Any channel including personal cloud sync',
                 to: 'Any personal storage destination'
-            }
+            },
+            monitorTypes: ['Credit risk models', 'Underwriting algorithms', 'Prediction datasets']
         },
 
         {
@@ -2817,7 +2844,7 @@ const DEMO_DATA = {
                 riskFactors: ['Husband launched competing commercial banking advisory', 'Full commercial client data extraction', 'Used service account credentials']
             },
             dlpAlerted: false,
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             assignee: null,
             actions: ['Manager notified', 'Service account suspended'],
             completedActions: ['contact-manager'],
@@ -2841,7 +2868,8 @@ const DEMO_DATA = {
                 does: 'Exports more than 100 commercial client records via API',
                 through: 'Treasury management platform API',
                 to: 'Local storage or personal destinations'
-            }
+            },
+            monitorTypes: ['Client portfolio data', 'Treasury fee structures', 'Covenant details']
         },
 
         {
@@ -2862,7 +2890,7 @@ const DEMO_DATA = {
                 riskFactors: ['Named 5 commercial clients by name', 'ACH/wire processing failure details', 'Forwarded to competitor domain']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             assignee: { name: 'Alex Rivera', initials: 'AR', role: 'Security Analyst' },
             actions: ['Manager notified', 'HR notified', 'Evidence preserved'],
             completedActions: ['contact-manager', 'contact-hr'],
@@ -2888,7 +2916,8 @@ const DEMO_DATA = {
                 does: 'Forwards internal documents to personal email that are subsequently forwarded externally',
                 through: 'Email (multi-hop chain)',
                 to: 'Known competitor domains'
-            }
+            },
+            monitorTypes: ['Migration documents', 'Client data', 'Processing architecture']
         },
 
         // ========== HIGH CASES (3 open) ==========
@@ -2911,7 +2940,7 @@ const DEMO_DATA = {
                 riskFactors: ['External Slack DM to journalist', 'Confidential OCC examination findings', 'Named BSA/AML deficiencies']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             assignee: { name: 'Alex Rivera', initials: 'AR', role: 'Security Analyst' },
             actions: ['Manager notified', 'Legal notified'],
             completedActions: ['contact-manager', 'contact-legal'],
@@ -2947,7 +2976,7 @@ const DEMO_DATA = {
                 riskFactors: ['FDIC Call Report draft', 'Commercial client financials', 'Consultant not under NDA']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             assignee: null,
             actions: ['Manager notified', 'Consultant contacted for deletion'],
             completedActions: ['contact-manager'],
@@ -2983,7 +3012,7 @@ const DEMO_DATA = {
                 riskFactors: ['Named 142 employees with severance amounts', 'Personal cloud destination', 'Pre-announcement by 3 weeks']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             assignee: null,
             actions: ['HR VP notified', 'Legal notified'],
             completedActions: ['contact-manager'],
@@ -3019,11 +3048,11 @@ const DEMO_DATA = {
                 riskFactors: ['None identified']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['User verified', 'Pending approval'],
             completedActions: [],
             analysis: {
-                what: 'Sarah Goldman sent Valley\'s treasury management platform technical specifications (ACH processing architecture, wire transfer protocols, fraud detection rules, cash management features) to a verified prospect (Prologis Inc, $180B REIT) during active RFP response. Purview DLP alerted due to "Confidential" classification.',
+                what: 'Sarah Goldman sent Valley\'s treasury management platform technical specifications (ACH processing architecture, wire transfer protocols, fraud detection rules, cash management features) to a verified prospect (Prologis Inc, $180B REIT) during active RFP response. Forcepoint DLP alerted due to "Confidential" classification.',
                 whyMatters: 'While the documentation contains proprietary treasury platform architecture details, sharing technical specifications with serious prospects is essential to the enterprise treasury management sales process. Prologis is in late-stage evaluation with a $2.8M annual fee opportunity.',
                 whyUnusual: "Classification triggered a DLP alert, but context shows legitimate activity: WHO (Treasury Solutions Architect, role-appropriate for enterprise sales) + WHAT (technical specs, standard material for treasury management platform evaluations) + TO WHOM (Prologis Inc, verified prospect with $2.8M opportunity in Salesforce pipeline, active RFP in progress). AXIA identified as likely false positive and engaged user to verify."
             },
@@ -3031,7 +3060,7 @@ const DEMO_DATA = {
                 { time: '7:00 AM', event: 'Awaiting manager approval to confirm', source: 'AXIA workflow', color: 'primary' },
                 { time: '6:50 AM', event: 'User verified legitimate business purpose - Prologis RFP', source: 'AXIA engagement', color: 'status-success' },
                 { time: '6:45 AM', event: 'AXIA identified as potential false positive - verified prospect', source: 'AXIA analysis engine', color: 'primary' },
-                { time: '6:40 AM', event: 'DLP alerted on outbound email with Confidential tag', source: 'Microsoft Purview DLP', color: 'status-blocked' }
+                { time: '6:40 AM', event: 'DLP alerted on outbound email with Confidential tag', source: 'Forcepoint DLP', color: 'status-blocked' }
             ],
             canEnforce: false
         },
@@ -3045,7 +3074,7 @@ const DEMO_DATA = {
             status: 'closed',
             score: 45,
             time: '1d ago',
-            description: 'Purview flagged financial data patterns in staging environment. AXIA identified all data as synthetic test data from the credit risk model regression suite.',
+            description: 'Forcepoint DLP flagged financial data patterns in staging environment. AXIA identified all data as synthetic test data from the credit risk model regression suite.',
             entity: {
                 name: 'Ben Nakamura',
                 initials: 'BN',
@@ -3056,23 +3085,23 @@ const DEMO_DATA = {
                 riskFactors: ['None - standard QA workflow']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['Auto-resolved as false positive'],
             completedActions: [],
             analysis: {
-                what: 'Purview DLP flagged apparent financial data patterns in Valley\'s credit risk model staging environment: synthetic borrower records, test loan amounts, simulated default probabilities. Content detected:\n\n[ENV] STAGING \u2013 DO NOT USE FOR PRODUCTION\nborrower_id=test_849201\nloan_amount=$4,720,000.00\ndefault_probability=test_0.023\nstatus=approved_for_sandbox',
+                what: 'Forcepoint DLP flagged apparent financial data patterns in Valley\'s credit risk model staging environment: synthetic borrower records, test loan amounts, simulated default probabilities. Content detected:\n\n[ENV] STAGING \u2013 DO NOT USE FOR PRODUCTION\nborrower_id=test_849201\nloan_amount=$4,720,000.00\ndefault_probability=test_0.023\nstatus=approved_for_sandbox',
                 whyMatters: 'While the data patterns match financial data signatures that DLP is designed to catch, all values are synthetic test data generated by Valley\'s credit risk test data factory. The staging environment is clearly marked [STAGING] and isolated from production environments.',
-                whyUnusual: "Not unusual at all. AXIA analyzed context: WHO (QA Lead running v4.2 regression tests) + WHAT (synthetic data from test data factory, all IDs prefixed with test_) + WHERE (staging environment clearly labeled, network-isolated from production). Purview triggered on financial data patterns; AXIA suppressed the false positive in 3 minutes. This is a routine occurrence for any commercial banking platform with proper testing practices.\n\nAXIA Content Analysis: Safe (0.0) — Test indicators: \'sandbox\', \'STAGING\', \'DO NOT USE FOR PRODUCTION\' — all data is test data."
+                whyUnusual: "Not unusual at all. AXIA analyzed context: WHO (QA Lead running v4.2 regression tests) + WHAT (synthetic data from test data factory, all IDs prefixed with test_) + WHERE (staging environment clearly labeled, network-isolated from production). Forcepoint DLP triggered on financial data patterns; AXIA suppressed the false positive in 3 minutes. This is a routine occurrence for any commercial banking platform with proper testing practices.\n\nAXIA Content Analysis: Safe (0.0) — Test indicators: \'sandbox\', \'STAGING\', \'DO NOT USE FOR PRODUCTION\' — all data is test data."
             },
             timeline: [
                 { time: 'Yesterday 3:05 PM', event: 'Case auto-closed - false positive confirmed', source: 'AXIA resolution engine', color: 'status-success' },
                 { time: 'Yesterday 3:03 PM', event: 'AXIA verified: staging environment, synthetic test data', source: 'AXIA analysis engine', color: 'status-success' },
-                { time: 'Yesterday 3:00 PM', event: 'DLP flagged financial data patterns in staging', source: 'Microsoft Purview DLP', color: 'severity-medium' }
+                { time: 'Yesterday 3:00 PM', event: 'DLP flagged financial data patterns in staging', source: 'Forcepoint DLP', color: 'severity-medium' }
             ],
             canEnforce: false
         },
 
-        // CASE-VB-008 removed in V6.28 — DLP false positive, belongs in False Alerts panel only (FP-DLP-003)
+        // CASE-VB-008 removed in V6.28.1 — DLP false positive, belongs in False Alerts panel only (FP-DLP-003)
 
         {
             id: 'CASE-VB-012',
@@ -3092,7 +3121,7 @@ const DEMO_DATA = {
                 riskFactors: ['Personal email destination', 'Commercial client financials', 'First-time incident']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['Employee coached', 'Personal copy deleted', 'Case resolved'],
             completedActions: ['contact-employee'],
             analysis: {
@@ -3105,7 +3134,7 @@ const DEMO_DATA = {
                 { time: '3 days ago 1:15 PM', event: 'Employee acknowledged coaching and confirmed deletion', source: 'Employee response', color: 'accent-teal' },
                 { time: '3 days ago 11:30 AM', event: 'Employee coaching sent - explained client data handling policy', source: 'AXIA engagement', color: 'accent-teal' },
                 { time: '3 days ago 10:50 AM', event: 'Case created for review', source: 'AXIA analysis engine', color: 'primary' },
-                { time: '3 days ago 10:45 AM', event: 'Client financial data detected in outbound email', source: 'Microsoft Purview DLP', color: 'severity-medium' }
+                { time: '3 days ago 10:45 AM', event: 'Client financial data detected in outbound email', source: 'Forcepoint DLP', color: 'severity-medium' }
             ],
             canEnforce: false,
             resolutionMetrics: {
@@ -3135,7 +3164,7 @@ const DEMO_DATA = {
                 riskFactors: ['None - standard integration testing']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['Auto-resolved as false positive'],
             completedActions: [],
             analysis: {
@@ -3146,7 +3175,7 @@ const DEMO_DATA = {
             timeline: [
                 { time: '4 days ago 4:05 PM', event: 'Case auto-closed - sandbox test data confirmed', source: 'AXIA resolution engine', color: 'status-success' },
                 { time: '4 days ago 4:02 PM', event: 'AXIA verified: BSA/KYC sandbox, synthetic test payloads', source: 'AXIA analysis engine', color: 'status-success' },
-                { time: '4 days ago 4:00 PM', event: 'DLP flagged PII patterns in API payload', source: 'Microsoft Purview DLP', color: 'text-secondary' }
+                { time: '4 days ago 4:00 PM', event: 'DLP flagged PII patterns in API payload', source: 'Forcepoint DLP', color: 'text-secondary' }
             ],
             canEnforce: false
         },
@@ -3169,7 +3198,7 @@ const DEMO_DATA = {
                 riskFactors: ['None - compliance training program']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['Auto-resolved as false positive'],
             completedActions: [],
             analysis: {
@@ -3180,12 +3209,12 @@ const DEMO_DATA = {
             timeline: [
                 { time: '5 days ago 11:05 AM', event: 'Case auto-closed - training material confirmed', source: 'AXIA resolution engine', color: 'status-success' },
                 { time: '5 days ago 11:03 AM', event: 'AXIA verified: compliance training document, synthetic data', source: 'AXIA analysis engine', color: 'status-success' },
-                { time: '5 days ago 11:00 AM', event: 'DLP flagged SSN and card number patterns', source: 'Microsoft Purview DLP', color: 'text-secondary' }
+                { time: '5 days ago 11:00 AM', event: 'DLP flagged SSN and card number patterns', source: 'Forcepoint DLP', color: 'text-secondary' }
             ],
             canEnforce: false
         },
 
-        // CASE-VB-010 removed in V6.28 — DLP false positive, belongs in False Alerts panel only (FP-DLP-008)
+        // CASE-VB-010 removed in V6.28.1 — DLP false positive, belongs in False Alerts panel only (FP-DLP-008)
 
         {
             id: 'CASE-VB-013',
@@ -3205,7 +3234,7 @@ const DEMO_DATA = {
                 riskFactors: ['None - approved OSS contribution']
             },
             dlpAlerted: false,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['OSS approval verified', 'Auto-resolved'],
             completedActions: [],
             analysis: {
@@ -3240,7 +3269,7 @@ const DEMO_DATA = {
                 riskFactors: ['None - standard ML workflow']
             },
             dlpAlerted: true,
-            dlpSystem: 'Purview',
+            dlpSystem: 'Forcepoint',
             actions: ['Auto-resolved as false positive'],
             completedActions: [],
             analysis: {
@@ -3251,7 +3280,7 @@ const DEMO_DATA = {
             timeline: [
                 { time: '6 days ago 1:05 PM', event: 'Case auto-closed - synthetic ML training data confirmed', source: 'AXIA resolution engine', color: 'status-success' },
                 { time: '6 days ago 1:03 PM', event: 'AXIA verified: ML pipeline, synthetic dataset, test ranges', source: 'AXIA analysis engine', color: 'status-success' },
-                { time: '6 days ago 1:00 PM', event: 'DLP flagged SSN and card number patterns in data upload', source: 'Microsoft Purview DLP', color: 'text-secondary' }
+                { time: '6 days ago 1:00 PM', event: 'DLP flagged SSN and card number patterns in data upload', source: 'Forcepoint DLP', color: 'text-secondary' }
             ],
             canEnforce: false
         },
@@ -3274,7 +3303,7 @@ const DEMO_DATA = {
                 riskFactors: ['None - standard QA testing']
             },
             dlpAlerted: true,
-            dlpSystem: 'Netskope',
+            dlpSystem: 'Proofpoint',
             actions: ['Auto-resolved as false positive', 'Test suite exception recommended'],
             completedActions: [],
             analysis: {
@@ -3285,7 +3314,7 @@ const DEMO_DATA = {
             timeline: [
                 { time: '7 days ago 9:05 AM', event: 'Case auto-closed - Stripe test card confirmed', source: 'AXIA resolution engine', color: 'status-success' },
                 { time: '7 days ago 9:03 AM', event: 'AXIA verified: QA test suite, standard Stripe decline card', source: 'AXIA analysis engine', color: 'status-success' },
-                { time: '7 days ago 9:00 AM', event: 'DLP flagged card + CVV + expiry in test file', source: 'Netskope', color: 'text-secondary' }
+                { time: '7 days ago 9:00 AM', event: 'DLP flagged card + CVV + expiry in test file', source: 'Proofpoint', color: 'text-secondary' }
             ],
             canEnforce: false
         }
@@ -3377,10 +3406,10 @@ const DEMO_DATA = {
         // V6.14: Expanded DLP list
         dlp: [
             { name: 'Symantec DLP', icon: 'shield', status: 'in-environment' },
-            { name: 'Forcepoint DLP', icon: 'security', status: 'available' },
+            { name: 'Microsoft Forcepoint DLP', icon: 'security', status: 'available' },
             { name: 'Digital Guardian', icon: 'verified_user', status: 'available' },
             { name: 'Trellix DLP', icon: 'lock', status: 'available' },
-            { name: 'Proofpoint DLP', icon: 'mail_lock', status: 'available' },
+            { name: 'Netskope DLP', icon: 'cloud_sync', status: 'available' },
             { name: 'Code42 Incydr', icon: 'code', status: 'available' },
             { name: 'Zscaler DLP', icon: 'cloud_sync', status: 'available' },
             { name: 'Palo Alto DSPM', icon: 'dns', status: 'available' }
@@ -3785,14 +3814,14 @@ function renderFullChat() {
                         ${p.label}
                     </button>
                 `).join('') : `
-                    <button onclick="sendSuggestedPrompt('What are the top risk patterns in Engineering this quarter?')" class="px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-secondary hover:text-text-primary hover:border-primary transition-colors text-sm">
-                        Risk patterns in Engineering
+                    <button onclick="sendSuggestedPrompt('Which Treasury Solutions employees pose the highest risk to our wire transfer infrastructure?')" class="px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-secondary hover:text-text-primary hover:border-primary transition-colors text-sm">
+                        Treasury wire transfer risk
                     </button>
                     <button onclick="sendSuggestedPrompt('Tell me about Marcus Chen')" class="px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-secondary hover:text-text-primary hover:border-primary transition-colors text-sm">
                         Analyze Marcus Chen
                     </button>
-                    <button onclick="sendSuggestedPrompt('What enforcement rules should I create?')" class="px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-secondary hover:text-text-primary hover:border-primary transition-colors text-sm">
-                        Enforcement opportunities
+                    <button onclick="sendSuggestedPrompt('How does our Commercial Banking lending data exposure compare across departments, and what OCC compliance risks should I flag?')" class="px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-secondary hover:text-text-primary hover:border-primary transition-colors text-sm">
+                        CRE lending data exposure
                     </button>
                 `}
             </div>
@@ -3898,7 +3927,10 @@ async function sendMessage() {
         const runRes = await fetch(`${base}/v1/threads/${currentThreadId}/runs`, {
             method: 'POST',
             headers,
-            body: JSON.stringify({ assistant_id: ASSISTANT_ID })
+            body: JSON.stringify({
+                assistant_id: ASSISTANT_ID,
+                additional_instructions: `You are deployed at Valley National Bancorp (Valley Bank, valley.com), a $62B commercial bank headquartered in Wayne, NJ. Valley operates 200+ branches across NJ, NY, CT, FL, AL. Key business lines: Commercial Banking (CRE lending #1 in NJ/NY metro), Treasury Solutions (cash management, ACH, wire transfers), Wealth Management ($8B AUM), Digital Banking (consumer + small business). CEO: Ira Robbins. ~4,800 employees. Recent: completed Leumi Bank USA acquisition (2022), core banking platform modernization in progress. Regulatory: OCC-supervised, FDIC-insured. Valley's insider risk profile centers on: (1) Commercial loan data and client relationships, (2) Treasury/payments infrastructure, (3) Wealth client PII and portfolio data, (4) Core conversion project IP. When answering, naturally weave in Valley-specific context where relevant — reference their business lines, regulatory environment, client types, and organizational structure. Use banking/financial services terminology naturally.`
+            })
         });
         if (!runRes.ok) throw new Error('Failed to create run');
         const runData = await runRes.json();
@@ -4739,15 +4771,15 @@ function renderConnectionsOverview() {
 
 // ==================== V5.9: Helper to get DLP system for a channel ====================
 function getDLPForChannel(channelId) {
-    // V5.9: Purview covers Microsoft ecosystem, Netskope covers non-Microsoft
-    const purviewChannels = ['ms-365', 'ms-purview', 'sharepoint', 'onedrive', 'teams'];
-    const netskopeChannels = ['gmail', 'slack', 'dropbox', 'box', 'google-drive'];
+    // V6.28.1.1: Forcepoint covers endpoint/network DLP, Proofpoint covers email/cloud DLP
+    const forcepointChannels = ['ms-365', 'forcepoint', 'sharepoint', 'onedrive', 'teams'];
+    const proofpointChannels = ['gmail', 'slack', 'dropbox', 'box', 'google-drive'];
 
-    if (purviewChannels.includes(channelId)) return 'Purview';
-    if (netskopeChannels.includes(channelId)) return 'Netskope';
+    if (forcepointChannels.includes(channelId)) return 'Forcepoint';
+    if (proofpointChannels.includes(channelId)) return 'Proofpoint';
 
     // Default based on connection data
-    return 'Purview';
+    return 'Forcepoint';
 }
 
 // ==================== SECURITY POSTURE WIDGET (V6.9 - Combined Channel+DLP cards) ====================
@@ -5090,13 +5122,13 @@ function renderDashboardMetrics() {
     const systems = connectionsData.filter(c => c.status === 'connected' && c.category === 'system');
 
     // Get DLP-specific alerts
-    const purview = systems.find(s => s.id === 'ms-purview');
-    const netskope = systems.find(s => s.id === 'netskope');
+    const forcepoint = systems.find(s => s.id === 'forcepoint');
+    const proofpoint = systems.find(s => s.id === 'proofpoint');
 
-    const purviewAlerts = purview?.stats.alerts || { critical: 0, medium: 0, low: 0 };
-    const netskopeAlerts = netskope?.stats.alerts || { critical: 0, medium: 0, low: 0 };
-    const purviewFP = purview?.stats.falsePositives || 0;
-    const netskopeFP = netskope?.stats.falsePositives || 0;
+    const forcepointAlerts = forcepoint?.stats.alerts || { critical: 0, medium: 0, low: 0 };
+    const proofpointAlerts = proofpoint?.stats.alerts || { critical: 0, medium: 0, low: 0 };
+    const forcepointFP = forcepoint?.stats.falsePositives || 0;
+    const proofpointFP = proofpoint?.stats.falsePositives || 0;
 
     const engagements = metrics.engagementsByType || { employee: 0, manager: 0, legal: 0, evidence: 0 };
     const totalEngagements = engagements.employee + engagements.manager + engagements.legal;
@@ -5150,21 +5182,21 @@ function renderDashboardMetrics() {
             <!-- Row 3: DLP Alerts Breakdown - V5.7: Improved readability -->
             <div class="grid grid-cols-2 gap-2">
                 <div class="bg-purple-500/5 rounded-lg p-2.5 border border-purple-500/10">
-                    <div class="text-[11px] font-bold text-purple-500 mb-1.5">Purview Alerts:</div>
+                    <div class="text-[11px] font-bold text-purple-500 mb-1.5">Forcepoint Alerts:</div>
                     <div class="flex flex-wrap gap-1.5 text-[11px]">
-                        <span class="text-severity-critical">Crit: <strong>${purviewAlerts.critical}</strong></span>
-                        <span class="text-severity-medium">Med: <strong>${purviewAlerts.medium}</strong></span>
-                        <span class="text-severity-low">Low: <strong>${purviewAlerts.low}</strong></span>
-                        <span class="text-text-secondary ml-auto">FP: ${purviewFP}</span>
+                        <span class="text-severity-critical">Crit: <strong>${forcepointAlerts.critical}</strong></span>
+                        <span class="text-severity-medium">Med: <strong>${forcepointAlerts.medium}</strong></span>
+                        <span class="text-severity-low">Low: <strong>${forcepointAlerts.low}</strong></span>
+                        <span class="text-text-secondary ml-auto">FP: ${forcepointFP}</span>
                     </div>
                 </div>
                 <div class="bg-teal-500/5 rounded-lg p-2.5 border border-teal-500/10">
-                    <div class="text-[11px] font-bold text-teal-500 mb-1.5">Netskope Alerts:</div>
+                    <div class="text-[11px] font-bold text-teal-500 mb-1.5">Proofpoint Alerts:</div>
                     <div class="flex flex-wrap gap-1.5 text-[11px]">
-                        <span class="text-severity-critical">Crit: <strong>${netskopeAlerts.critical}</strong></span>
-                        <span class="text-severity-medium">Med: <strong>${netskopeAlerts.medium}</strong></span>
-                        <span class="text-severity-low">Low: <strong>${netskopeAlerts.low}</strong></span>
-                        <span class="text-text-secondary ml-auto">FP: ${netskopeFP}</span>
+                        <span class="text-severity-critical">Crit: <strong>${proofpointAlerts.critical}</strong></span>
+                        <span class="text-severity-medium">Med: <strong>${proofpointAlerts.medium}</strong></span>
+                        <span class="text-severity-low">Low: <strong>${proofpointAlerts.low}</strong></span>
+                        <span class="text-text-secondary ml-auto">FP: ${proofpointFP}</span>
                     </div>
                 </div>
             </div>
@@ -5306,10 +5338,10 @@ function renderConnectionsScreen() {
             <p class="text-xs text-text-muted mb-3">Contextual enforcement rules that guide DLP systems and SaaS applications. These policies use behavioral context that static rules cannot capture.</p>
             <div class="grid gap-3">
                 ${enforcementRulesData.map(rule => {
-                    // V6.14: Only DLPs (Purview, Netskope) and direct API integrations (Slack)
+                    // V6.14: Only DLPs (Forcepoint, Proofpoint) and direct API integrations (Slack)
                     const channelNames = {
-                        'ms-purview': 'Purview',
-                        'netskope': 'Netskope',
+                        'forcepoint': 'Forcepoint',
+                        'proofpoint': 'Proofpoint',
                         'slack': 'Slack'
                     };
                     const targetSystems = (rule.channels || []).map(ch => channelNames[ch] || ch).join(', ');
@@ -6757,7 +6789,7 @@ function renderHeatmapGrid(departments, severities = ['critical', 'high', 'mediu
             const alpha = val === 0 ? 0 : Math.max(0.25, Math.min(0.95, intensity * 0.75 + 0.25));
             const hexAlpha = val === 0 ? '' : Math.round(alpha * 255).toString(16).padStart(2, '0');
             const bgStyle = val === 0 ? 'background: var(--color-surface-elevated, #f1f5f9)' : `background-color: ${bg}${hexAlpha}`;
-            const textColor = alpha > 0.5 ? '#fff' : (val === 0 ? 'var(--color-text-muted,#cbd5e1)' : '#1e293b');
+            const textColor = alpha > 0.5 ? '#fff' : (val === 0 ? 'var(--color-text-muted,#cbd5e1)' : 'var(--color-text-primary,#1e293b)');
             return `<div class="flex items-center justify-center rounded-sm" style="${bgStyle}; height: 26px;">
                 <span style="font-size:10px;font-weight:700;color:${textColor}">${val > 0 ? val : ''}</span>
             </div>`;
@@ -7603,10 +7635,10 @@ function showConnectionFlow(name, icon, isInEnvironment) {
         'Jira': { fields: ['Instance URL', 'API Token', 'User Email'], method: 'API Token' },
         'Active Directory': { fields: ['Domain', 'LDAP URL', 'Service Account', 'Password'], method: 'LDAP' },
         'Symantec DLP': { fields: ['Server URL', 'API Key'], method: 'REST API' },
-        'Forcepoint DLP': { fields: ['Server URL', 'API Key', 'Account ID'], method: 'REST API' },
+        'Microsoft Forcepoint DLP': { fields: ['Tenant ID', 'Client ID', 'Client Secret'], method: 'OAuth 2.0' },
         'Digital Guardian': { fields: ['Tenant URL', 'API Key'], method: 'REST API' },
         'Trellix DLP': { fields: ['Server URL', 'API Key'], method: 'REST API' },
-        'Proofpoint DLP': { fields: ['API Key', 'API Secret'], method: 'REST API' },
+        'Netskope DLP': { fields: ['Tenant URL', 'API Key', 'API Secret'], method: 'REST API' },
         'Code42 Incydr': { fields: ['API Gateway URL', 'API Client ID', 'API Secret'], method: 'REST API' },
         'Zscaler DLP': { fields: ['Cloud Name', 'API Key', 'API Secret'], method: 'REST API' },
         'Palo Alto DSPM': { fields: ['Instance URL', 'API Key'], method: 'REST API' }
@@ -7747,8 +7779,8 @@ function showCreatePolicyModal(caseData) {
             <div>
                 <label class="block text-sm font-medium text-text-secondary mb-1">Target DLP System</label>
                 <select class="w-full px-3 py-2 rounded-lg border border-border-default bg-surface-elevated text-text-primary text-sm">
-                    <option>Microsoft Purview</option>
-                    <option>Netskope CASB</option>
+                    <option>Forcepoint DLP</option>
+                    <option>Proofpoint DLP</option>
                 </select>
             </div>
             <div>
@@ -7810,7 +7842,7 @@ function showAdjustPoliciesModal(caseData) {
                         <div class="w-9 h-5 bg-surface-hover rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
                     </label>
                 </div>
-                <div class="text-xs text-text-muted">Blocks code files to external recipients • Purview</div>
+                <div class="text-xs text-text-muted">Blocks code files to external recipients • Forcepoint</div>
             </div>
             <div class="bg-surface-card rounded-lg p-3 border border-border-subtle">
                 <div class="flex items-center justify-between mb-2">
@@ -7820,7 +7852,7 @@ function showAdjustPoliciesModal(caseData) {
                         <div class="w-9 h-5 bg-surface-hover rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
                     </label>
                 </div>
-                <div class="text-xs text-text-muted">Alerts on >50 files in 24h • Netskope</div>
+                <div class="text-xs text-text-muted">Alerts on >50 files in 24h • Proofpoint</div>
             </div>
             <div class="bg-surface-card rounded-lg p-3 border border-border-subtle">
                 <div class="flex items-center justify-between mb-2">
@@ -7892,14 +7924,15 @@ function showSmartControlModal(caseData) {
         <div class="bg-surface-card rounded-lg p-3 border border-border-subtle mb-4">
             <div class="text-xs text-text-secondary mb-2">Smart Control will monitor:</div>
             <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 bg-severity-critical/10 text-severity-critical text-xs rounded">Source code</span>
-                <span class="px-2 py-1 bg-severity-high/10 text-severity-high text-xs rounded">Customer data</span>
-                <span class="px-2 py-1 bg-severity-medium/10 text-severity-medium text-xs rounded">Internal docs</span>
+                ${(caseData.monitorTypes || ['Source code', 'Customer data', 'Internal docs']).map((t, i) => {
+                    const colors = ['severity-critical', 'severity-high', 'severity-medium'];
+                    return `<span class="px-2 py-1 bg-${colors[i % colors.length]}/10 text-${colors[i % colors.length]} text-xs rounded">${t}</span>`;
+                }).join('')}
                 <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded">+ Learn patterns</span>
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="confirmSmartControl()" class="flex-1 px-4 py-2 bg-status-blocked text-white rounded-lg font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2">
+            <button onclick="confirmSmartControl('${caseData.id}')" class="flex-1 px-4 py-2 bg-status-blocked text-white rounded-lg font-medium hover:opacity-90 transition-colors flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-lg">shield</span>
                 Activate Protection
             </button>
@@ -7927,20 +7960,29 @@ function confirmAdjustPolicies() {
     showPolicyToast('DLP Rule adjustments saved', 'tune', 'ops-purple');
 }
 
-function confirmSmartControl() {
+function confirmSmartControl(caseId) {
     closePolicyModal();
     showPolicyToast('Smart Block activated', 'shield', 'status-blocked');
-    // V6.20: Navigate to Enforce tab and scroll to the first smart block policy
+    // V6.28.1: Navigate to Enforce tab and scroll to the SPECIFIC policy matching this case
     setTimeout(() => {
         navigateTo('connections');
         setTimeout(() => {
-            const firstPolicy = document.querySelector('[data-rule-id]');
-            if (firstPolicy) {
-                firstPolicy.setAttribute('open', '');
-                firstPolicy.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstPolicy.style.outline = '2px solid var(--status-blocked)';
-                firstPolicy.style.outlineOffset = '2px';
-                setTimeout(() => { firstPolicy.style.outline = ''; firstPolicy.style.outlineOffset = ''; }, 3000);
+            // Find the enforcement rule linked to this case
+            const matchingRule = DEMO_DATA.enforcementRules.find(r => r.sourceCase === caseId);
+            let targetPolicy;
+            if (matchingRule) {
+                targetPolicy = document.querySelector(`[data-rule-id="${matchingRule.id}"]`);
+            }
+            // Fallback to first policy if no match found
+            if (!targetPolicy) {
+                targetPolicy = document.querySelector('[data-rule-id]');
+            }
+            if (targetPolicy) {
+                targetPolicy.setAttribute('open', '');
+                targetPolicy.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                targetPolicy.style.outline = '2px solid var(--status-blocked)';
+                targetPolicy.style.outlineOffset = '2px';
+                setTimeout(() => { targetPolicy.style.outline = ''; targetPolicy.style.outlineOffset = ''; }, 3000);
             }
         }, 300);
     }, 1000);
@@ -7959,6 +8001,11 @@ function showPolicyToast(message, icon, colorClass) {
         toast.style.transition = 'opacity 0.3s';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+// V6.28.1: Add Widget toast
+function showAddWidgetToast() {
+    showPolicyToast('Widget library coming soon — choose from 12 additional risk widgets', 'widgets', 'primary');
 }
 
 function updateSelectedActionCount() {
