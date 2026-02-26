@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>AXIA Stealth Campaign: LinkedIn Post Templates</title>
+    <title>AXIA Stealth Campaign: LinkedIn Post Templates (V2)</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='36' fill='%2309434e'/%3E%3Ccircle cx='40' cy='40' r='28' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='18' fill='none' stroke='%23fff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='40' r='3' fill='%23fff'/%3E%3Cline x1='40' y1='8' x2='40' y2='18' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='40' y1='62' x2='40' y2='72' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='8' y1='40' x2='18' y2='40' stroke='%23fff' stroke-width='2'/%3E%3Cline x1='62' y1='40' x2='72' y2='40' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -85,6 +85,21 @@
             max-width: 600px;
             margin: 0 auto;
         }
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-top: 1rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 9999px;
+            background: rgba(13, 148, 136, 0.08);
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
 
         /* ---- GOLDEN RULE BANNER ---- */
         .golden-rule {
@@ -101,6 +116,24 @@
         .golden-rule .material-symbols-outlined { font-size: 1.5rem; color: var(--accent-orange); flex-shrink: 0; }
         .golden-rule p { font-size: 0.875rem; color: var(--text-secondary); }
         .golden-rule strong { color: var(--accent-orange); }
+
+        /* ---- REVISION BANNER ---- */
+        .revision-banner {
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            padding: 1.25rem 2rem;
+            background: rgba(13, 148, 136, 0.04);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        .revision-banner .material-symbols-outlined { font-size: 1.5rem; color: var(--accent-teal); flex-shrink: 0; margin-top: 0.1rem; }
+        .revision-banner p { font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.6; }
+        .revision-banner strong { color: var(--accent-teal); }
+        .revision-banner ul { margin: 0.5rem 0 0 1.25rem; font-size: 0.8125rem; color: var(--text-secondary); }
+        .revision-banner li { margin-bottom: 0.25rem; }
 
         /* ---- NAVIGATION TABS ---- */
         .tabs-nav {
@@ -134,6 +167,20 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
+        }
+        .tab-btn .revised-marker {
+            font-size: 0.5625rem;
+            font-weight: 800;
+            color: var(--accent-teal);
+            background: rgba(13, 148, 136, 0.1);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .tab-btn.active .revised-marker {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* ---- POST CARD ---- */
@@ -345,6 +392,47 @@
             opacity: 0.5;
         }
 
+        /* ---- REVISION NOTES ---- */
+        .revision-notes {
+            padding: 1.25rem 2rem;
+            background: rgba(13, 148, 136, 0.03);
+            border-top: 1px solid rgba(13, 148, 136, 0.1);
+        }
+        .revision-notes-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--accent-teal);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .revision-notes ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .revision-notes li {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+            position: relative;
+        }
+        .revision-notes li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-teal);
+            opacity: 0.7;
+        }
+
         /* ---- EXECUTION PLAYBOOK ---- */
         .playbook-card {
             background: var(--surface-page);
@@ -469,6 +557,10 @@
         </div>
         <h1>Stealth Campaign: LinkedIn Post Templates</h1>
         <p class="subtitle">6 post types for founder-led thought leadership. Problem-focused. No product reveal. Ready to use.</p>
+        <div class="version-badge">
+            <span class="material-symbols-outlined" style="font-size:12px">edit_note</span>
+            V2 &mdash; Posts 1, 3, 6 Revised &mdash; Feb 26, 2026
+        </div>
     </div>
 
     <!-- Golden Rule -->
@@ -477,11 +569,25 @@
         <p><strong>Golden Rule:</strong> NEVER mention AXIA, hint at a product, or say "we're building something." These posts are pure thought leadership about market problems and wrong directions. If a competitor reads it, they should learn nothing about what you're building.</p>
     </div>
 
+    <!-- Revision Summary -->
+    <div class="revision-banner">
+        <span class="material-symbols-outlined">difference</span>
+        <div>
+            <p><strong>V2 Revisions (Feb 26, 2026):</strong></p>
+            <ul>
+                <li><strong>Post 1 (Contrarian Take):</strong> Reframed from "stop treating employees as threats" to the real failure: the right people (manager, HR, legal) are disconnected from the moment of decision. Insider risk is gray, not black and white.</li>
+                <li><strong>Post 3 (Hot Take):</strong> Flipped from "HR knows before DLP" to the stronger take: behavioral signals (export rate acceleration, archive access) predict departure before HR or managers know. The data tells you first.</li>
+                <li><strong>Post 6 (Three Questions):</strong> No longer gives DLP credit for content detection. Opens by undermining DLP's WHAT capabilities (regex, keywords, false matches), then layers on the WHO/WHY/WHOM gap.</li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Tabs -->
     <nav class="tabs-nav">
         <button class="tab-btn active" onclick="showPost(0)">
             <span class="tab-dot" style="background:var(--accent-blue)"></span>
             1. Contrarian Take
+            <span class="revised-marker">V2</span>
         </button>
         <button class="tab-btn" onclick="showPost(1)">
             <span class="tab-dot" style="background:var(--accent-teal)"></span>
@@ -490,6 +596,7 @@
         <button class="tab-btn" onclick="showPost(2)">
             <span class="tab-dot" style="background:var(--accent-orange)"></span>
             3. Hot Take
+            <span class="revised-marker">V2</span>
         </button>
         <button class="tab-btn" onclick="showPost(3)">
             <span class="tab-dot" style="background:var(--accent-purple)"></span>
@@ -502,6 +609,7 @@
         <button class="tab-btn" onclick="showPost(5)">
             <span class="tab-dot" style="background:var(--primary)"></span>
             6. Three Questions
+            <span class="revised-marker">V2</span>
         </button>
         <button class="tab-btn" onclick="showPost(6)">
             <span class="tab-dot" style="background:var(--text-muted)"></span>
@@ -511,13 +619,15 @@
 
     <div class="posts-container">
 
-        <!-- POST 1: Contrarian Take -->
+        <!-- ============================================================ -->
+        <!-- POST 1: Contrarian Take (REVISED V2) -->
+        <!-- ============================================================ -->
         <div class="post-section active" id="post-0">
             <div class="post-card">
                 <div class="post-card-header">
                     <div class="post-card-header-left">
                         <span class="post-type-badge" style="background:rgba(37,99,235,0.08); color:var(--accent-blue); border:1px solid rgba(37,99,235,0.2);">Contrarian Take</span>
-                        <span class="post-card-title">The Industry Is Broken</span>
+                        <span class="post-card-title">The Disconnected Organization</span>
                     </div>
                     <span class="poster-badge" style="color:var(--accent-blue); border-color:rgba(37,99,235,0.2); background:rgba(37,99,235,0.04);">
                         <span class="material-symbols-outlined" style="font-size:14px">person</span>
@@ -533,24 +643,28 @@
                         </div>
                     </div>
                     <div class="linkedin-body">
-<span class="hook">We've spent 20 years building insider risk programs that treat employees like threats. And we're surprised they don't work.</span>
-Think about what the industry has built: systems that monitor every keystroke, flag every file transfer, block every USB port. We created surveillance infrastructure and called it "data protection."
+<span class="hook">An employee downloads 50 files the week before resigning. Malicious or Monday? Your CISO can't tell. Neither can your DLP. The answer is in a conversation nobody's having.</span>
+Here's what the insider risk industry got backwards: we built systems that make decisions in isolation. The DLP flags the download. The SOC analyst investigates alone. The CISO decides alone. Block or allow. Threat or false positive. Black or white.
 
-The result? 70-90% false positive rates. Security teams drowning in alerts they can't investigate. Employees who feel watched but never heard. And the insiders who actually intend harm? They learned to work around the rules years ago.
+But insider risk is almost never black or white.
 
-Here's what nobody in the boardroom wants to admit: the problem isn't detection. We can detect everything. The problem is that detection without judgment is just noise. And noise at scale is paralysis.
+That file download during notice period? The manager knows the employee is wrapping up a client handover. HR knows the departure is amicable and there's a 90-day garden leave clause. Legal knows the non-compete covers exactly this type of data. Each person holds a piece of the puzzle. None of them are in the room when the SOC analyst clicks "false positive" or "escalate."
 
-The next generation of insider risk won't be defined by who can monitor the most. It will be defined by who can understand the most. That's a fundamentally different challenge.
+The failure isn't that we're watching employees. Every organization should understand what happens with its data. The failure is that the people with judgment, context, and authority are completely disconnected from the moment of decision.
 
-What's the biggest gap you see in how organizations handle insider risk today?
+The CISO shouldn't decide alone. The DLP definitely shouldn't decide alone. And the SOC analyst staring at an alert at 3 AM shouldn't be making a call that requires knowing whether someone resigned, what project they're on, and whether their access still makes sense.
+
+The organizations getting insider risk right aren't the ones with the best monitoring. They're the ones where the right people are involved at the right time. That's a coordination problem, not a technology problem.
+
+What's the most underutilized connection in your insider risk workflow?
 
 <span class="hashtags">#InsiderRisk #CISO #CyberSecurity #DataProtection</span></div>
                     <!-- Post image -->
                     <div class="post-image-wrapper">
-                        <img src="images/post1-alert-noise.png" alt="Alert noise visualization: one real threat among thousands"/>
+                        <img src="images/post1-alert-noise.png" alt="Disconnected stakeholders around an insider risk alert"/>
                         <div class="post-image-caption">
                             <span class="material-symbols-outlined">auto_awesome</span>
-                            <p><strong>Concept visual:</strong> One real threat glowing among thousands of noise alerts. <span class="ai-badge">AI-generated concept</span> Final version: bold stat card "70-90% false positive rate" in clean typography over teal.</p>
+                            <p><strong>Concept visual:</strong> Four silhouettes (SOC analyst, manager, HR, legal) each holding one puzzle piece, separated by walls. <span class="ai-badge">AI-generated concept</span> Final version: clean diagram showing stakeholders disconnected from the decision point.</p>
                         </div>
                     </div>
                     <div class="linkedin-actions">
@@ -563,16 +677,30 @@ What's the biggest gap you see in how organizations handle insider risk today?
                 <div class="voice-notes">
                     <div class="voice-notes-title">Voice Notes</div>
                     <ul>
-                        <li><strong>Tone:</strong> Authoritative but not arrogant. Diagnosing the industry, not attacking vendors.</li>
-                        <li><strong>Cadence:</strong> Short paragraphs. Punchy sentences. Build momentum toward the reframe.</li>
-                        <li><strong>Energy:</strong> Frustrated executive who's seen this movie before and knows how it ends.</li>
-                        <li><strong>Avoid:</strong> Naming specific competitors. Sounding like a pitch. Using "we" in a way that hints at a company building something.</li>
+                        <li><strong>Tone:</strong> Authoritative but inclusive. Diagnosing a systemic failure, not attacking any single role or vendor.</li>
+                        <li><strong>Key shift from V1:</strong> Not "stop treating employees as threats" (too binary). Instead: insider risk is gray, and gray requires multiple perspectives at the table.</li>
+                        <li><strong>Cadence:</strong> Build from the isolated DLP decision to the full picture of disconnected stakeholders. Let the reader see the gap.</li>
+                        <li><strong>Energy:</strong> Executive who has seen the same organizational failure across dozens of companies.</li>
+                        <li><strong>Avoid:</strong> Making it sound anti-monitoring. The point is that monitoring without coordination is waste, not that monitoring is wrong.</li>
+                    </ul>
+                </div>
+                <div class="revision-notes">
+                    <div class="revision-notes-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">difference</span>
+                        V2 Revision Notes
+                    </div>
+                    <ul>
+                        <li><strong>V1 problem:</strong> "Treat employees like threats" framing was too binary and could alienate CISOs who legitimately need monitoring.</li>
+                        <li><strong>V2 fix:</strong> The failure isn't monitoring itself. It's that the people with context (manager, HR, legal) are disconnected from the decision moment. Insider risk is gray. Gray requires judgment from multiple stakeholders.</li>
+                        <li><strong>Stealth check:</strong> Describes a coordination gap. Does NOT describe a product that solves it. Safe.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- POST 2: DLP Series -->
+        <!-- ============================================================ -->
+        <!-- POST 2: DLP Series (UNCHANGED) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-1">
             <div class="post-card">
                 <div class="post-card-header">
@@ -637,13 +765,15 @@ Next in the series: What your DLP won't tell you about lateral sharing between d
             </div>
         </div>
 
-        <!-- POST 3: Hot Take -->
+        <!-- ============================================================ -->
+        <!-- POST 3: Hot Take (REVISED V2) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-2">
             <div class="post-card">
                 <div class="post-card-header">
                     <div class="post-card-header-left">
                         <span class="post-type-badge" style="background:rgba(184,84,12,0.08); color:var(--accent-orange); border:1px solid rgba(184,84,12,0.2);">Hot Take</span>
-                        <span class="post-card-title">Incident Commentary</span>
+                        <span class="post-card-title">The Signal Before the Signal</span>
                     </div>
                     <span class="poster-badge" style="color:var(--accent-blue); border-color:rgba(37,99,235,0.2); background:rgba(37,99,235,0.04);">
                         <span class="material-symbols-outlined" style="font-size:14px">person</span>
@@ -659,24 +789,26 @@ Next in the series: What your DLP won't tell you about lateral sharing between d
                         </div>
                     </div>
                     <div class="linkedin-body">
-<span class="hook">90% of insider data theft happens in the 90 days before an employee leaves. Your DLP doesn't know someone is leaving. HR does.</span>
-I've been watching this cycle for 15 years. Incident happens. Vendor publishes a blog post about how their tool would have caught it. CISO buys another license. Nothing fundamentally changes.
+<span class="hook">The data tells you someone is leaving before they tell their manager. Nobody is reading the signal.</span>
+We talk about the "90 days before departure" as if departure is the starting gun. The employee resigns, HR flags it, security tightens access. That's the playbook most organizations run.
 
-Here's what we keep getting wrong: we analyze these incidents as technology failures. "The DLP should have caught it." "The access controls were too permissive." But the real failure is almost never technical. It's organizational.
+But here's what actually happens in the data: weeks before anyone submits a resignation, behavioral patterns shift. The download rate doubles. Access to archived projects that haven't been touched in months suddenly spikes. Sharing patterns shift from team channels to personal email. Files get exported gradually, systematically, across days and weeks.
 
-The employee who exfiltrates data before leaving doesn't do it because the firewall had a gap. They do it because nobody discussed what was appropriate during their notice period. Nobody checked whether their access still matched their changing role. Nobody engaged the right people at the right time.
+The trajectory is visible. The signal is already there.
 
-We keep building better locks. The problem is that we're not having better conversations.
+The problem is that nobody is watching the trajectory. DLP sees individual events. An email with an attachment. A file downloaded from SharePoint. Each one reviewed in isolation. Each one "justified" on its own. But zoom out and the pattern is unmistakable: someone is collecting things. And by the time HR learns they're leaving, the collection is already complete.
 
-What would change if we treated insider risk as a people problem first and a technology problem second?
+This is the gap nobody talks about: the behavioral signal arrives before the organizational signal. The data knows before the manager knows. But the industry is still waiting for HR to file a ticket before it starts paying attention.
+
+What if the question isn't "who has resigned" but "who is behaving like someone about to"?
 
 <span class="hashtags">#CyberSecurity #InsiderThreat #CISO #SecurityLeadership</span></div>
                     <!-- Post image -->
                     <div class="post-image-wrapper">
-                        <img src="images/post3-90-90-stat.png" alt="90% of insider data theft occurs in 90 days before departure"/>
+                        <img src="images/post3-90-90-stat.png" alt="Behavioral signal timeline showing pattern shift before resignation"/>
                         <div class="post-image-caption">
                             <span class="material-symbols-outlined">auto_awesome</span>
-                            <p><strong>Concept visual:</strong> The 90/90 pre-departure stat. <span class="ai-badge">AI-generated concept</span> Final version: bold stat card with timeline visual. For live incidents, swap with news headline screenshot.</p>
+                            <p><strong>Concept visual:</strong> Timeline showing behavioral pattern acceleration weeks before official resignation date. <span class="ai-badge">AI-generated concept</span> Final version: line chart with inflection point labeled "Pattern shift starts here" weeks before "Resignation submitted." For live incidents, swap with news headline screenshot.</p>
                         </div>
                     </div>
                     <div class="linkedin-actions">
@@ -689,16 +821,30 @@ What would change if we treated insider risk as a people problem first and a tec
                 <div class="voice-notes">
                     <div class="voice-notes-title">Voice Notes</div>
                     <ul>
-                        <li><strong>Tone:</strong> Reflective, not reactive. Stepping back to reveal patterns, not piling on the news.</li>
-                        <li><strong>Timing:</strong> Post within 24-48 hours of a relevant insider incident for maximum visibility.</li>
-                        <li><strong>Template:</strong> Adapt: replace the generic framing with the specific incident. Keep the structure: incident, predicted response, real lesson, reframe.</li>
-                        <li><strong>Avoid:</strong> Naming the victim company negatively. Appearing to capitalize on someone's breach.</li>
+                        <li><strong>Tone:</strong> Revelatory, not alarmist. Asaf is pointing at something hiding in plain sight.</li>
+                        <li><strong>Key shift from V1:</strong> Not "HR knows, DLP doesn't" (passive, just connect the dots). Instead: behavioral data is a leading indicator that arrives before ANY human signal. The data knows first.</li>
+                        <li><strong>Timing:</strong> Post within 24-48 hours of a relevant insider incident for maximum visibility. Adapt the framing to reference the specific case.</li>
+                        <li><strong>Cadence:</strong> Build from the conventional playbook (wait for resignation) to the insight (the data already told you). Let the reader connect the dots.</li>
+                        <li><strong>Avoid:</strong> Making it sound like surveillance advocacy. The point is reading signals that already exist, not adding more monitoring.</li>
+                    </ul>
+                </div>
+                <div class="revision-notes">
+                    <div class="revision-notes-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">difference</span>
+                        V2 Revision Notes
+                    </div>
+                    <ul>
+                        <li><strong>V1 problem:</strong> "HR knows, DLP doesn't" positioned the answer as just connecting DLP to HR systems. That's a feature, not an insight.</li>
+                        <li><strong>V2 fix:</strong> Behavioral signals (download rate acceleration, archive access spikes, sharing pattern shifts) are leading indicators that predict departure before the employee tells anyone. The data arrives first. This is the real AXIA insight without naming AXIA.</li>
+                        <li><strong>Stealth check:</strong> Describes observable behavioral patterns anyone could notice. Does NOT describe a product that detects them. Safe.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- POST 4: Workflow Reality -->
+        <!-- ============================================================ -->
+        <!-- POST 4: Workflow Reality (UNCHANGED) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-3">
             <div class="post-card">
                 <div class="post-card-header">
@@ -761,7 +907,9 @@ If you run a SOC or security team, how do you handle alert fatigue today? Genuin
             </div>
         </div>
 
-        <!-- POST 5: Engagement Question -->
+        <!-- ============================================================ -->
+        <!-- POST 5: Engagement Question (UNCHANGED) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-4">
             <div class="post-card">
                 <div class="post-card-header">
@@ -828,7 +976,9 @@ Drop your take below. I'll respond to every comment.
             </div>
         </div>
 
-        <!-- POST 6: Three Questions (NEW - from WHO/WHAT/WHO gap) -->
+        <!-- ============================================================ -->
+        <!-- POST 6: Three Questions (REVISED V2) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-5">
             <div class="post-card">
                 <div class="post-card-header">
@@ -850,26 +1000,24 @@ Drop your take below. I'll respond to every comment.
                         </div>
                     </div>
                     <div class="linkedin-body">
-<span class="hook">Your DLP can tell you exactly what was in that file. Credit card numbers. Social Security numbers. Source code. But it can't answer three questions that matter more.</span>
-Who sent it?
-Why did they send it?
-Who received it?
+<span class="hook">Your DLP flagged a file transfer. It says "sensitive data shared externally." But what does it actually know? Less than you think.</span>
+Let's start with what DLP actually does when it fires an alert. It pattern-matches. Regex on credit card formats. Keywords like "confidential." File extensions that might contain source code. Sometimes it's right. Often it flags a test document with sample data, a public press release marked "internal," or a CSV of fake records from a dev environment.
+
+So even the WHAT, the one thing DLP is supposed to be good at, is unreliable.
+
+But let's say the content detection is perfect. Let's give it full credit for a moment. It correctly identifies a file with real customer records being shared externally. Alert fires. Now what?
+
+You still don't know WHO sent it. A ten-year veteran with a spotless record, or a contractor in their third week?
+
+You still don't know WHY. Legitimate client deliverable, or someone building a portfolio for their next job?
+
+You still don't know WHO received it. The client's project lead on the approved contacts list, or a personal Gmail?
 
 Until you know all three, you don't know if you have a problem or a Tuesday.
 
-Think about it. A file containing customer records gets shared externally. Your DLP fires an alert for "sensitive data shared outside the organization." That's the WHAT. Now consider the three questions:
+Every insider risk decision comes down to WHO, WHY, and to WHOM. The industry has spent 20 years optimizing a content scanner that doesn't even do content well, while completely ignoring the three questions that actually determine risk.
 
-WHO sent it? A contractor who's been with the company for six months.
-WHY did they send it? They're delivering a client report that requires sample data.
-WHO received it? The client's project lead, on the approved contacts list.
-
-Same alert. Zero risk. But without those three answers, your analyst just burned 30 minutes to reach a conclusion the system should have surfaced in seconds.
-
-Now change one variable. The sender submitted their resignation yesterday. Same file. Same recipient. Completely different risk profile. The WHAT didn't change. The WHO did.
-
-Every insider risk decision comes down to these three questions. The industry has spent 20 years optimizing for WHAT. Almost nobody is asking WHO and WHY.
-
-Which of these three does your current setup handle best? Which one is your blind spot?
+Which of these three is your biggest blind spot?
 
 <span class="hashtags">#InsiderRisk #DLP #SecurityOperations #DataProtection</span></div>
                     <!-- Post image -->
@@ -877,7 +1025,7 @@ Which of these three does your current setup handle best? Which one is your blin
                         <img src="images/post6-three-questions.png" alt="Three questions your DLP can't answer"/>
                         <div class="post-image-caption">
                             <span class="material-symbols-outlined">auto_awesome</span>
-                            <p><strong>Concept visual:</strong> Three questions surrounding a document. <span class="ai-badge">AI-generated concept</span> Final version: typography card "WHO sent it? / WHY? / WHO received it?" with red X marks. Recurring visual anchor.</p>
+                            <p><strong>Concept visual:</strong> Three questions with DLP crossed out. <span class="ai-badge">AI-generated concept</span> Final version: typography card. Top: "WHAT" with red X and "unreliable." Below: "WHO sent it? / WHY? / WHO received it?" with red X marks. Recurring visual anchor.</p>
                         </div>
                     </div>
                     <div class="linkedin-actions">
@@ -890,16 +1038,30 @@ Which of these three does your current setup handle best? Which one is your blin
                 <div class="voice-notes">
                     <div class="voice-notes-title">Voice Notes</div>
                     <ul>
-                        <li><strong>Tone:</strong> Teaching moment. Guy is revealing a framework disguised as an observation. Not academic, but insightful.</li>
+                        <li><strong>Tone:</strong> Teaching moment with an edge. Guy is dismantling a sacred cow (DLP's content detection) before revealing the bigger gap.</li>
+                        <li><strong>Key shift from V1:</strong> V1 opened by giving DLP credit ("Your DLP can tell you exactly what was in that file"). V2 opens by undermining that claim. DLP doesn't even do the WHAT well.</li>
                         <li><strong>Recurring anchor:</strong> "The Three Questions" can become a callback reference in future posts: "As I mentioned in my Three Questions post..."</li>
-                        <li><strong>Cadence:</strong> Start with the gap, introduce the framework through a scenario, then flip one variable to show power of context.</li>
-                        <li><strong>Stealth check:</strong> This describes questions the industry should be asking. It does NOT describe a product that answers them. Safe.</li>
+                        <li><strong>Cadence:</strong> Start by undermining DLP's supposed strength, then concede hypothetically ("let's give it full credit"), then reveal the three questions it still can't answer.</li>
+                        <li><strong>Stealth check:</strong> Describes questions the industry should be asking. Does NOT describe a product that answers them. Safe.</li>
+                    </ul>
+                </div>
+                <div class="revision-notes">
+                    <div class="revision-notes-title">
+                        <span class="material-symbols-outlined" style="font-size:14px">difference</span>
+                        V2 Revision Notes
+                    </div>
+                    <ul>
+                        <li><strong>V1 problem:</strong> Opening with "Your DLP can tell you exactly what was in that file" elevated DLP's content detection, giving it undeserved credit. Practitioners know DLP content detection is mediocre (regex, keywords, high false match rate).</li>
+                        <li><strong>V2 fix:</strong> Opens by undermining DLP's WHAT detection. Then uses the rhetorical move: "Even if it were perfect, you'd still miss WHO, WHY, and WHOM." This is stronger because it doesn't depend on conceding DLP's strength.</li>
+                        <li><strong>Stealth check:</strong> Describes questions the industry should be asking. Does NOT describe a product that answers them. Safe.</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- PLAYBOOK -->
+        <!-- ============================================================ -->
+        <!-- PLAYBOOK (UPDATED) -->
+        <!-- ============================================================ -->
         <div class="post-section" id="post-6">
             <div class="playbook-card">
                 <div class="playbook-header">
@@ -963,6 +1125,8 @@ Which of these three does your current setup handle best? Which one is your blin
                                 <li><strong>Split-screen:</strong> "What DLP sees" vs "What it misses." Great for DLP Series.</li>
                                 <li><strong>Infographics:</strong> Simple math visuals (alerts x time = waste). For Workflow Reality.</li>
                                 <li><strong>Framework cards:</strong> Three Questions visual anchor. Reusable.</li>
+                                <li><strong>Timeline charts:</strong> Behavioral signal inflection before resignation. For Hot Take.</li>
+                                <li><strong>Stakeholder diagrams:</strong> Disconnected puzzle pieces. For Contrarian Take.</li>
                                 <li><strong>Video (future):</strong> 60-90s founder commentary on incidents. Authentic, not produced.</li>
                             </ul>
                         </div>
@@ -988,6 +1152,7 @@ Which of these three does your current setup handle best? Which one is your blin
                                 <li>End with a question or invitation to engage</li>
                                 <li>Use numbers from public sources only</li>
                                 <li>Include a visual graphic with every post</li>
+                                <li>Frame insider risk as gray, requiring judgment from multiple stakeholders</li>
                             </ul>
                             <p style="color:var(--accent-orange); font-weight:700; margin:0.75rem 0 0.375rem;">DON'T:</p>
                             <ul>
@@ -995,20 +1160,36 @@ Which of these three does your current setup handle best? Which one is your blin
                                 <li>Use em dashes (use periods, commas, colons)</li>
                                 <li>Name specific competitors negatively</li>
                                 <li>Use stock photography or generic "hacker" imagery</li>
+                                <li>Give DLP undeserved credit for content detection</li>
+                                <li>Frame insider risk as black/white (threat vs. not-threat)</li>
                             </ul>
                         </div>
 
-                        <!-- Data Hook Bank -->
+                        <!-- Data Hook Bank (UPDATED) -->
                         <div class="playbook-item">
                             <h3>Data Hook Bank (Stealth-Safe Stats)</h3>
                             <ul>
                                 <li>"1,247 alerts. Monday morning. One real threat."</li>
-                                <li>"90% of data theft happens in the 90 days before departure."</li>
+                                <li>"The data tells you someone is leaving before they tell their manager."</li>
+                                <li>"Download rate doubles. Archive access spikes. Nobody notices."</li>
                                 <li>"72% of orgs run 2+ DLP solutions. None talk to each other."</li>
                                 <li>"85% of insider incidents involve legitimate access."</li>
                                 <li>"86 days average to contain an insider incident."</li>
                                 <li>"$16.2M average cost of an insider-caused incident."</li>
                                 <li>"70-90% false positive rates in DLP deployments."</li>
+                                <li>"DLP pattern-matches. Regex on credit cards. Keywords like 'confidential.' That's it."</li>
+                                <li>"Four people hold the answer. None are in the room when the analyst clicks 'escalate.'"</li>
+                            </ul>
+                        </div>
+
+                        <!-- Core Themes (NEW) -->
+                        <div class="playbook-item">
+                            <h3>V2 Core Themes</h3>
+                            <ul>
+                                <li><strong>Insider risk is gray:</strong> Almost never black/white. Requires judgment from multiple stakeholders, not binary block/allow.</li>
+                                <li><strong>Behavioral signals are leading indicators:</strong> Data patterns predict intent before anyone files a resignation or tells a manager.</li>
+                                <li><strong>DLP is weaker than assumed:</strong> Don't concede content detection works. It doesn't. And even if it did, it misses WHO/WHY/WHOM.</li>
+                                <li><strong>Coordination > detection:</strong> The failure is organizational disconnection, not insufficient monitoring.</li>
                             </ul>
                         </div>
                     </div>
@@ -1036,7 +1217,7 @@ Which of these three does your current setup handle best? Which one is your blin
                             </tr>
                             <tr>
                                 <td>Core Question</td>
-                                <td>"Why is the industry wrong?"</td>
+                                <td>"Why is the organization disconnected?"</td>
                                 <td>"Why does this workflow fail?"</td>
                             </tr>
                             <tr>
@@ -1097,7 +1278,7 @@ Which of these three does your current setup handle best? Which one is your blin
     </div>
 
     <div class="page-footer">
-        <p>AXIA Stealth Campaign Reference | Internal Use Only | Feb 2026</p>
+        <p>AXIA Stealth Campaign Reference V2 | Internal Use Only | Feb 2026</p>
     </div>
 
     <script>
