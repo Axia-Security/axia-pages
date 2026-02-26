@@ -1,0 +1,9 @@
+name: Jira Ticket Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  jira-ticket-check:
+    uses: Axia-Security/github-actions-shared-workflows/.github/workflows/jira-ticket-check-reusable.yml@main
