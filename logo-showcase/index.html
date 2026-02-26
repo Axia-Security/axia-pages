@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA Logo Exploration V2 — Color Diversity Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Manrope', -apple-system, sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            line-height: 1.6;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 40px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #FF6B8A, #22D3EE, #A855F7, #F59E0B);
+            background-size: 300% 300%;
+            animation: gradShift 8s ease infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes gradShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .hero p { font-size: 16px; color: #9CA3AF; max-width: 700px; margin: 0 auto 16px; }
+        .hero .stats {
+            display: inline-flex; gap: 32px; font-size: 13px; color: #6B7280;
+            background: rgba(255,255,255,0.03); padding: 12px 28px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06); margin-top: 8px;
+        }
+        .hero .stats span { font-weight: 700; font-size: 18px; }
+        .hero .stats .s1 { color: #FF6B8A; }
+        .hero .stats .s2 { color: #22D3EE; }
+        .hero .stats .s3 { color: #A855F7; }
+
+        .nav {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 10px 40px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+        }
+        .nav a {
+            color: #9CA3AF; text-decoration: none; font-size: 11px; font-weight: 500;
+            padding: 5px 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .nav a:hover, .nav a.active { color: #fff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
+
+        .category {
+            padding: 48px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .category-header {
+            margin-bottom: 28px;
+        }
+        .category-header .number {
+            font-size: 12px; font-weight: 600; color: #6B7280;
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+        }
+        .category-header h2 {
+            font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px;
+        }
+        .category-header .inspiration {
+            font-size: 13px; color: #6B7280; font-style: italic;
+        }
+        .category-header .color-tag {
+            display: inline-block; font-size: 11px; font-weight: 600;
+            padding: 3px 10px; border-radius: 12px; margin-top: 8px;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+        .concept {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .concept:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
+        .concept-name {
+            padding: 10px 16px;
+            font-size: 13px; font-weight: 600; color: #d1d5db;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .concept-name .palette-dots {
+            display: flex; gap: 4px;
+        }
+        .concept-name .palette-dots .dot {
+            width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15);
+        }
+        .pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .pair .side {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .pair .side img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .pair .side:hover img { transform: scale(1.05); }
+        .pair .side .label {
+            position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%);
+            font-size: 9px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; padding: 2px 8px; border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .pair .side.light-bg .label { background: rgba(0,0,0,0.5); color: #fff; }
+        .pair .side.dark-bg .label { background: rgba(255,255,255,0.2); color: #fff; }
+
+        .fav-btn {
+            position: absolute; top: 8px; right: 8px; z-index: 10;
+            background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+            width: 32px; height: 32px; cursor: pointer; font-size: 16px;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); transition: all 0.2s;
+        }
+        .fav-btn:hover { background: rgba(0,0,0,0.7); transform: scale(1.1); }
+        .fav-btn.active { background: rgba(239, 68, 68, 0.7); }
+
+        /* Lightbox */
+        .lightbox {
+            display: none; position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
+            align-items: center; justify-content: center; cursor: pointer;
+        }
+        .lightbox.show { display: flex; }
+        .lightbox img {
+            max-width: 80vw; max-height: 80vh; border-radius: 16px;
+            box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+        }
+        .lightbox .close {
+            position: absolute; top: 24px; right: 32px; font-size: 32px;
+            color: #fff; cursor: pointer; opacity: 0.7; transition: opacity 0.2s;
+        }
+        .lightbox .close:hover { opacity: 1; }
+
+        /* Favorites bar */
+        .fav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 40px; display: flex; align-items: center; justify-content: space-between;
+            transform: translateY(100%); transition: transform 0.3s;
+        }
+        .fav-bar.show { transform: translateY(0); }
+        .fav-bar .count { font-size: 14px; color: #d1d5db; }
+        .fav-bar .count span { color: #EF4444; font-weight: 700; }
+        .fav-bar button {
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+            color: #fff; border: none; padding: 8px 20px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+            font-family: 'Manrope', sans-serif;
+        }
+        .fav-bar button:hover { opacity: 0.85; }
+
+        @media (max-width: 768px) {
+            .hero { padding: 40px 20px 24px; }
+            .hero h1 { font-size: 28px; }
+            .category { padding: 32px 16px; }
+            .concepts-grid { grid-template-columns: 1fr; }
+            .nav { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>AXIA Logo Exploration V2</h1>
+    <p>Icon marks across diverse color palettes and visual styles. Each concept shown on light and dark backgrounds. Heart your favorites.</p>
+    <div class="stats">
+        <div><span class="s1">10</span> Color Palettes</div>
+        <div><span class="s2">24</span> Concepts</div>
+        <div><span class="s3">48</span> Images</div>
+    </div>
+</div>
+
+<div class="nav" id="nav">
+    <a href="#multi-color">Multi-Color</a>
+    <a href="#purple-blue">Purple + Blue</a>
+    <a href="#warm-fire">Warm Fire</a>
+    <a href="#sunset">Sunset Gradient</a>
+    <a href="#green">Green Energy</a>
+    <a href="#crimson">Crimson Bold</a>
+    <a href="#pink-blue">Pink + Blue</a>
+    <a href="#rainbow">Rainbow Spectrum</a>
+    <a href="#pure-bw">Pure B&W</a>
+    <a href="#teal-cyan">Teal + Cyan (Current)</a>
+</div>
+
+<!-- ============================================ -->
+<!-- 01. MULTI-COLOR (Slack / Figma / Google)     -->
+<!-- ============================================ -->
+<div class="category" id="multi-color">
+    <div class="category-header">
+        <div class="number">01 / 10</div>
+        <h2>Multi-Color Playful</h2>
+        <div class="inspiration">Inspired by: Slack, Figma, Google, Asana</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #FF3B8A, #3B82F6, #4ADE80, #FACC15); color: #fff;">Pink + Blue + Green + Yellow</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Overlapping Bubbles">
+            <div class="concept-name">
+                Overlapping Bubbles
+                <div class="palette-dots">
+                    <div class="dot" style="background:#FF3B8A"></div>
+                    <div class="dot" style="background:#3B8BF6"></div>
+                    <div class="dot" style="background:#4ADE80"></div>
+                    <div class="dot" style="background:#FACC15"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="multicolor-bubbles-light.jpg" alt="Multi-color bubbles on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="multicolor-bubbles-dark.jpg" alt="Multi-color bubbles on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Color Hexagon Gem">
+            <div class="concept-name">
+                Color Hexagon Gem
+                <div class="palette-dots">
+                    <div class="dot" style="background:#06B6D4"></div>
+                    <div class="dot" style="background:#3B82F6"></div>
+                    <div class="dot" style="background:#84CC16"></div>
+                    <div class="dot" style="background:#F97316"></div>
+                    <div class="dot" style="background:#EC4899"></div>
+                    <div class="dot" style="background:#8B5CF6"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="color-hexagon-light.jpg" alt="Color hexagon on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="color-hexagon-dark.jpg" alt="Color hexagon on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Overlapping Rounded Squares">
+            <div class="concept-name">
+                Overlapping Rounded Squares
+                <div class="palette-dots">
+                    <div class="dot" style="background:#FF6B8A"></div>
+                    <div class="dot" style="background:#60A5FA"></div>
+                    <div class="dot" style="background:#4ADE80"></div>
+                    <div class="dot" style="background:#FBBF24"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="Four_overlapping_rounded_squar_20260226_140335.png" alt="Rounded squares on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="Four_overlapping_rounded_squar_20260226_140353.png" alt="Rounded squares on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 02. PURPLE + BLUE (Stripe / Linear / Discord) -->
+<!-- ============================================ -->
+<div class="category" id="purple-blue">
+    <div class="category-header">
+        <div class="number">02 / 10</div>
+        <h2>Purple + Blue Premium</h2>
+        <div class="inspiration">Inspired by: Stripe, Linear, Discord, Framer</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #7C3AED, #3B82F6); color: #fff;">Violet + Indigo</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Gradient Shield">
+            <div class="concept-name">
+                Gradient Shield
+                <div class="palette-dots">
+                    <div class="dot" style="background:#7C3AED"></div>
+                    <div class="dot" style="background:#4F46E5"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="purple-shield-light.jpg" alt="Purple shield on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="purple-shield-dark.jpg" alt="Purple shield on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Tri-Color Knot">
+            <div class="concept-name">
+                Tri-Color Knot
+                <div class="palette-dots">
+                    <div class="dot" style="background:#8B5CF6"></div>
+                    <div class="dot" style="background:#3B82F6"></div>
+                    <div class="dot" style="background:#F97316"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="tricolor-knot-light.jpg" alt="Tricolor knot on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="tricolor-knot-dark.jpg" alt="Tricolor knot on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 03. WARM FIRE (Red / Orange / Amber)         -->
+<!-- ============================================ -->
+<div class="category" id="warm-fire">
+    <div class="category-header">
+        <div class="number">03 / 10</div>
+        <h2>Warm Fire</h2>
+        <div class="inspiration">Inspired by: Firefox, Brave, Y Combinator</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #DC2626, #F97316, #F59E0B); color: #fff;">Red + Orange + Amber</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Geometric Eye">
+            <div class="concept-name">
+                Geometric Eye
+                <div class="palette-dots">
+                    <div class="dot" style="background:#DC2626"></div>
+                    <div class="dot" style="background:#F97316"></div>
+                    <div class="dot" style="background:#F59E0B"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="warm-eye-light.jpg" alt="Warm eye on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="warm-eye-dark.jpg" alt="Warm eye on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 04. SUNSET GRADIENT (Pink / Orange / Gold)   -->
+<!-- ============================================ -->
+<div class="category" id="sunset">
+    <div class="category-header">
+        <div class="number">04 / 10</div>
+        <h2>Sunset Gradient</h2>
+        <div class="inspiration">Inspired by: Instagram, Headspace, Calm</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #EC4899, #F97316, #EAB308); color: #fff;">Pink + Peach + Gold</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Rounded Square">
+            <div class="concept-name">
+                Rounded Square
+                <div class="palette-dots">
+                    <div class="dot" style="background:#EC4899"></div>
+                    <div class="dot" style="background:#F97316"></div>
+                    <div class="dot" style="background:#EAB308"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="sunset-square-light.jpg" alt="Sunset square on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="sunset-square-dark.jpg" alt="Sunset square on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 05. GREEN ENERGY (Spotify / Robinhood)       -->
+<!-- ============================================ -->
+<div class="category" id="green">
+    <div class="category-header">
+        <div class="number">05 / 10</div>
+        <h2>Green Energy</h2>
+        <div class="inspiration">Inspired by: Spotify, Robinhood, WhatsApp</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #22C55E, #059669); color: #fff;">Electric Green + Emerald</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Spiral Vortex">
+            <div class="concept-name">
+                Spiral Vortex
+                <div class="palette-dots">
+                    <div class="dot" style="background:#22C55E"></div>
+                    <div class="dot" style="background:#059669"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="green-spiral-light.jpg" alt="Green spiral on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="green-spiral-dark.jpg" alt="Green spiral on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 06. CRIMSON BOLD (CrowdStrike / Twilio)      -->
+<!-- ============================================ -->
+<div class="category" id="crimson">
+    <div class="category-header">
+        <div class="number">06 / 10</div>
+        <h2>Crimson Bold</h2>
+        <div class="inspiration">Inspired by: CrowdStrike, Twilio, Pinterest</div>
+        <div class="color-tag" style="background: #B91C1C; color: #fff;">Deep Crimson Red</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Phoenix Bird">
+            <div class="concept-name">
+                Phoenix Bird
+                <div class="palette-dots">
+                    <div class="dot" style="background:#B91C1C"></div>
+                    <div class="dot" style="background:#DC2626"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="crimson-phoenix-light.jpg" alt="Crimson phoenix on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="crimson-phoenix-dark.jpg" alt="Crimson phoenix on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Angular Falcon">
+            <div class="concept-name">
+                Angular Falcon
+                <div class="palette-dots">
+                    <div class="dot" style="background:#DC2626"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_sharp_angular_bird_or_falcon_20260226_141006.png" alt="Falcon on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="A_sharp_angular_bird_or_falcon_20260226_141045.png" alt="Falcon on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 07. PINK + BLUE (Mastercard / Beats)         -->
+<!-- ============================================ -->
+<div class="category" id="pink-blue">
+    <div class="category-header">
+        <div class="number">07 / 10</div>
+        <h2>Pink + Blue Duo</h2>
+        <div class="inspiration">Inspired by: Mastercard, Beats, Tinder</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #F472B6, #3B82F6); color: #fff;">Coral Pink + Royal Blue</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Venn Circles">
+            <div class="concept-name">
+                Venn Circles
+                <div class="palette-dots">
+                    <div class="dot" style="background:#F472B6"></div>
+                    <div class="dot" style="background:#3B82F6"></div>
+                    <div class="dot" style="background:#8B5CF6"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="venn-pinkblue-light.jpg" alt="Venn circles on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="venn-pinkblue-dark.jpg" alt="Venn circles on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 08. RAINBOW SPECTRUM                          -->
+<!-- ============================================ -->
+<div class="category" id="rainbow">
+    <div class="category-header">
+        <div class="number">08 / 10</div>
+        <h2>Rainbow Spectrum</h2>
+        <div class="inspiration">Inspired by: Apple, NBC, Google</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #EF4444, #F97316, #EAB308, #22C55E, #3B82F6, #8B5CF6); color: #fff;">Full Spectrum</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Curved Pinwheel">
+            <div class="concept-name">
+                Curved Pinwheel
+                <div class="palette-dots">
+                    <div class="dot" style="background:#EF4444"></div>
+                    <div class="dot" style="background:#F97316"></div>
+                    <div class="dot" style="background:#EAB308"></div>
+                    <div class="dot" style="background:#22C55E"></div>
+                    <div class="dot" style="background:#3B82F6"></div>
+                    <div class="dot" style="background:#8B5CF6"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="rainbow-pinwheel-light.jpg" alt="Rainbow pinwheel on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="rainbow-pinwheel-dark.jpg" alt="Rainbow pinwheel on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Stacked Circles">
+            <div class="concept-name">
+                Stacked Circles
+                <div class="palette-dots">
+                    <div class="dot" style="background:#EF4444"></div>
+                    <div class="dot" style="background:#22C55E"></div>
+                    <div class="dot" style="background:#3B82F6"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="Three_smooth_circles_of_differ_20260226_140407.png" alt="Stacked circles on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="Three_smooth_circles_of_differ_20260226_140435.png" alt="Stacked circles on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 09. PURE B&W (Notion / Vercel / Nike)        -->
+<!-- ============================================ -->
+<div class="category" id="pure-bw">
+    <div class="category-header">
+        <div class="number">09 / 10</div>
+        <h2>Pure Black & White</h2>
+        <div class="inspiration">Inspired by: Notion, Vercel, Nike, Apple</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #000, #fff); color: #999; border: 1px solid #333;">Monochrome</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Asterisk Star">
+            <div class="concept-name">
+                Asterisk Star
+                <div class="palette-dots">
+                    <div class="dot" style="background:#000; border-color:#555"></div>
+                    <div class="dot" style="background:#fff; border-color:#555"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="bw-asterisk-light.jpg" alt="B&W asterisk on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="bw-asterisk-dark.jpg" alt="B&W asterisk on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Geometric Diamond">
+            <div class="concept-name">
+                Geometric Diamond
+                <div class="palette-dots">
+                    <div class="dot" style="background:#000; border-color:#555"></div>
+                    <div class="dot" style="background:#fff; border-color:#555"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_single_thin-line_geometric_d_20260226_142004.png" alt="Diamond on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="minimal-diamond-dark.jpg" alt="Diamond on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Quarter Circle">
+            <div class="concept-name">
+                Quarter Circle
+                <div class="palette-dots">
+                    <div class="dot" style="background:#000; border-color:#555"></div>
+                    <div class="dot" style="background:#fff; border-color:#555"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_solid_black_circle_with_a_qu_20260226_141139.png" alt="Quarter circle on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="A_solid_white_circle_with_a_qu_20260226_141148.png" alt="Quarter circle on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 10. TEAL + CYAN (Current Brand)              -->
+<!-- ============================================ -->
+<div class="category" id="teal-cyan">
+    <div class="category-header">
+        <div class="number">10 / 10</div>
+        <h2>Teal + Cyan (Current Brand)</h2>
+        <div class="inspiration">Current AXIA palette. Included for comparison.</div>
+        <div class="color-tag" style="background: linear-gradient(90deg, #0D9488, #22D3EE); color: #fff;">Electric Teal + Signal Cyan</div>
+    </div>
+    <div class="concepts-grid">
+        <div class="concept" data-name="Scanning Lens (Current)">
+            <div class="concept-name">
+                Scanning Lens (Current)
+                <div class="palette-dots">
+                    <div class="dot" style="background:#0D9488"></div>
+                    <div class="dot" style="background:#22D3EE"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_perfectly_round_circle_with_20260226_140603.png" alt="Scanning lens on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="A_perfectly_round_circle_with_20260226_140647.png" alt="Scanning lens on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Gradient Ring">
+            <div class="concept-name">
+                Gradient Ring
+                <div class="palette-dots">
+                    <div class="dot" style="background:#0D9488"></div>
+                    <div class="dot" style="background:#22D3EE"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="Minimalist_abstract_logo_icon_20260226_140115.png" alt="Gradient ring on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="Minimalist_abstract_logo_icon_20260226_140134.png" alt="Gradient ring on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Concentric Rings">
+            <div class="concept-name">
+                Concentric Rings
+                <div class="palette-dots">
+                    <div class="dot" style="background:#0D9488"></div>
+                    <div class="dot" style="background:#22D3EE"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="Two_concentric_rings_the_oute_20260226_141343.png" alt="Concentric rings on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="Two_concentric_rings_the_oute_20260226_141402.png" alt="Concentric rings on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Hexagon">
+            <div class="concept-name">
+                Hexagon
+                <div class="palette-dots">
+                    <div class="dot" style="background:#0D9488"></div>
+                    <div class="dot" style="background:#22D3EE"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_hexagonal_shape_made_of_six_20260226_141205.png" alt="Hexagon on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="A_hexagonal_shape_made_of_six_20260226_141239.png" alt="Hexagon on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+        <div class="concept" data-name="Shield">
+            <div class="concept-name">
+                Shield
+                <div class="palette-dots">
+                    <div class="dot" style="background:#0D9488"></div>
+                    <div class="dot" style="background:#22D3EE"></div>
+                </div>
+            </div>
+            <button class="fav-btn" onclick="toggleFav(this)">&#9825;</button>
+            <div class="pair">
+                <div class="side light-bg" onclick="openLightbox(this)">
+                    <img src="A_shield_shape_with_modern_rou_20260226_141437.png" alt="Shield on light">
+                    <div class="label">Light</div>
+                </div>
+                <div class="side dark-bg" onclick="openLightbox(this)">
+                    <img src="A_shield_shape_with_modern_rou_20260226_141507.png" alt="Shield on dark">
+                    <div class="label">Dark</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="close">&times;</div>
+    <img id="lightbox-img" src="" alt="Zoomed logo">
+</div>
+
+<!-- Favorites bar -->
+<div class="fav-bar" id="favBar">
+    <div class="count"><span id="favCount">0</span> favorites selected</div>
+    <div>
+        <button onclick="copyFavorites()" style="margin-right: 8px;">Copy List</button>
+        <button onclick="clearFavorites()" style="background: rgba(255,255,255,0.1);">Clear</button>
+    </div>
+</div>
+
+<script>
+// Lightbox
+function openLightbox(el) {
+    const img = el.querySelector('img');
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('show');
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeLightbox(); });
+
+// Favorites
+const favorites = new Set();
+function toggleFav(btn) {
+    event.stopPropagation();
+    const concept = btn.closest('.concept');
+    const name = concept.dataset.name;
+    const cat = concept.closest('.category').querySelector('h2').textContent;
+    const key = cat + ' > ' + name;
+    if (favorites.has(key)) {
+        favorites.delete(key);
+        btn.classList.remove('active');
+        btn.innerHTML = '&#9825;';
+    } else {
+        favorites.add(key);
+        btn.classList.add('active');
+        btn.innerHTML = '&#9829;';
+    }
+    updateFavBar();
+}
+function updateFavBar() {
+    document.getElementById('favCount').textContent = favorites.size;
+    document.getElementById('favBar').classList.toggle('show', favorites.size > 0);
+}
+function copyFavorites() {
+    const text = 'AXIA Logo Favorites:\n' + [...favorites].map((f,i) => `${i+1}. ${f}`).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy List', 1500);
+    });
+}
+function clearFavorites() {
+    favorites.clear();
+    document.querySelectorAll('.fav-btn.active').forEach(b => {
+        b.classList.remove('active');
+        b.innerHTML = '&#9825;';
+    });
+    updateFavBar();
+}
+
+// Sticky nav active state
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector(`.nav a[href="#${id}"]`);
+        if (link) {
+            if (entry.isIntersecting) link.classList.add('active');
+            else link.classList.remove('active');
+        }
+    });
+}, { threshold: 0.2 });
+document.querySelectorAll('.category').forEach(cat => observer.observe(cat));
+</script>
+
+</body>
+</html>
