@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIA Detailed Severity Guidelines</title>
+<style>
+  body { background: #0a1929; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 40px; line-height: 1.7; }
+  @media (max-width: 768px) {
+    body { padding: 16px; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 18px; }
+    table { font-size: 11px; display: block; overflow-x: auto; }
+    th, td { padding: 6px 8px; }
+    .tier { padding: 12px 16px; }
+    .boundary { padding: 12px; }
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { color: #22D3EE; font-size: 28px; border-bottom: 2px solid #22D3EE; padding-bottom: 12px; }
+  h2 { color: #22D3EE; font-size: 22px; margin-top: 36px; }
+  h3 { color: #94a3b8; font-size: 16px; margin-top: 24px; }
+  .label { display: inline-block; padding: 2px 10px; border-radius: 4px; font-weight: 700; font-size: 14px; margin-right: 8px; }
+  .sev-critical { background: #dc2626; color: #fff; }
+  .sev-high { background: #f97316; color: #fff; }
+  .sev-medium { background: #eab308; color: #000; }
+  .sev-low { background: #22c55e; color: #000; }
+  .note { background: #1a1a2e; border-left: 4px solid #22D3EE; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; font-size: 14px; }
+  .tier { margin: 16px 0; padding: 20px 24px; border-radius: 8px; }
+  .tier-critical { background: rgba(220,38,38,0.08); border-left: 4px solid #dc2626; }
+  .tier-high { background: rgba(249,115,22,0.08); border-left: 4px solid #f97316; }
+  .tier-medium { background: rgba(234,179,8,0.08); border-left: 4px solid #eab308; }
+  .tier-low { background: rgba(34,197,94,0.08); border-left: 4px solid #22c55e; }
+  .boundary { background: #112240; border: 1px solid #1e3a5f; border-radius: 8px; padding: 20px; margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+  th { background: #1e3a5f; color: #22D3EE; padding: 8px 12px; text-align: left; font-size: 12px; text-transform: uppercase; }
+  td { padding: 8px 12px; border-bottom: 1px solid #1e3a5f; }
+  tr:hover td { background: rgba(34,211,238,0.05); }
+  strong { color: #fff; }
+  .section-label { display: inline-block; background: #22D3EE; color: #0a1929; padding: 2px 12px; border-radius: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Detailed Severity Guidelines (Full Framework)</h1>
+
+<div class="note">
+This is the <strong>detailed prompt</strong> used in Experiment 2. Includes violation category tables for each tier, boundary decision matrices, and amplifier/mitigator lists. Derived from analysis of the 150 test cases. <strong style="color:#22D3EE;">Updated Feb 27</strong> with revised response-action definitions.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2><span class="label sev-critical">CRITICAL</span> (Score 90-100)</h2>
+
+<div class="tier tier-critical">
+<p><strong>Response:</strong> Requires immediate alerting/visibility of executive compliance/security/legal/HR function(s). Immediate human confirmation required.</p>
+<p><strong>Core pattern:</strong> Active or imminent harm involving either (a) deliberate malicious action, (b) regulatory violations carrying criminal or systemic consequences, or (c) exposure of data whose compromise could cause irreversible damage.</p>
+
+<span class="section-label">Violation Categories</span>
+<table>
+<tr><th>Category</th><th>What It Looks Like</th></tr>
+<tr><td>IP exfiltration to competitor</td><td>Departing employee sends proprietary code, algorithms, or trade secrets to personal email or directly to competitor, especially with departure + competitor destination confirmed</td></tr>
+<tr><td>Regulatory crime / securities violation</td><td>Pre-earnings data to investors, insider trading facilitation, sanctions evasion, SAR disclosure, wire fraud</td></tr>
+<tr><td>Customer PII/financial data theft</td><td>Bulk export of customer records (PII, payment data, biometrics) to personal or external destinations, especially with concealment or disguise</td></tr>
+<tr><td>Infrastructure/credential compromise</td><td>Production API keys, SWIFT credentials, cold wallet keys, core banking credentials sent externally or posted to dark web</td></tr>
+<tr><td>DLP evasion / deliberate concealment</td><td>Encryption specifically to bypass scanning, disguised filenames, audit trail manipulation</td></tr>
+<tr><td>MNPI disclosure</td><td>Material non-public information shared before authorized release to unauthorized parties</td></tr>
+<tr><td>Fraud / financial crime by insider</td><td>Wire redirection, forged documents, bribery, collusion with external bad actors</td></tr>
+</table>
+
+<span class="section-label">Key Signals</span>
+<ul>
+<li>Recipient is personal email, competitor, unauthorized external party, dark web, or anonymous/encrypted channel</li>
+<li>Data is regulated (PCI DSS, GLBA, BSA/AML, SEC, biometric privacy laws)</li>
+<li>Sender shows departure + competitor destination, or financial distress + privileged access</li>
+<li>Deliberate concealment methods (encryption to bypass DLP, mislabeled files, off-hours timing)</li>
+<li>Criminal liability potential (securities fraud, wire fraud, sanctions violations)</li>
+</ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2><span class="label sev-high">HIGH</span> (Score 70-89)</h2>
+
+<div class="tier tier-high">
+<p><strong>Response:</strong> Requires manager and/or alerting/visibility of operational compliance/security/legal/HR function(s). Manager-level review and action required.</p>
+<p><strong>Core pattern:</strong> Significant data exposure or policy violation that creates material business risk, but with one or more mitigating factors: the recipient has some legitimate relationship, the data lacks the most sensitive regulatory classifications, the sender shows no malicious intent, or the exposure has not yet left organizational control.</p>
+
+<span class="section-label">Violation Categories</span>
+<table>
+<tr><th>Category</th><th>What It Looks Like</th></tr>
+<tr><td>Commercial intelligence to competitor</td><td>Client lists, loan portfolios, pricing, CRM data sent to competitors or personal storage by departing employees - data is commercial rather than regulated PII</td></tr>
+<tr><td>Sensitive data to legitimate-but-unauthorized recipients</td><td>Data shared with vendors, partners, or investors who have a business relationship but lack proper authorization (no NDA, no DPA, outside contract scope)</td></tr>
+<tr><td>Internal data at massive scale / misconfiguration</td><td>Large-volume customer data exposed through misconfiguration or automation, remaining within organizational systems but far exceeding appropriate access</td></tr>
+<tr><td>Governance bypass with sensitive data</td><td>Well-intentioned sharing that bypasses required approval processes when the data is materially sensitive</td></tr>
+<tr><td>Compliance/regulatory data shared with inappropriate scope</td><td>AML thresholds, transaction monitoring rules, examination findings shared with parties who should not have them</td></tr>
+<tr><td>Personal use of institutional resources for financial gain</td><td>Using corporate terminals, data, or access for personal trading, investment research, or side businesses</td></tr>
+<tr><td>Sensitive data to media / public platform with significant impact</td><td>Feature flags revealing roadmap to journalist, operational data to PR agency during crisis, calendar/travel data to recruiter</td></tr>
+</table>
+
+<span class="section-label">What Distinguishes HIGH from CRITICAL</span>
+<ul>
+<li>Data is commercially sensitive but not regulated PII, not MNPI, not criminal</li>
+<li>Recipient has some existing relationship (vendor, partner, board member) even if authorization is missing</li>
+<li>Sender intent is not malicious (though may be self-serving, negligent, or pressure-driven)</li>
+<li>Exposure is contained or recoverable (still within company systems, or sent to a single known party)</li>
+<li>No criminal liability, but material business harm possible</li>
+</ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2><span class="label sev-medium">MEDIUM</span> (Score 50-69)</h2>
+
+<div class="tier tier-medium">
+<p><strong>Response:</strong> Requires employee engagement and/or coaching for resolution. Educational engagement, process correction.</p>
+<p><strong>Core pattern:</strong> Policy violations driven by carelessness, ignorance, poor process, or misguided helpfulness rather than malicious intent. The data has some sensitivity but the exposure is limited, internal, or to parties with partial authorization.</p>
+
+<span class="section-label">Violation Categories</span>
+<table>
+<tr><th>Category</th><th>What It Looks Like</th></tr>
+<tr><td>Accidental misdirection / wrong recipient</td><td>Email to wrong client, reply-all with sensitive data, posting to wrong channel - clear human error with no malicious intent</td></tr>
+<tr><td>Over-sharing with legitimate intent</td><td>Employee shares more data than necessary for a legitimate purpose, or shares via inappropriate channel</td></tr>
+<tr><td>Process/policy violation without malice</td><td>Bypassing proper channels, using wrong tools, failing to follow data handling procedures - coaching will fix it</td></tr>
+<tr><td>Data in unsanctioned personal tools</td><td>Employees copying work data to personal Notion, blogs, GitHub, social media - not for theft but for productivity or personal brand building</td></tr>
+<tr><td>Legitimate relationship, premature or excessive sharing</td><td>Sharing with auditors, regulators, board candidates, or partners before proper governance review</td></tr>
+<tr><td>Internal boundary violations</td><td>Accessing data outside assigned portfolio, sharing across internal information barriers, credential sharing between colleagues</td></tr>
+<tr><td>Public or semi-public disclosure of operational details</td><td>Sharing operational metrics, internal processes, or competitive details in podcasts, blogs, conferences, or developer communities</td></tr>
+</table>
+
+<span class="section-label">Key MEDIUM Signals</span>
+<ul>
+<li>Sender has no malicious intent (careless, helpful, ignorant, pressured, or building personal brand)</li>
+<li>Data is sensitive but not the most regulated categories</li>
+<li>Recipient often has partial legitimacy (vendor with relationship but missing DPA, internal but wrong department, public but limited audience)</li>
+<li>Behavioral risk signals are absent or mild</li>
+<li>Problem is fixable through coaching and process improvement</li>
+<li>No deliberate concealment or DLP evasion</li>
+</ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2><span class="label sev-low">LOW</span> (Score 0-49)</h2>
+
+<div class="tier tier-low">
+<p><strong>Response:</strong> Auto-resolve if matches known-good pattern. Verify and close.</p>
+<p><strong>Core pattern:</strong> Legitimate business activity that was correctly flagged by a pattern-matching DLP system but does not represent actual risk. The data is authorized for sharing, the recipient is appropriate, and the activity aligns with the sender's role.</p>
+
+<span class="section-label">Categories (False Positives)</span>
+<table>
+<tr><th>Category</th><th>What It Looks Like</th></tr>
+<tr><td>Pre-approved content sharing</td><td>Marketing collateral, published reports, approved case studies, public filings sent to appropriate recipients</td></tr>
+<tr><td>Public/regulatory documents</td><td>Publicly filed documents, open-source content, government publications, industry standards</td></tr>
+<tr><td>Authorized external collaboration</td><td>Sharing with engaged law firms (privilege), contracted vendors with DPA, approved academic partnerships</td></tr>
+<tr><td>Routine internal operations</td><td>Standard management reporting, internal escalations, training materials using public references</td></tr>
+<tr><td>Personal content triggering keyword matches</td><td>Personal financial planning, tax documents, personal LinkedIn articles - mentions employer but contains no company data</td></tr>
+<tr><td>Departing employee - personal files only</td><td>DLP flags departure + data transfer, but content is personal (resume, photos, reviews)</td></tr>
+</table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 style="color:#f59e0b;">Boundary Decision Factors</h2>
+
+<div class="boundary">
+<h3>CRITICAL vs. HIGH</h3>
+<table>
+<tr><th>Factor</th><th style="color:#dc2626;">Tips toward CRITICAL</th><th style="color:#f97316;">Tips toward HIGH</th></tr>
+<tr><td>Data type</td><td>Regulated (PCI, GLBA, BSA/AML, SEC, biometric)</td><td>Commercial/competitive (client lists, pricing, roadmap)</td></tr>
+<tr><td>Regulatory consequence</td><td>Criminal liability, reportable breach, SEC violation</td><td>Policy violation, contractual breach, NDA violation</td></tr>
+<tr><td>Recipient</td><td>No relationship, competitor, anonymous, dark web</td><td>Existing relationship but missing authorization</td></tr>
+<tr><td>Intent</td><td>Deliberate exfiltration, concealment, fraud</td><td>Negligent, pressure-driven, self-serving</td></tr>
+<tr><td>Sender signals</td><td>Departure + competitor, financial distress, prior violations</td><td>Departure alone, work pressure, career ambition</td></tr>
+<tr><td>Reversibility</td><td>Irreversible (data in the wild, crypto keys compromised)</td><td>Potentially recoverable (known recipient, NDA possible)</td></tr>
+</table>
+</div>
+
+<div class="boundary">
+<h3>HIGH vs. MEDIUM</h3>
+<table>
+<tr><th>Factor</th><th style="color:#f97316;">Tips toward HIGH</th><th style="color:#eab308;">Tips toward MEDIUM</th></tr>
+<tr><td>Recipient</td><td>External (competitor, vendor, public)</td><td>Internal (wrong department, over-broad access)</td></tr>
+<tr><td>Sender signals</td><td>Departure, grievance, financial conflict, undisclosed interests</td><td>None, or mild (eagerness, inexperience, pressure)</td></tr>
+<tr><td>Governance bypass</td><td>Deliberate, aware of the requirement</td><td>Accidental or ignorance-based</td></tr>
+<tr><td>Data volume/impact</td><td>Bulk export, complete portfolios, production credentials</td><td>Limited scope, single documents, operational data</td></tr>
+<tr><td>Concealment</td><td>Some evidence (off-hours, encrypted email, mislabeling)</td><td>None (sender often openly discusses the sharing)</td></tr>
+</table>
+</div>
+
+<div class="boundary">
+<h3>MEDIUM vs. LOW</h3>
+<table>
+<tr><th>Factor</th><th style="color:#eab308;">Tips toward MEDIUM</th><th style="color:#22c55e;">Tips toward LOW</th></tr>
+<tr><td>Authorization</td><td>Missing or incomplete</td><td>Fully authorized</td></tr>
+<tr><td>Content sensitivity</td><td>Contains sensitive data that should not be shared this way</td><td>Already public, personal, or designed for distribution</td></tr>
+<tr><td>Process compliance</td><td>Process was violated</td><td>Process was followed</td></tr>
+<tr><td>Risk factors</td><td>Mild but present</td><td>None</td></tr>
+</table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 style="color:#a78bfa;">Amplifiers & Mitigators</h2>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:16px;">
+<div class="tier" style="background:rgba(220,38,38,0.06); border-left:4px solid #dc2626;">
+<strong style="color:#dc2626;">Amplifiers (push severity UP)</strong>
+<ul>
+<li>Confirmed departure to competitor</li>
+<li>Financial distress or personal grievance</li>
+<li>Deliberate concealment (encryption to bypass DLP, mislabeled files, off-hours timing)</li>
+<li>Pattern of escalation (multiple incidents, increasing volume)</li>
+<li>Undisclosed conflicts of interest</li>
+<li>Prior disciplinary history for similar behavior</li>
+</ul>
+</div>
+<div class="tier" style="background:rgba(34,197,94,0.06); border-left:4px solid #22c55e;">
+<strong style="color:#22c55e;">Mitigators (push severity DOWN)</strong>
+<ul>
+<li>Recipient has existing authorized relationship (vendor with NDA, engaged law firm)</li>
+<li>Data stayed within organizational systems (self-email, internal misdirection)</li>
+<li>Clear accidental nature (autocomplete error, wrong channel)</li>
+<li>Sender proactively disclosed or sought approval</li>
+<li>Data volume is limited (single document vs. bulk export)</li>
+<li>Content was already public or approaching public release</li>
+</ul>
+</div>
+</div>
+
+<p style="text-align:center; color:#666; margin-top:40px; font-size:13px;">AXIA Severity Benchmark &mdash; Detailed Guidelines Reference</p>
+
+</div>
+</body>
+</html>

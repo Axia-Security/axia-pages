@@ -1190,16 +1190,53 @@
   </div>
 </div>
 
+<!-- Slide 16: Resources -->
+<div class="slide" id="slide-16">
+  <div class="slide-content">
+    <h3>Benchmark Assets</h3>
+    <h2>All Resources</h2>
+    <div style="margin-top: 32px;">
+      <div style="display: grid; gap: 16px; max-width: 800px;">
+        <a href="https://axia-security.github.io/axia-pages/severity-benchmark/story.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">📊</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">Storytelling Presentation</div><div style="color: var(--text-dim); font-size: 0.85rem;">This deck. 16 slides covering methodology, results, and implications.</div></div>
+        </a>
+        <a href="https://axia-security.github.io/axia-pages/severity-benchmark/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">🔬</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">Interactive Report: Minimal Prompt</div><div style="color: var(--text-dim); font-size: 0.85rem;">Case-by-case results, filters, confusion matrices. 750 evaluations.</div></div>
+        </a>
+        <a href="https://axia-security.github.io/axia-pages/severity-benchmark/detailed.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">🔬</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">Interactive Report: Detailed Prompt</div><div style="color: var(--text-dim); font-size: 0.85rem;">Same format, detailed guidelines results. 750 evaluations.</div></div>
+        </a>
+        <a href="https://axia-security.github.io/axia-pages/severity-benchmark/examples.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">📋</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">150 Test Examples (Detailed GT)</div><div style="color: var(--text-dim); font-size: 0.85rem;">All scenarios with updated severities. 43 reclassified cases highlighted.</div></div>
+        </a>
+        <a href="https://axia-security.github.io/axia-pages/severity-benchmark/guidelines.html" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">📐</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">Detailed Severity Guidelines</div><div style="color: var(--text-dim); font-size: 0.85rem;">Full WHO/WHAT/WHO framework used in the detailed prompt experiment.</div></div>
+        </a>
+        <a href="https://axia-security.github.io/axia-pages/severity-examples/" target="_blank" style="text-decoration: none; display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size: 1.5rem;">📋</span>
+          <div><div style="color: var(--text); font-weight: 600; font-size: 1.05rem;">Original 150 Test Examples</div><div style="color: var(--text-dim); font-size: 0.85rem;">Original severity classifications before reclassification.</div></div>
+        </a>
+      </div>
+    </div>
+    <p style="margin-top: 32px; font-size: 0.85rem; color: var(--text-dim);">AXIA Insider Risk Management &mdash; February 2026</p>
+  </div>
+</div>
+
 <!-- Navigation -->
 <div class="nav">
   <button onclick="goSlide(-1)">&larr;</button>
-  <span class="counter" id="counter">1 / 15</span>
+  <span class="counter" id="counter">1 / 16</span>
   <button onclick="goSlide(1)">&rarr;</button>
 </div>
 
 <script>
 let current = 1;
-const total = 15;
+const total = 16;
 
 function showSlide(n) {
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
