@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIA Severity Benchmark &mdash; Experiment Prompts</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a1929;
+    --surface: #112240;
+    --surface2: #1a2f4a;
+    --border: #1e3a5f;
+    --text: #e0e0e0;
+    --text-dim: #8899aa;
+    --teal: #22D3EE;
+    --accent: #6366f1;
+    --critical: #ef4444;
+    --high: #f97316;
+    --medium: #eab308;
+    --low: #22c55e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #09434e 0%, var(--bg) 100%);
+    padding: 48px 40px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span { color: var(--teal); }
+
+  .header p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .tab {
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+  }
+
+  .tab:hover { color: var(--text); }
+
+  .tab.active {
+    color: var(--teal);
+    border-bottom-color: var(--teal);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 900px) {
+    .comparison { grid-template-columns: 1fr; }
+    .header { padding: 24px 16px; }
+    .container { padding: 16px; }
+    .header h1 { font-size: 22px; }
+  }
+
+  .prompt-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .prompt-label {
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-minimal {
+    background: rgba(99,102,241,0.1);
+    color: var(--accent);
+  }
+
+  .label-detailed {
+    background: rgba(34,211,238,0.1);
+    color: var(--teal);
+  }
+
+  .prompt-body {
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    color: var(--text);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .prompt-body .kw { color: var(--teal); font-weight: 600; }
+  .prompt-body .sev-c { color: var(--critical); font-weight: 600; }
+  .prompt-body .sev-h { color: var(--high); font-weight: 600; }
+  .prompt-body .sev-m { color: var(--medium); font-weight: 600; }
+  .prompt-body .sev-l { color: var(--low); font-weight: 600; }
+  .prompt-body .var { color: #c084fc; }
+  .prompt-body .heading { color: var(--teal); font-weight: 700; font-size: 13px; }
+  .prompt-body .separator { color: var(--text-dim); opacity: 0.4; }
+
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .stat-box .number {
+    font-size: 28px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-box .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .note {
+    background: var(--surface);
+    border-left: 4px solid var(--teal);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .note strong { color: var(--text); }
+
+  h2 {
+    color: var(--teal);
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+
+  th {
+    background: var(--surface2);
+    color: var(--teal);
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tr:hover td { background: rgba(34,211,238,0.03); }
+
+  .diff-highlight {
+    background: rgba(34,211,238,0.08);
+    border: 1px solid rgba(34,211,238,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  a { color: var(--teal); }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-dim);
+    font-size: 13px;
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="https://axia-security.github.io/axia-pages/severity-benchmark/story.html" class="back-link">&larr; Back to Benchmark Presentation</a>
+    <h1>Experiment <span>Prompts</span></h1>
+    <p>Side-by-side comparison of the two prompt conditions used in the AXIA Severity Benchmark. Each of the 150 test cases was evaluated by 5 LLMs under both conditions (1,500 total API calls).</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="number" style="color: var(--accent);">~120</div>
+      <div class="label">Minimal Prompt (words)</div>
+    </div>
+    <div class="stat-box">
+      <div class="number" style="color: var(--teal);">~1,800</div>
+      <div class="label">Detailed Prompt (words)</div>
+    </div>
+    <div class="stat-box">
+      <div class="number" style="color: var(--text);">15x</div>
+      <div class="label">Size Difference</div>
+    </div>
+    <div class="stat-box">
+      <div class="number" style="color: var(--low);">+14.9%</div>
+      <div class="label">Accuracy Gain (Best Model)</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Identical structure, different depth.</strong> Both prompts use the same WHO/WHAT/WHO framework, the same JSON response format, and receive the same sender/recipient/email data. The only difference is the severity guidance: the minimal prompt provides a 4-line severity scale, while the detailed prompt includes violation category tables, boundary decision matrices, and amplifier/mitigator lists.
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('side-by-side')">Side-by-Side</button>
+    <button class="tab" onclick="showTab('minimal')">Minimal Prompt (Full)</button>
+    <button class="tab" onclick="showTab('detailed')">Detailed Prompt (Full)</button>
+    <button class="tab" onclick="showTab('differences')">Key Differences</button>
+  </div>
+
+  <!-- Tab 1: Side-by-Side -->
+  <div id="tab-side-by-side" class="tab-content active">
+    <div class="comparison">
+      <div class="prompt-col">
+        <div class="prompt-label label-minimal">Minimal Prompt (Experiment 1)</div>
+        <div class="prompt-body">You are an insider risk analyst at a financial institution. You receive DLP alerts and must triage them by severity.
+
+Analyze the following email and its sender/recipient context. Classify the severity and explain your reasoning.
+
+Use the WHO/WHAT/WHO framework:
+- WHO sent it (role, access, behavioral signals)
+- WHAT it contains (data type, sensitivity, volume)
+- WHO received it (authorization, relationship, organizational controls)
+
+<span class="heading">Severity scale:</span>
+- <span class="sev-c">CRITICAL (90-100)</span>: Requires immediate alerting/visibility of executive compliance/security/legal/HR function(s). The most severe incidents.
+- <span class="sev-h">HIGH (70-89)</span>: Requires manager and/or alerting/visibility of operational compliance/security/legal/HR function(s). Serious but with some mitigating factors.
+- <span class="sev-m">MEDIUM (50-69)</span>: Requires employee engagement and/or coaching for resolution. Policy violation that can be corrected through guidance.
+- <span class="sev-l">LOW (0-49)</span>: Can be auto-resolved. Legitimate activity or false positive.
+
+Respond in this exact JSON format only, no other text:
+{"severity": "CRITICAL", "analysis": "Your WHO/WHAT/WHO reasoning here"}
+
+<span class="separator">---</span>
+
+<span class="heading">### Sender Context</span>
+- Name: <span class="var">{sender_name}</span>
+- Role: <span class="var">{sender_role}</span>
+- Department: <span class="var">{sender_dept}</span>
+- Tenure: <span class="var">{sender_tenure}</span>
+- Location: <span class="var">{sender_location}</span>
+- Risk Factors: <span class="var">{sender_risks}</span>
+
+<span class="heading">### Recipient Context</span>
+- Name: <span class="var">{recipient_name}</span>
+- Organization: <span class="var">{recipient_org}</span>
+- Relationship: <span class="var">{recipient_rel}</span>
+
+<span class="heading">### Email</span>
+From: <span class="var">{email_from}</span>
+To: <span class="var">{email_to}</span>
+Date: <span class="var">{email_date}</span>
+Subject: <span class="var">{email_subject}</span>
+
+<span class="var">{email_body}</span></div>
+      </div>
+
+      <div class="prompt-col">
+        <div class="prompt-label label-detailed">Detailed Prompt (Experiment 2)</div>
+        <div class="prompt-body">You are an insider risk analyst at a financial institution. You receive DLP alerts and must triage them by severity.
+
+Analyze the following email and its sender/recipient context. Classify the severity and explain your reasoning.
+
+Use the WHO/WHAT/WHO framework:
+- WHO sent it (role, access, behavioral signals)
+- WHAT it contains (data type, sensitivity, volume)
+- WHO received it (authorization, relationship, organizational controls)
+
+Severity emerges from the COMBINATION of these dimensions. The same data sent to different recipients can be different severities. Behavioral context (departure, grievance, financial pressure) acts as an amplifier.
+
+<span class="separator">---</span>
+
+<span class="heading">## CRITICAL (Score 90-100)</span>
+
+<span class="sev-c">Response:</span> Requires immediate alerting/visibility of executive compliance/security/legal/HR function(s). Immediate human confirmation required.
+
+<span class="sev-c">Core pattern:</span> Active or imminent harm involving either (a) deliberate malicious action, (b) regulatory violations carrying criminal or systemic consequences, or (c) exposure of data whose compromise could cause irreversible damage.
+
+<span class="sev-c">Violation categories that typically drive CRITICAL:</span>
+| IP exfiltration to competitor
+| Regulatory crime / securities violation
+| Customer PII/financial data theft
+| Infrastructure/credential compromise
+| DLP evasion / deliberate concealment
+| MNPI disclosure
+| Fraud / financial crime by insider
+
+<span class="sev-c">Key CRITICAL signals:</span>
+- Recipient is personal email, competitor, unauthorized external, dark web, or encrypted channel
+- Data is regulated (PCI DSS, GLBA, BSA/AML, SEC, biometric)
+- Sender shows departure + competitor, or financial distress + privileged access
+- Deliberate concealment methods
+- Criminal liability potential
+
+<span class="heading">## HIGH (Score 70-89)</span>
+
+<span class="sev-h">Response:</span> Requires manager and/or alerting/visibility of operational compliance/security/legal/HR function(s).
+
+<span class="sev-h">Core pattern:</span> Significant data exposure with mitigating factors: legitimate relationship, non-regulated data, no malicious intent, or contained exposure.
+
+<span class="sev-h">Violation categories:</span>
+| Commercial intelligence to competitor
+| Sensitive data to unauthorized but related recipients
+| Internal data at massive scale
+| Governance bypass with sensitive data
+| Compliance data shared beyond scope
+| Personal use of institutional resources for gain
+
+<span class="heading">## MEDIUM (Score 50-69)</span>
+
+<span class="sev-m">Response:</span> Requires employee engagement and/or coaching for resolution.
+
+<span class="sev-m">Core pattern:</span> Policy violations driven by carelessness, not malice. Limited exposure, partial authorization.
+
+<span class="sev-m">Violation categories:</span>
+| Accidental misdirection
+| Over-sharing with legitimate intent
+| Process violation without malice
+| Data in unsanctioned personal tools
+| Internal boundary violations
+
+<span class="heading">## LOW (Score 0-49)</span>
+
+<span class="sev-l">Response:</span> Auto-resolve if matches known-good pattern.
+
+<span class="sev-l">Core pattern:</span> Legitimate business activity correctly flagged by pattern-matching DLP.
+
+<span class="heading">## Boundary Decision Factors</span>
+
+[Detailed tables for CRITICAL vs HIGH, HIGH vs MEDIUM, MEDIUM vs LOW boundaries]
+
+<span class="heading">## Amplifiers and Mitigators</span>
+
+Amplifiers: departure to competitor, financial distress, concealment, escalation pattern...
+Mitigators: authorized relationship, data within org, accidental nature, proactive disclosure...
+
+<span class="separator">---</span>
+
+<span class="kw">[Same JSON format, same sender/recipient/email data fields]</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Full Minimal Prompt -->
+  <div id="tab-minimal" class="tab-content">
+    <div class="prompt-col" style="max-width: 900px;">
+      <div class="prompt-label label-minimal">Minimal Prompt &mdash; Complete Text</div>
+      <div class="prompt-body">You are an insider risk analyst at a financial institution. You receive DLP alerts and must triage them by severity.
+
+Analyze the following email and its sender/recipient context. Classify the severity and explain your reasoning.
+
+Use the WHO/WHAT/WHO framework:
+- WHO sent it (role, access, behavioral signals)
+- WHAT it contains (data type, sensitivity, volume)
+- WHO received it (authorization, relationship, organizational controls)
+
+<span class="heading">Severity scale:</span>
+- <span class="sev-c">CRITICAL (90-100)</span>: Requires immediate alerting/visibility of executive compliance/security/legal/HR function(s). The most severe incidents.
+- <span class="sev-h">HIGH (70-89)</span>: Requires manager and/or alerting/visibility of operational compliance/security/legal/HR function(s). Serious but with some mitigating factors.
+- <span class="sev-m">MEDIUM (50-69)</span>: Requires employee engagement and/or coaching for resolution. Policy violation that can be corrected through guidance.
+- <span class="sev-l">LOW (0-49)</span>: Can be auto-resolved. Legitimate activity or false positive.
+
+Respond in this exact JSON format only, no other text:
+{"severity": "CRITICAL", "analysis": "Your WHO/WHAT/WHO reasoning here"}
+
+<span class="separator">---</span>
+
+<span class="heading">### Sender Context</span>
+- Name: <span class="var">{sender_name}</span>
+- Role: <span class="var">{sender_role}</span>
+- Department: <span class="var">{sender_dept}</span>
+- Tenure: <span class="var">{sender_tenure}</span>
+- Location: <span class="var">{sender_location}</span>
+- Risk Factors: <span class="var">{sender_risks}</span>
+
+<span class="heading">### Recipient Context</span>
+- Name: <span class="var">{recipient_name}</span>
+- Organization: <span class="var">{recipient_org}</span>
+- Relationship: <span class="var">{recipient_rel}</span>
+
+<span class="heading">### Email</span>
+From: <span class="var">{email_from}</span>
+To: <span class="var">{email_to}</span>
+CC: <span class="var">{email_cc}</span>   <span class="kw">(only if present)</span>
+BCC: <span class="var">{email_bcc}</span>  <span class="kw">(only if present)</span>
+Date: <span class="var">{email_date}</span>
+Subject: <span class="var">{email_subject}</span>
+Attachments: <span class="var">{email_attachments}</span>  <span class="kw">(only if present)</span>
+
+<span class="var">{email_body}</span></div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Full Detailed Prompt -->
+  <div id="tab-detailed" class="tab-content">
+    <div class="prompt-col" style="max-width: 900px;">
+      <div class="prompt-label label-detailed">Detailed Prompt &mdash; Complete Text</div>
+      <div class="prompt-body">You are an insider risk analyst at a financial institution. You receive DLP alerts and must triage them by severity.
+
+Analyze the following email and its sender/recipient context. Classify the severity and explain your reasoning.
+
+Use the WHO/WHAT/WHO framework:
+- WHO sent it (role, access, behavioral signals)
+- WHAT it contains (data type, sensitivity, volume)
+- WHO received it (authorization, relationship, organizational controls)
+
+Severity emerges from the COMBINATION of these dimensions. The same data sent to different recipients can be different severities. Behavioral context (departure, grievance, financial pressure) acts as an amplifier.
+
+<span class="separator">---</span>
+
+<span class="heading">## CRITICAL (Score 90-100)</span>
+
+<span class="sev-c">Response:</span> Requires immediate alerting/visibility of executive compliance/security/legal/HR function(s). Immediate human confirmation required.
+
+<span class="sev-c">Core pattern:</span> Active or imminent harm involving either (a) deliberate malicious action, (b) regulatory violations carrying criminal or systemic consequences, or (c) exposure of data whose compromise could cause irreversible damage.
+
+<span class="sev-c">Violation categories that typically drive CRITICAL:</span>
+
+| Category                               | What It Looks Like                                                                                               |
+| IP exfiltration to competitor           | Departing employee sends proprietary code, algorithms, or trade secrets to personal email or competitor           |
+| Regulatory crime / securities violation | Pre-earnings data to investors, insider trading, sanctions evasion, SAR disclosure, wire fraud                    |
+| Customer PII/financial data theft       | Bulk export of customer records (PII, payment data, biometrics) to personal or external destinations             |
+| Infrastructure/credential compromise    | Production API keys, SWIFT credentials, cold wallet keys sent externally or posted to dark web                   |
+| DLP evasion / deliberate concealment    | Encryption specifically to bypass scanning, disguised filenames, audit trail manipulation                        |
+| MNPI disclosure                         | Material non-public information shared before authorized release to unauthorized parties                         |
+| Fraud / financial crime by insider      | Wire redirection, forged documents, bribery, collusion with external bad actors                                  |
+
+<span class="sev-c">Key CRITICAL signals:</span>
+- Recipient is personal email, competitor, unauthorized external party, dark web, or anonymous/encrypted channel
+- Data is regulated (PCI DSS, GLBA, BSA/AML, SEC, biometric privacy laws)
+- Sender shows departure + competitor destination, or financial distress + privileged access
+- Deliberate concealment methods (encryption to bypass DLP, mislabeled files, off-hours timing)
+- Criminal liability potential (securities fraud, wire fraud, sanctions violations)
+
+<span class="separator">---</span>
+
+<span class="heading">## HIGH (Score 70-89)</span>
+
+<span class="sev-h">Response:</span> Requires manager and/or alerting/visibility of operational compliance/security/legal/HR function(s). Manager-level review and action required.
+
+<span class="sev-h">Core pattern:</span> Significant data exposure or policy violation that creates material business risk, but with one or more mitigating factors: the recipient has some legitimate relationship, the data lacks the most sensitive regulatory classifications, the sender shows no malicious intent, or the exposure has not yet left organizational control.
+
+<span class="sev-h">Violation categories that typically drive HIGH:</span>
+
+| Category                                                   | What It Looks Like                                                                                               |
+| Commercial intelligence to competitor                      | Client lists, loan portfolios, pricing, CRM data sent to competitors or personal storage by departing employees  |
+| Sensitive data to legitimate-but-unauthorized recipients   | Data shared with vendors/partners who have a relationship but lack proper authorization                          |
+| Internal data at massive scale / misconfiguration          | Large-volume data exposed through misconfiguration, remaining within organizational systems                      |
+| Governance bypass with sensitive data                      | Well-intentioned sharing that bypasses required approval processes                                               |
+| Compliance/regulatory data shared with inappropriate scope | AML thresholds, transaction monitoring rules, examination findings shared beyond authorized parties              |
+| Personal use of institutional resources for financial gain | Using corporate terminals, data, or access for personal trading, investment research                            |
+| Sensitive data to media / public platform                  | Feature flags to journalist, operational data to PR agency during crisis                                         |
+
+<span class="sev-h">What distinguishes HIGH from CRITICAL:</span>
+- Data is commercially sensitive but not regulated PII, not MNPI, not criminal
+- Recipient has some existing relationship (vendor, partner, board member)
+- Sender intent is not malicious (though may be self-serving, negligent, or pressure-driven)
+- Exposure is contained or recoverable
+- No criminal liability, but material business harm possible
+
+<span class="separator">---</span>
+
+<span class="heading">## MEDIUM (Score 50-69)</span>
+
+<span class="sev-m">Response:</span> Requires employee engagement and/or coaching for resolution. Educational engagement, process correction.
+
+<span class="sev-m">Core pattern:</span> Policy violations driven by carelessness, ignorance, poor process, or misguided helpfulness rather than malicious intent. The data has some sensitivity but the exposure is limited, internal, or to parties with partial authorization.
+
+<span class="sev-m">Violation categories that typically drive MEDIUM:</span>
+
+| Category                                              | What It Looks Like                                                                    |
+| Accidental misdirection / wrong recipient             | Email to wrong client, reply-all, posting to wrong channel                            |
+| Over-sharing with legitimate intent                   | Employee shares more data than necessary for a legitimate purpose                     |
+| Process/policy violation without malice               | Bypassing proper channels, using wrong tools, failing to follow procedures            |
+| Data in unsanctioned personal tools                   | Copying work data to personal Notion, blogs, GitHub, social media for productivity    |
+| Legitimate relationship, premature or excessive share | Sharing with auditors, regulators before proper governance review                     |
+| Internal boundary violations                          | Accessing data outside assigned portfolio, sharing across information barriers        |
+| Public disclosure of operational details              | Sharing operational metrics in podcasts, blogs, conferences                           |
+
+<span class="sev-m">Key MEDIUM signals:</span>
+- Sender has no malicious intent (careless, helpful, ignorant, pressured)
+- Data is sensitive but not the most regulated categories
+- Recipient often has partial legitimacy
+- Behavioral risk signals are absent or mild
+- Problem is fixable through coaching and process improvement
+- No deliberate concealment or DLP evasion
+
+<span class="separator">---</span>
+
+<span class="heading">## LOW (Score 0-49)</span>
+
+<span class="sev-l">Response:</span> Auto-resolve if matches known-good pattern. Verify and close.
+
+<span class="sev-l">Core pattern:</span> Legitimate business activity that was correctly flagged by a pattern-matching DLP system but does not represent actual risk.
+
+<span class="sev-l">Categories that drive LOW (false positives):</span>
+
+| Category                               | What It Looks Like                                                                       |
+| Pre-approved content sharing           | Marketing collateral, published reports, approved case studies sent to appropriate people |
+| Public/regulatory documents            | Publicly filed documents, open-source content, government publications                   |
+| Authorized external collaboration      | Sharing with engaged law firms, contracted vendors with DPA, approved partnerships       |
+| Routine internal operations            | Standard management reporting, internal escalations, training materials                  |
+| Personal content triggering keywords   | Personal financial planning, tax documents, personal LinkedIn articles                   |
+| Departing employee, personal files     | DLP flags departure + data transfer, but content is personal (resume, photos, reviews)   |
+
+<span class="separator">---</span>
+
+<span class="heading">## Boundary Decision Factors</span>
+
+<span class="sev-c">CRITICAL vs. HIGH:</span>
+
+| Factor                | Tips toward CRITICAL                                    | Tips toward HIGH                                      |
+| Data type             | Regulated (PCI, GLBA, BSA/AML, SEC, biometric)         | Commercial/competitive (client lists, pricing)        |
+| Regulatory consequence| Criminal liability, reportable breach, SEC violation    | Policy violation, contractual breach, NDA violation   |
+| Recipient             | No relationship, competitor, anonymous, dark web        | Existing relationship but missing authorization       |
+| Intent                | Deliberate exfiltration, concealment, fraud             | Negligent, pressure-driven, self-serving              |
+| Sender signals        | Departure + competitor, financial distress              | Departure alone, work pressure, career ambition       |
+| Reversibility         | Irreversible (data in the wild, keys compromised)       | Potentially recoverable (known recipient, NDA)        |
+
+<span class="sev-h">HIGH vs. MEDIUM:</span>
+
+| Factor                | Tips toward HIGH                                        | Tips toward MEDIUM                                    |
+| Recipient             | External (competitor, vendor, public)                   | Internal (wrong department, over-broad access)        |
+| Sender signals        | Departure, grievance, financial conflict                | None, or mild (eagerness, inexperience, pressure)     |
+| Governance bypass     | Deliberate, aware of the requirement                    | Accidental or ignorance-based                         |
+| Data volume/impact    | Bulk export, complete portfolios, credentials           | Limited scope, single documents, operational data     |
+| Concealment           | Some evidence (off-hours, encrypted, mislabeling)       | None (sender often openly discusses the sharing)      |
+
+<span class="sev-m">MEDIUM vs. LOW:</span>
+
+| Factor                | Tips toward MEDIUM                                      | Tips toward LOW                                       |
+| Authorization         | Missing or incomplete                                   | Fully authorized                                      |
+| Content sensitivity   | Contains sensitive data that should not be shared       | Already public, personal, or designed for distribution|
+| Process compliance    | Process was violated                                    | Process was followed                                  |
+| Risk factors          | Mild but present                                        | None                                                  |
+
+<span class="separator">---</span>
+
+<span class="heading">## Amplifiers and Mitigators</span>
+
+<span class="sev-c">Amplifiers (push severity UP):</span>
+- Confirmed departure to competitor
+- Financial distress or personal grievance
+- Deliberate concealment (encryption to bypass DLP, mislabeled files, off-hours timing)
+- Pattern of escalation (multiple incidents, increasing volume)
+- Undisclosed conflicts of interest
+- Prior disciplinary history for similar behavior
+
+<span class="sev-l">Mitigators (push severity DOWN):</span>
+- Recipient has existing authorized relationship (vendor with NDA, engaged law firm)
+- Data stayed within organizational systems (self-email, internal misdirection)
+- Clear accidental nature (autocomplete error, wrong channel)
+- Sender proactively disclosed or sought approval
+- Data volume is limited (single document vs. bulk export)
+- Content was already public or approaching public release
+
+<span class="separator">---</span>
+
+Respond in this exact JSON format only, no other text:
+{"severity": "CRITICAL", "analysis": "Your WHO/WHAT/WHO reasoning here"}
+
+<span class="separator">---</span>
+
+<span class="heading">### Sender Context</span>
+- Name: <span class="var">{sender_name}</span>
+- Role: <span class="var">{sender_role}</span>
+- Department: <span class="var">{sender_dept}</span>
+- Tenure: <span class="var">{sender_tenure}</span>
+- Location: <span class="var">{sender_location}</span>
+- Risk Factors: <span class="var">{sender_risks}</span>
+
+<span class="heading">### Recipient Context</span>
+- Name: <span class="var">{recipient_name}</span>
+- Organization: <span class="var">{recipient_org}</span>
+- Relationship: <span class="var">{recipient_rel}</span>
+
+<span class="heading">### Email</span>
+From: <span class="var">{email_from}</span>
+To: <span class="var">{email_to}</span>
+CC: <span class="var">{email_cc}</span>   <span class="kw">(only if present)</span>
+BCC: <span class="var">{email_bcc}</span>  <span class="kw">(only if present)</span>
+Date: <span class="var">{email_date}</span>
+Subject: <span class="var">{email_subject}</span>
+Attachments: <span class="var">{email_attachments}</span>  <span class="kw">(only if present)</span>
+
+<span class="var">{email_body}</span></div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Key Differences -->
+  <div id="tab-differences" class="tab-content">
+    <h2>What Changed Between Prompts</h2>
+
+    <div class="note">
+      Both prompts share the same role setup, WHO/WHAT/WHO framework, JSON response format, and sender/recipient/email data injection. The <strong>only difference</strong> is the severity guidance section.
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Minimal Prompt</th>
+          <th>Detailed Prompt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Severity Definitions</strong></td>
+          <td>4 one-line definitions<br><span class="diff-highlight">~40 words</span></td>
+          <td>Full descriptions with core patterns, violation categories, and key signals per tier<br><span class="diff-highlight">~800 words</span></td>
+        </tr>
+        <tr>
+          <td><strong>Violation Categories</strong></td>
+          <td>Not provided</td>
+          <td>7 categories for Critical, 7 for High, 7 for Medium, 6 for Low &mdash; each with concrete examples of what it looks like</td>
+        </tr>
+        <tr>
+          <td><strong>Boundary Decisions</strong></td>
+          <td>Not provided</td>
+          <td>Three decision matrices (Critical/High, High/Medium, Medium/Low) with 4-6 factors each and concrete "tips toward" guidance</td>
+        </tr>
+        <tr>
+          <td><strong>Amplifiers &amp; Mitigators</strong></td>
+          <td>Not provided</td>
+          <td>6 amplifiers and 6 mitigators that adjust severity based on contextual signals</td>
+        </tr>
+        <tr>
+          <td><strong>Combinatorial Guidance</strong></td>
+          <td>Not provided</td>
+          <td>"Severity emerges from the COMBINATION of these dimensions. The same data sent to different recipients can be different severities."</td>
+        </tr>
+        <tr>
+          <td><strong>Total Prompt Length</strong></td>
+          <td>~120 words (fixed) + email data</td>
+          <td>~1,800 words (fixed) + email data</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 32px;">Impact on Results</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Minimal Accuracy</th>
+          <th>Detailed Accuracy</th>
+          <th>Improvement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Claude Sonnet 4</strong></td>
+          <td>72.4%</td>
+          <td style="color: var(--teal); font-weight: 700;">87.3%</td>
+          <td style="color: var(--low); font-weight: 700;">+14.9%</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-4.1</strong></td>
+          <td>67.3%</td>
+          <td>80.7%</td>
+          <td style="color: var(--low);">+13.3%</td>
+        </tr>
+        <tr>
+          <td><strong>Gemini 2.5 Pro</strong></td>
+          <td>60.7%</td>
+          <td>74.7%</td>
+          <td style="color: var(--low);">+14.0%</td>
+        </tr>
+        <tr>
+          <td><strong>GPT-4.1 Mini</strong></td>
+          <td>59.3%</td>
+          <td>60.0%</td>
+          <td style="color: var(--text-dim);">+0.7%</td>
+        </tr>
+        <tr>
+          <td><strong>Gemini 2.5 Flash</strong></td>
+          <td>50.7%</td>
+          <td>50.0%</td>
+          <td style="color: var(--critical);">-0.7%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top: 24px;">
+      <strong>Key finding:</strong> The detailed prompt's greatest impact was on the HIGH and MEDIUM tiers, where models without guidance collapse to binary thinking ("bad" = Critical, "not bad" = Low). HIGH accuracy jumped from 24.5% average to 53.5% (+29%). Efficient models (Mini, Flash) showed near-zero improvement, suggesting a capacity ceiling for processing complex classification frameworks.
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
