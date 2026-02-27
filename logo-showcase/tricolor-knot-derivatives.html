@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA — Tri-Color Knot Derivatives</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Manrope',sans-serif;background:#0a0a0a;color:#e5e5e5;line-height:1.6}
+        .hero{text-align:center;padding:60px 40px 40px;border-bottom:1px solid rgba(139,92,246,0.15)}
+        .hero h1{font-size:42px;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#8B5CF6,#3B82F6,#F97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:#9CA3AF;margin-top:12px;font-size:16px;max-width:600px;margin-left:auto;margin-right:auto}
+        .grid{max-width:1400px;margin:0 auto;padding:32px 40px 100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:24px}
+        .card{background:#141414;border-radius:16px;border:1px solid rgba(255,255,255,0.06);overflow:hidden;transition:all 0.3s;cursor:pointer}
+        .card:hover{border-color:rgba(139,92,246,0.4);transform:translateY(-3px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+        .card-header{padding:14px 20px 10px;display:flex;align-items:center;gap:10px}
+        .card-num{font-size:12px;font-weight:700;color:#6B7280;min-width:22px}
+        .card-name{font-size:14px;font-weight:700;color:#E5E5E5;flex:1}
+        .card-tag{font-size:10px;font-weight:600;color:#9CA3AF;background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.05em}
+        .fav-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#6B7280;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+        .fav-btn:hover{color:#F97316;border-color:rgba(249,115,22,0.4)}
+        .fav-btn.active{color:#F97316;background:rgba(249,115,22,0.1);border-color:#F97316}
+        .previews{display:flex}
+        .preview{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px 16px 10px}
+        .preview.light{background:#ffffff}
+        .preview.dark{background:#111111}
+        .preview svg{width:150px;height:150px}
+        .bg-label{font-size:10px;font-weight:700;letter-spacing:0.1em;margin-top:6px;padding:2px 10px;border-radius:4px}
+        .preview.light .bg-label{color:#6B7280;background:#F3F4F6}
+        .preview.dark .bg-label{color:#9CA3AF;background:rgba(255,255,255,0.08)}
+        .color-bar{display:flex;gap:5px;padding:10px 20px 14px}
+        .chip{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)}
+        .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;align-items:center;justify-content:center;flex-direction:column;gap:16px;cursor:pointer}
+        .lightbox.active{display:flex}
+        .lightbox .lb-title{color:#fff;font-size:20px;font-weight:700}
+        .lightbox .lb-row{display:flex;gap:24px}
+        .lightbox .lb-row svg{width:340px;height:340px;border-radius:12px}
+        .lightbox .close{position:absolute;top:20px;right:20px;color:#9CA3AF;font-size:28px;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.05)}
+        .lightbox .close:hover{color:#fff}
+        .lb-nav{display:flex;gap:12px;margin-top:8px}
+        .lb-nav button{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);color:#9CA3AF;padding:6px 16px;border-radius:8px;font-family:'Manrope';font-size:13px;cursor:pointer;transition:all 0.2s}
+        .lb-nav button:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+        .summary-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(10,10,10,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(139,92,246,0.3);padding:12px 40px;display:none;align-items:center;justify-content:space-between}
+        .summary-bar.active{display:flex}
+        .summary-bar .count{font-size:14px;color:#A78BFA;font-weight:600}
+        .copy-btn{background:#7C3AED;color:white;border:none;padding:8px 20px;border-radius:8px;font-family:'Manrope';font-size:13px;font-weight:600;cursor:pointer}
+        .copy-btn:hover{background:#6D28D9}
+        footer{text-align:center;padding:40px;color:#4B5563;font-size:13px}
+        @media(max-width:768px){.grid{padding:16px;grid-template-columns:1fr}.hero h1{font-size:28px}.preview svg{width:120px;height:120px}.lightbox .lb-row svg{width:160px;height:160px}}
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>Tri-Color Knot — Derivatives</h1>
+    <p>15 variations across color palettes, 2D/3D styles, and weight. Each shown on light and dark backgrounds. Click to enlarge, heart to mark favorites.</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLB()">
+    <span class="close" onclick="closeLB()">&times;</span>
+    <div class="lb-title" id="lb-title"></div>
+    <div class="lb-row" id="lb-row"></div>
+    <div class="lb-nav">
+        <button onclick="event.stopPropagation();navLB(-1)">&larr; Prev</button>
+        <button onclick="event.stopPropagation();navLB(1)">Next &rarr;</button>
+    </div>
+</div>
+
+<div class="summary-bar" id="summary-bar">
+    <span class="count" id="vote-count">0 favorites</span>
+    <button class="copy-btn" onclick="copyFavs()">Copy favorites list</button>
+</div>
+
+<footer>
+    AXIA Tri-Color Knot Derivatives — February 2026<br>
+    Click logos to enlarge. Heart to mark favorites.
+</footer>
+
+<script>
+const CX=[100,78,122], CY=[79,120,120], R=27, SW=14;
+
+const variants=[
+  {n:'Original',tag:'2D Flat',c:['#8B5CF6','#3B82F6','#F97316']},
+  {n:'AXIA Brand',tag:'2D Flat',c:['#14B8A6','#22D3EE','#0D9488']},
+  {n:'Ocean Depths',tag:'2D Flat',c:['#2563EB','#14B8A6','#60A5FA']},
+  {n:'Sunset Blaze',tag:'2D Flat',c:['#EF4444','#F97316','#FBBF24']},
+  {n:'Royal Velvet',tag:'2D Flat',c:['#8B5CF6','#6366F1','#A78BFA']},
+  {n:'Coral Reef',tag:'2D Flat',c:['#FB923C','#EC4899','#2DD4BF']},
+  {n:'Mono Teal',tag:'2D Flat',c:['#0D9488','#2DD4BF','#5EEAD4']},
+  {n:'Neon Electric',tag:'2D Flat',c:['#06B6D4','#F43F5E','#A3E635']},
+  {n:'Soft Pastel',tag:'2D Flat',c:['#A78BFA','#7DD3FC','#FCA5A1']},
+  {n:'Forest',tag:'2D Flat',c:['#10B981','#84CC16','#34D399']},
+  {n:'3D Depth',tag:'3D Gradient',type:'gradient',
+    gc:[['#C4B5FD','#5B21B6'],['#93C5FD','#1E3A8A'],['#FDBA74','#9A3412']]},
+  {n:'Metallic Chrome',tag:'3D Metallic',type:'metallic',
+    gc:[['#F3F4F6','#9CA3AF','#E5E7EB','#6B7280'],['#E5E7EB','#6B7280','#D1D5DB','#4B5563'],['#FDE68A','#D97706','#F59E0B','#92400E']]},
+  {n:'Wireframe',tag:'2D Line',c:['#8B5CF6','#3B82F6','#F97316'],sw:4},
+  {n:'Ultra Bold',tag:'2D Bold',c:['#8B5CF6','#3B82F6','#F97316'],sw:22,r:30},
+  {n:'Midnight Premium',tag:'2D Flat',c:['#64748B','#14B8A6','#F59E0B']},
+];
+
+function knot(id, v, bg) {
+  const sw = v.sw || SW;
+  const r = v.r || R;
+  const outer = r + sw/2;
+  const type = v.type || 'flat';
+  let defs = '', strokes = [];
+
+  if (type === 'gradient' && v.gc) {
+    v.gc.forEach((g,i) => {
+      defs += `<linearGradient id="${id}g${i}" x1="0.2" y1="0" x2="0.8" y2="1">
+        <stop offset="0%" stop-color="${g[0]}"/><stop offset="100%" stop-color="${g[1]}"/>
+      </linearGradient>`;
+    });
+    strokes = [0,1,2].map(i => `url(#${id}g${i})`);
+    defs += `<filter id="${id}sh"><feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.2"/></filter>`;
+  } else if (type === 'metallic' && v.gc) {
+    v.gc.forEach((g,i) => {
+      defs += `<linearGradient id="${id}g${i}" x1="0" y1="0" x2="0.8" y2="1">
+        <stop offset="0%" stop-color="${g[0]}"/><stop offset="30%" stop-color="${g[1]}"/>
+        <stop offset="65%" stop-color="${g[2]}"/><stop offset="100%" stop-color="${g[3]}"/>
+      </linearGradient>`;
+    });
+    strokes = [0,1,2].map(i => `url(#${id}g${i})`);
+    defs += `<filter id="${id}sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter>`;
+  } else {
+    strokes = v.c;
+  }
+
+  defs += `<mask id="${id}m"><rect width="200" height="200" fill="black"/>
+    <circle cx="${CX[2]}" cy="${CY[2]}" r="${outer}" fill="white"/>
+    <circle cx="${CX[1]}" cy="${CY[1]}" r="${outer}" fill="black"/></mask>`;
+
+  const grp = (type==='gradient'||type==='metallic') ? `filter="url(#${id}sh)"` : '';
+
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="${bg}"/>
+    <defs>${defs}</defs>
+    <g ${grp}>
+      <circle cx="${CX[0]}" cy="${CY[0]}" r="${r}" fill="none" stroke="${strokes[0]}" stroke-width="${sw}"/>
+      <circle cx="${CX[1]}" cy="${CY[1]}" r="${r}" fill="none" stroke="${strokes[1]}" stroke-width="${sw}"/>
+      <circle cx="${CX[2]}" cy="${CY[2]}" r="${r}" fill="none" stroke="${strokes[2]}" stroke-width="${sw}"/>
+      <circle cx="${CX[0]}" cy="${CY[0]}" r="${r}" fill="none" stroke="${strokes[0]}" stroke-width="${sw}" mask="url(#${id}m)"/>
+    </g>
+  </svg>`;
+}
+
+function chipColors(v) {
+  if (v.c) return v.c;
+  return v.gc.map(g => g[0]);
+}
+
+// Build grid
+const grid = document.getElementById('grid');
+variants.forEach((v,i) => {
+  const num = String(i+1).padStart(2,'0');
+  const lid = `v${i}l`, did = `v${i}d`;
+  const lightSvg = knot(lid, v, '#ffffff');
+  const darkSvg = knot(did, v, '#111111');
+  const chips = chipColors(v).map(c => `<span class="chip" style="background:${c}"></span>`).join('');
+
+  grid.innerHTML += `
+    <div class="card" data-idx="${i}" onclick="openLB(${i})">
+      <div class="card-header">
+        <span class="card-num">${num}</span>
+        <span class="card-name">${v.n}</span>
+        <span class="card-tag">${v.tag}</span>
+        <button class="fav-btn" onclick="event.stopPropagation();toggleFav(this,'${v.n}')">&#9825;</button>
+      </div>
+      <div class="previews">
+        <div class="preview light">${lightSvg}<span class="bg-label">LIGHT</span></div>
+        <div class="preview dark">${darkSvg}<span class="bg-label">DARK</span></div>
+      </div>
+      <div class="color-bar">${chips}</div>
+    </div>`;
+});
+
+// Favorites
+const favs = new Set();
+function toggleFav(btn, name) {
+  if (btn.classList.contains('active')) {
+    btn.classList.remove('active'); btn.innerHTML='&#9825;'; favs.delete(name);
+  } else {
+    btn.classList.add('active'); btn.innerHTML='&#9829;'; favs.add(name);
+  }
+  const bar = document.getElementById('summary-bar');
+  const cnt = document.getElementById('vote-count');
+  if (favs.size > 0) {
+    bar.classList.add('active');
+    cnt.textContent = favs.size + ' favorite' + (favs.size>1?'s':'') + ': ' + Array.from(favs).join(', ');
+  } else { bar.classList.remove('active'); }
+}
+function copyFavs() {
+  const text = 'AXIA Tri-Color Knot Favorites:\n' + Array.from(favs).map((f,i)=>(i+1)+'. '+f).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy favorites list',2000);
+  });
+}
+
+// Lightbox
+let currentLB = 0;
+function openLB(idx) {
+  currentLB = idx;
+  const v = variants[idx];
+  document.getElementById('lb-title').textContent = `${String(idx+1).padStart(2,'0')} — ${v.n}`;
+  const row = document.getElementById('lb-row');
+  row.innerHTML = `
+    <div style="background:#fff;border-radius:12px;padding:8px">${knot('lb'+idx+'l', v, '#ffffff')}</div>
+    <div style="background:#111;border-radius:12px;padding:8px">${knot('lb'+idx+'d', v, '#111111')}</div>`;
+  // Fix SVG sizes for lightbox
+  row.querySelectorAll('svg').forEach(s => { s.style.width='340px'; s.style.height='340px'; });
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLB() { document.getElementById('lightbox').classList.remove('active'); }
+function navLB(dir) {
+  currentLB = (currentLB + dir + variants.length) % variants.length;
+  openLB(currentLB);
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('active')) return;
+  if (e.key==='Escape') closeLB();
+  if (e.key==='ArrowLeft') navLB(-1);
+  if (e.key==='ArrowRight') navLB(1);
+});
+</script>
+</body>
+</html>
