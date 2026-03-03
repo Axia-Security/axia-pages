@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXIA AI System Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal-deep: #09434e;
+  --teal-primary: #0D9488;
+  --cyan: #22D3EE;
+  --orange: #B8540C;
+  --bg-dark: #0A0F1A;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2234;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --border: rgba(34,211,238,0.12);
+  --glow-cyan: rgba(34,211,238,0.15);
+  --glow-teal: rgba(13,148,136,0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.slide {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-inner {
+  max-width: 1100px;
+  width: 100%;
+  z-index: 2;
+  position: relative;
+}
+
+/* Slide counter */
+.slide-number {
+  position: absolute;
+  top: 28px;
+  right: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  z-index: 10;
+}
+
+/* Background effects */
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.bg-glow-1 { width: 500px; height: 500px; background: var(--glow-teal); top: -150px; right: -100px; }
+.bg-glow-2 { width: 400px; height: 400px; background: var(--glow-cyan); bottom: -100px; left: -80px; }
+.bg-glow-3 { width: 350px; height: 350px; background: rgba(184,84,12,0.08); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+/* Typography */
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 800;
+  line-height: 1.08;
+  margin-bottom: 24px;
+  letter-spacing: -1.5px;
+}
+
+h2 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+.highlight { color: var(--cyan); }
+.highlight-teal { color: var(--teal-primary); }
+.highlight-orange { color: var(--orange); }
+
+/* Cards */
+.card-grid {
+  display: grid;
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.card-grid-2 { grid-template-columns: 1fr 1fr; }
+.card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(34,211,238,0.25);
+  transform: translateY(-2px);
+}
+
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.card p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* Pipeline visual */
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 36px 0 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pipeline-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 22px;
+  text-align: center;
+  min-width: 130px;
+  transition: all 0.3s ease;
+}
+
+.pipeline-node:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--glow-cyan);
+}
+
+.pipeline-node.active {
+  border-color: var(--cyan);
+  background: rgba(34,211,238,0.06);
+}
+
+.pipeline-node .node-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pipeline-node .node-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pipeline-arrow {
+  color: var(--text-muted);
+  font-size: 20px;
+  padding: 0 8px;
+}
+
+/* Stat blocks */
+.stat-row {
+  display: flex;
+  gap: 24px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.stat-block {
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+  padding: 24px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.stat-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 700;
+  color: var(--cyan);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* Bar chart */
+.bar-chart {
+  margin: 28px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 14px;
+}
+
+.bar-label {
+  width: 160px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bar-track {
+  flex: 1;
+  height: 32px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  transition: width 1.5s ease;
+}
+
+.bar-fill.teal { background: linear-gradient(90deg, var(--teal-deep), var(--teal-primary)); }
+.bar-fill.cyan { background: linear-gradient(90deg, #0e7490, var(--cyan)); }
+.bar-fill.orange { background: linear-gradient(90deg, #92400e, var(--orange)); }
+.bar-fill.slate { background: linear-gradient(90deg, #334155, #64748B); }
+.bar-fill.red { background: linear-gradient(90deg, #7f1d1d, #dc2626); }
+
+.bar-pct {
+  width: 50px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Ensemble visual */
+.ensemble-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.ensemble-model {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+
+.ensemble-model .model-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.ensemble-model .model-type {
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.ensemble-model .model-trait {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Funnel / gate */
+.gate-visual {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 32px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.gate-side {
+  flex: 1;
+  padding: 28px;
+}
+
+.gate-left {
+  background: rgba(34,211,238,0.04);
+  border-right: 1px solid var(--border);
+}
+
+.gate-right {
+  background: rgba(184,84,12,0.04);
+}
+
+.gate-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 12px;
+}
+
+.gate-badge.pass { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.gate-badge.deep { background: rgba(184,84,12,0.15); color: #f59e0b; }
+
+/* Question cards */
+.question-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.question-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  border-left: 3px solid var(--cyan);
+}
+
+.question-card .q-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.question-card .q-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.question-card .q-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Donut chart */
+.donut-container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 28px 0;
+}
+
+.donut-svg { flex-shrink: 0; }
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+}
+
+.data-table tr:hover td {
+  background: rgba(255,255,255,0.02);
+}
+
+.data-table .mono {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--cyan);
+  font-weight: 500;
+}
+
+/* Nav dots */
+.nav-dots {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  padding: 0;
+}
+
+.nav-dot:hover { background: rgba(255,255,255,0.35); }
+.nav-dot.active { background: var(--cyan); box-shadow: 0 0 8px var(--glow-cyan); }
+
+/* Keyboard hint */
+.key-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* Divider line */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 28px 0;
+}
+
+/* Tag pills */
+.tag-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.tag {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(34,211,238,0.08);
+  color: var(--cyan);
+  border: 1px solid rgba(34,211,238,0.15);
+}
+
+.tag.orange {
+  background: rgba(184,84,12,0.08);
+  color: #f59e0b;
+  border-color: rgba(184,84,12,0.15);
+}
+
+/* Two column layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 40px 20px; }
+  .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+  .ensemble-box { grid-template-columns: 1fr; }
+  .question-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .stat-row { flex-direction: column; }
+  .pipeline { flex-direction: column; gap: 8px; }
+  .pipeline-arrow { transform: rotate(90deg); }
+  .bar-label { width: 100px; font-size: 12px; }
+  .gate-visual { flex-direction: column; }
+  .nav-dots { display: none; }
+  .donut-container { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+<div class="key-hint">Arrow keys or scroll to navigate</div>
+
+<!-- ==================== SLIDE 1: Title ==================== -->
+<section class="slide" id="slide-0">
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <span class="slide-number">01 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">AXIA AI System Review</div>
+    <h1>Under the Hood:<br><span class="highlight">How AXIA Detects</span><br>Insider Risk</h1>
+    <p class="subtitle" style="margin-top: 20px;">
+      An analysis of AXIA's classification architecture, synthetic data generation pipeline, and 28,495-record training dataset.
+    </p>
+    <div class="tag-row" style="margin-top: 28px;">
+      <span class="tag">Ensemble Classification</span>
+      <span class="tag">Synthetic Data</span>
+      <span class="tag">Multi-Model</span>
+      <span class="tag orange">CPO Analysis</span>
+    </div>
+    <p style="margin-top: 32px; font-size: 14px; color: var(--text-muted);">
+      Yohay Etsion, Fractional Chief Product &middot; March 2026
+    </p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: The Challenge ==================== -->
+<section class="slide" id="slide-1">
+  <div class="bg-glow bg-glow-3"></div>
+  <span class="slide-number">02 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">The Challenge</div>
+    <h2>Every document could be a risk.<br><span class="highlight">Most aren't.</span></h2>
+    <p class="subtitle">
+      AXIA needs to scan massive volumes of corporate communications, but only a fraction contain sensitive data. Sending everything through an LLM would be prohibitively expensive. Skipping the LLM would miss critical context.
+    </p>
+    <div class="divider"></div>
+    <div class="card-grid card-grid-3" style="margin-top: 24px;">
+      <div class="card">
+        <span class="card-icon">&#9889;</span>
+        <h3>Speed</h3>
+        <p>Thousands of documents per minute. Classification must be near-instant.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128176;</span>
+        <h3>Cost</h3>
+        <p>LLM calls are expensive. You can't run GPT-4 on every Slack message.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#127919;</span>
+        <h3>Accuracy</h3>
+        <p>Missing a sensitive document is a compliance failure. False positives erode trust.</p>
+      </div>
+    </div>
+    <p style="margin-top: 24px; color: var(--text-secondary); font-size: 15px; font-style: italic;">
+      The solution: a two-stage architecture that's fast by default and deep when it matters.
+    </p>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: Architecture Overview ==================== -->
+<section class="slide" id="slide-2">
+  <div class="bg-glow bg-glow-1"></div>
+  <span class="slide-number">03 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Architecture</div>
+    <h2>Two Stages.<br><span class="highlight">One Smart Gate.</span></h2>
+    <p class="subtitle">Documents flow through fast classifiers first. Only flagged content gets the expensive LLM treatment.</p>
+    <div class="pipeline">
+      <div class="pipeline-node">
+        <div class="node-label">Input Document</div>
+        <div class="node-sub">email, chat, file</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-label">Chunking</div>
+        <div class="node-sub">split &amp; segment</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node active">
+        <div class="node-label">3x Classifiers</div>
+        <div class="node-sub">ensemble vote</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-label">Sensitive?</div>
+        <div class="node-sub">confidence gate</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node" style="border-color: rgba(184,84,12,0.3);">
+        <div class="node-label">LLM Analysis</div>
+        <div class="node-sub">if flagged only</div>
+      </div>
+    </div>
+    <div class="gate-visual">
+      <div class="gate-side gate-left">
+        <span class="gate-badge pass">NOT SENSITIVE</span>
+        <h3 style="color: var(--cyan);">Fast Path</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Classifiers say "clean." Skip the LLM. Report result immediately. This is the majority of traffic.
+        </p>
+      </div>
+      <div class="gate-side gate-right">
+        <span class="gate-badge deep">SENSITIVE</span>
+        <h3 style="color: #f59e0b;">Deep Analysis</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Classifiers flag risk. Route to LLM for reasoning, entity extraction, categorization, and recommendations.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: The Ensemble ==================== -->
+<section class="slide" id="slide-3">
+  <div class="bg-glow bg-glow-2"></div>
+  <span class="slide-number">04 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">The Ensemble</div>
+    <h2>Three Models.<br><span class="highlight">One Vote.</span></h2>
+    <p class="subtitle">Three architecturally different classifiers run in parallel. Their predictions are combined through confidence-weighted soft voting &mdash; not simple majority.</p>
+    <div class="ensemble-box">
+      <div class="ensemble-model" style="border-top: 3px solid var(--cyan);">
+        <div class="model-name">SetFit</div>
+        <div class="model-type">sentence-transformer</div>
+        <div class="model-trait">Few-shot fine-tuned. Lightweight, fast inference. Good at learning from small labeled datasets.</div>
+      </div>
+      <div class="ensemble-model" style="border-top: 3px solid var(--teal-primary);">
+        <div class="model-name">ModernBERT</div>
+        <div class="model-type">transformer encoder</div>
+        <div class="model-trait">Modern BERT variant. Strong contextual understanding with long-sequence support. The backbone.</div>
+      </div>
+      <div class="ensemble-model" style="border-top: 3px solid var(--orange);">
+        <div class="model-name">Embeddings + XGBoost/NN</div>
+        <div class="model-type">traditional ML</div>
+        <div class="model-trait">Embedding representations fed to gradient boosting or neural net. Interpretable. Different failure modes.</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 20px; border-left: 3px solid var(--cyan);">
+      <p style="color: var(--text-secondary); font-size: 15px;">
+        <strong style="color: var(--cyan);">Why three?</strong> Each model architecture has different blind spots. A transformer might miss tabular PII that XGBoost catches from structural features. SetFit may catch patterns BERT needs more data to learn. The ensemble's disagreement is itself a signal.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: Data Generation ==================== -->
+<section class="slide" id="slide-4">
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-3"></div>
+  <span class="slide-number">05 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Data Factory</div>
+    <h2>Synthetic Data,<br><span class="highlight">Real Intelligence</span></h2>
+    <p class="subtitle">A YAML-configured pipeline generates training data using research, LLMs, and validation. Real data alone isn't enough for financial services IRM.</p>
+
+    <div class="pipeline" style="margin-top: 32px;">
+      <div class="pipeline-node">
+        <div class="node-label">YAML Config</div>
+        <div class="node-sub">parameters</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-label">Research</div>
+        <div class="node-sub">LLM + Tavily</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-label">Profiles</div>
+        <div class="node-sub">scenarios</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node active">
+        <div class="node-label">Generation</div>
+        <div class="node-sub">CSV + Markdown</div>
+      </div>
+      <span class="pipeline-arrow">&rarr;</span>
+      <div class="pipeline-node">
+        <div class="node-label">Validation</div>
+        <div class="node-sub">LLM quality gate</div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-2" style="margin-top: 28px;">
+      <div class="card">
+        <h3>&#128209; Tabular Output (CSV)</h3>
+        <p>Structured records: trade data, client lists, account information, payment details. Headers, CUSIP IDs, dollar amounts.</p>
+      </div>
+      <div class="card">
+        <h3>&#128221; Textual Output (Markdown)</h3>
+        <p>Unstructured content: emails, memos, reports, compliance documents. Natural language with embedded sensitive data.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top: 16px; border-left: 3px solid #f59e0b;">
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        <strong style="color: #f59e0b;">Key design choice:</strong> Three different LLMs generate the synthetic data (Gemini, Claude, GPT). This avoids stylistic monoculture &mdash; if one model has a "tell," the others won't share it.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: Dataset at a Glance ==================== -->
+<section class="slide" id="slide-5">
+  <div class="bg-glow bg-glow-2"></div>
+  <span class="slide-number">06 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Training Data</div>
+    <h2>28,495 Records.<br><span class="highlight">Three Sources.</span></h2>
+    <div class="stat-row">
+      <div class="stat-block">
+        <div class="stat-number">28.5K</div>
+        <div class="stat-label">Total Records</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Data Sources</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">545</div>
+        <div class="stat-label">Median Chars</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number">21</div>
+        <div class="stat-label">Topic Categories</div>
+      </div>
+    </div>
+
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Enron (real)</div>
+        <div class="bar-track"><div class="bar-fill teal" style="width: 53%;">15,000</div></div>
+        <div class="bar-pct">53%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Financial (synthetic)</div>
+        <div class="bar-track"><div class="bar-fill cyan" style="width: 37%;">10,495</div></div>
+        <div class="bar-pct">37%</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Slack (real)</div>
+        <div class="bar-track"><div class="bar-fill orange" style="width: 11%;">3,000</div></div>
+        <div class="bar-pct">11%</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top: 8px;">
+      <div class="card" style="padding: 20px;">
+        <p style="font-size: 13px; color: var(--text-secondary);">
+          <strong style="color: var(--text-primary);">Real data</strong> (Enron + Slack) provides authentic communication patterns and ground truth. <strong style="color: var(--text-primary);">Synthetic data</strong> fills domain-specific gaps with financial services content that can't be sourced from public corpora.
+        </p>
+      </div>
+      <div class="card" style="padding: 20px;">
+        <p style="font-size: 13px; color: var(--text-secondary);">
+          <strong style="color: var(--text-primary);">Three generation models</strong> produce the synthetic split in roughly equal proportion: Gemini 3 Flash (36%), Claude Sonnet 4.5 (33%), GPT-4.1 Mini (31%). Architectural diversity in generation.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: Sensitivity Distribution ==================== -->
+<section class="slide" id="slide-6">
+  <div class="bg-glow bg-glow-1"></div>
+  <span class="slide-number">07 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Sensitivity Breakdown</div>
+    <h2>62% Sensitive.<br><span class="highlight">Five Severity Levels.</span></h2>
+
+    <div class="two-col">
+      <div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Non-Sensitive</div>
+            <div class="bar-track"><div class="bar-fill slate" style="width: 76.6%;">10,909</div></div>
+            <div class="bar-pct">38.3%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Low</div>
+            <div class="bar-track"><div class="bar-fill teal" style="width: 49%;">6,992</div></div>
+            <div class="bar-pct">24.5%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Medium</div>
+            <div class="bar-track"><div class="bar-fill cyan" style="width: 35.4%;">5,039</div></div>
+            <div class="bar-pct">17.7%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Critical</div>
+            <div class="bar-track"><div class="bar-fill red" style="width: 23.2%;">3,295</div></div>
+            <div class="bar-pct">11.6%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">High</div>
+            <div class="bar-track"><div class="bar-fill orange" style="width: 15.8%;">2,250</div></div>
+            <div class="bar-pct">7.9%</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom: 16px;">Sensitivity by Source</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Source</th><th>Sensitive</th><th>Rate</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Financial (synthetic)</td>
+              <td class="mono">9,278</td>
+              <td class="mono">88%</td>
+            </tr>
+            <tr>
+              <td>Enron (real emails)</td>
+              <td class="mono">7,617</td>
+              <td class="mono">51%</td>
+            </tr>
+            <tr>
+              <td>Slack (real chat)</td>
+              <td class="mono">681</td>
+              <td class="mono">23%</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="card" style="margin-top: 16px; padding: 16px;">
+          <p style="font-size: 13px; color: var(--text-secondary);">
+            Synthetic data is deliberately enriched (88% sensitive). Enron is naturally balanced. Slack reflects reality: most chat is harmless.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: Data Explorer ==================== -->
+<section class="slide" id="slide-7" style="scroll-snap-align: start; min-height: 100vh; align-items: flex-start; padding-top: 30px; padding-bottom: 30px;">
+  <div class="bg-glow bg-glow-1" style="opacity: 0.2;"></div>
+  <span class="slide-number">08 / 12</span>
+  <div class="slide-inner" style="max-width: 1200px;">
+    <div class="kicker">Data Explorer</div>
+    <h2 style="font-size: 32px; margin-bottom: 12px;">Drill Down by <span class="highlight">Severity</span></h2>
+    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">Click a severity level to explore sample records. ~40 stratified samples per level from the 28,495-record dataset.</p>
+
+    <!-- Severity selector pills -->
+    <div id="severitySelector" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;"></div>
+
+    <!-- Stats panel -->
+    <div id="statsPanel" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px;"></div>
+
+    <!-- Filters row -->
+    <div id="filtersRow" style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label style="font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">SOURCE</label>
+        <select id="filterSource" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-family: 'Manrope', sans-serif;">
+          <option value="all">All Sources</option>
+          <option value="enron">Enron</option>
+          <option value="financial">Financial (synthetic)</option>
+          <option value="slack">Slack</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label style="font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">TOPIC</label>
+        <select id="filterTopic" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-family: 'Manrope', sans-serif; max-width: 280px;">
+          <option value="all">All Topics</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label style="font-size: 12px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">PII</label>
+        <select id="filterPII" style="background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-family: 'Manrope', sans-serif;">
+          <option value="all">Any</option>
+          <option value="True">Has PII</option>
+          <option value="False">No PII</option>
+        </select>
+      </div>
+      <div style="flex: 1;"></div>
+      <span id="resultCount" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted);"></span>
+    </div>
+
+    <!-- Records list -->
+    <div id="recordsList" style="max-height: calc(100vh - 340px); overflow-y: auto; border-radius: 12px; border: 1px solid var(--border);"></div>
+
+    <!-- Record detail modal -->
+    <div id="recordModal" style="display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 40px;">
+      <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; max-width: 900px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 32px; position: relative;">
+        <button onclick="closeModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; padding: 4px 10px; border-radius: 8px;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">&times;</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: Topics & Coverage ==================== -->
+<section class="slide" id="slide-8">
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+  <span class="slide-number">09 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Domain Coverage</div>
+    <h2>21 Topics.<br><span class="highlight">Financial Services Focus.</span></h2>
+    <p class="subtitle">The synthetic data covers the document types most likely to carry sensitive information in financial services organizations.</p>
+
+    <div class="card-grid card-grid-3" style="margin-top: 28px;">
+      <div class="card" style="border-top: 2px solid #dc2626;">
+        <h3 style="font-size: 14px; color: #dc2626;">HIGH SENSITIVITY</h3>
+        <p style="margin-top: 10px; font-size: 13px;">
+          Wire transfers &amp; payments<br>
+          Payroll &amp; salary records<br>
+          Loan applications + PII<br>
+          Account opening + identity docs<br>
+          Insurance claims<br>
+          Funding rounds &amp; cap tables
+        </p>
+      </div>
+      <div class="card" style="border-top: 2px solid #f59e0b;">
+        <h3 style="font-size: 14px; color: #f59e0b;">MEDIUM SENSITIVITY</h3>
+        <p style="margin-top: 10px; font-size: 13px;">
+          Employee benefits &amp; tax forms<br>
+          Client account statements<br>
+          Customer contact lists<br>
+          Customer complaints + account info<br>
+          Internal audit findings<br>
+          Vendor contract evaluations
+        </p>
+      </div>
+      <div class="card" style="border-top: 2px solid var(--teal-primary);">
+        <h3 style="font-size: 14px; color: var(--teal-primary);">LOW / NON-SENSITIVE</h3>
+        <p style="margin-top: 10px; font-size: 13px;">
+          Daily market commentary<br>
+          System maintenance notifications<br>
+          Compliance policy updates<br>
+          IT security patch notes<br>
+          Product feature roadmaps<br>
+          Project status reports
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <p style="color: var(--text-secondary); font-size: 14px;">
+        <strong style="color: var(--text-primary);">Note:</strong> 63% of records (all Enron + Slack) have <span class="mono" style="color: var(--text-muted);">topic: unknown</span>. Topic labels exist only on the synthetic financial data. This is fine if topics are used downstream in LLM analysis, but could limit topic-aware classifier training.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: Strengths ==================== -->
+<section class="slide" id="slide-9">
+  <div class="bg-glow bg-glow-1"></div>
+  <span class="slide-number">10 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">What's Working</div>
+    <h2>Solid Foundations.<br><span class="highlight">Smart Tradeoffs.</span></h2>
+
+    <div class="card-grid card-grid-2" style="margin-top: 28px;">
+      <div class="card">
+        <span class="card-icon">&#128200;</span>
+        <h3>Ensemble Diversity</h3>
+        <p>Three architecturally different classifiers mean different failure modes. Where one is blind, another sees.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#129516;</span>
+        <h3>Real + Synthetic Mix</h3>
+        <p>Enron and Slack provide authentic ground truth. Synthetic fills the financial domain gap that can't be sourced publicly.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#129302;</span>
+        <h3>Multi-Model Generation</h3>
+        <p>Gemini + Claude + GPT for synthetic data. No single model's stylistic fingerprint dominates the training set.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#128184;</span>
+        <h3>Cost-Efficient Inference</h3>
+        <p>The LLM only fires on flagged documents. Fast classifiers handle the bulk cheaply. This is the right design for scale.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#9989;</span>
+        <h3>Validation Loop</h3>
+        <p>Optional LLM validator catches low-quality synthetic data before it pollutes the training set.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">&#127970;</span>
+        <h3>Domain Fit</h3>
+        <p>Topic categories are well-chosen for financial IRM: payroll, wire transfers, PII documents, compliance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 11: Questions ==================== -->
+<section class="slide" id="slide-10">
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+  <span class="slide-number">11 / 12</span>
+  <div class="slide-inner">
+    <div class="kicker">Discussion Points</div>
+    <h2>Questions<br><span class="highlight">for Orr</span></h2>
+    <p class="subtitle">Areas to explore in our next conversation.</p>
+
+    <div class="question-grid">
+      <div class="question-card">
+        <div class="q-num">Q1</div>
+        <div class="q-title">Ensemble Calibration</div>
+        <div class="q-body">How are soft voting weights determined? Static or learned from a validation set? How often recalibrated?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q2</div>
+        <div class="q-title">Chunk Boundaries</div>
+        <div class="q-body">What happens when context spans chunks? A name in one chunk, SSN in the next. Is there overlap or cross-chunk attention?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q3</div>
+        <div class="q-title">Base Rate Mismatch</div>
+        <div class="q-body">Synthetic data is 88% sensitive. Production will be mostly clean. Is the model calibrated for real-world base rates?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q4</div>
+        <div class="q-title">PII Label Gap</div>
+        <div class="q-body">63% of records have no PII labels. Is PII detection a separate model or derived from sensitivity classification?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q5</div>
+        <div class="q-title">Slack Volume</div>
+        <div class="q-body">Only 3K Slack records. With Slack/Teams connectors in the JIRA backlog, this source needs significant expansion.</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q6</div>
+        <div class="q-title">Data Freshness</div>
+        <div class="q-body">Enron is from 2000-2001. Modern comms (emojis, links, threads) may not be represented. Plan for modern email corpora?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q7</div>
+        <div class="q-title">Topic Coverage</div>
+        <div class="q-body">63% of records are topic-unlabeled. Does this hurt topic-aware classifiers or is topic only used in the LLM analysis stage?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-num">Q8</div>
+        <div class="q-title">Connector-Specific Tuning</div>
+        <div class="q-body">Will ensemble weights vary by connector type? Email vs. Slack vs. file share have very different data shapes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 12: Summary ==================== -->
+<section class="slide" id="slide-11">
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <span class="slide-number">12 / 12</span>
+  <div class="slide-inner" style="text-align: center;">
+    <div class="kicker">Bottom Line</div>
+    <h2 style="max-width: 800px; margin: 0 auto 24px;">Engineering maturity<br>meets <span class="highlight">production readiness</span> questions</h2>
+    <p class="subtitle" style="margin: 0 auto 40px; text-align: center;">
+      The two-stage architecture is sound. The ensemble approach is defensible. The synthetic data pipeline shows real sophistication. The key conversations ahead are about calibration, scale, and coverage.
+    </p>
+
+    <div class="stat-row" style="justify-content: center; max-width: 700px; margin: 0 auto;">
+      <div class="stat-block">
+        <div class="stat-number" style="font-size: 32px;">&#9989;</div>
+        <div class="stat-label" style="color: var(--teal-primary); font-weight: 600;">Architecture</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Two-stage gate is cost-smart</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number" style="font-size: 32px;">&#9989;</div>
+        <div class="stat-label" style="color: var(--teal-primary); font-weight: 600;">Data Pipeline</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Multi-model, validated</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number" style="font-size: 32px;">&#128172;</div>
+        <div class="stat-label" style="color: #f59e0b; font-weight: 600;">Calibration</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Base rate + weights need discussion</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-number" style="font-size: 32px;">&#128172;</div>
+        <div class="stat-label" style="color: #f59e0b; font-weight: 600;">Coverage</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Slack, modern comms, PII labels</div>
+      </div>
+    </div>
+
+    <div class="divider" style="max-width: 400px; margin: 40px auto;"></div>
+    <p style="font-size: 13px; color: var(--text-muted);">
+      AXIA &middot; AI System Analysis &middot; Yohay Etsion &middot; March 2026
+    </p>
+  </div>
+</section>
+
+<script id="trainingDataJSON" type="application/json">{"samples":[{"id":27227,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: RE: Secondary firm delivery\n\nChris,\n\nWhat's the status of this product.  I haven't heard anything in a while.\n\nKR\n\n -----Original Message-----\nFrom:  Chris Walker  \nSent: Tuesday, March 27, 2001 5:07 PM\nTo: Stacy E Dickson\nCc: Kevin Ruscitti\nSubject: Secondary firm delivery\n\nStacy,\n\nKevin Ruscitti has requested a secondary firm ANR ML7 phy gas product for EOL.  I have located some language that you and Dale worked on back in May of 2000.  Please let me know if this language will be OK for our needs.  Also, will the current GTC for Phy gas need to be revised in any way?\n\nThanks,\n\nCW\n3-","text_len":1905},{"id":4961,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: RE: Master Agreement\n\nVeronica,  Duke has agreed to 5mm for their threshold I have sent a redline for their review.\n\n Thanks!\n\n -----Original Message-----\nFrom:  Espinoza, Veronica  \nSent: Tuesday, September 25, 2001 10:30 AM\nTo: Perlingiere, Debra\nCc: Vanek, Darren; Williams, Jason R (Credit)\nSubject: RE: Master Agreement\n\nDebra--\n\nThe attached contract has reciprocal $10MM thresholds.  I did not agree to that with the counteraparty when I spoke to them on Friday afternoon.  I went ahead and only agreed to raise Duke's threshold to $5MM (and to keep ours at $10MM).\n\nPlease send a rev","text_len":1111},{"id":1085,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Calpine model\n\nBen,\n\nCan you send me the latest Calpine model after correcting IDC draw down \nschedule and inputting VOM? We need this for \"Retail Short\" as well. \n\nDid you start to work on Retail Short? We have a meeting with Don tomorrow at \n5:00pm. Thanks. Jin","text_len":272},{"id":11962,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Update on IPPNY PR Working Group\n\nGreetings everyone,\n\nI thought it would be useful to send you this email as a follow up to the \nmeeting we had last week with the IPPNY PR Working Group.  \n\nBackground\nAs you know our efforts to form a PR campaign as the Empire State Energy \nSuppliers fell apart at the end of May.  Since then, I have been working with \nSharon Stewart at Brown Olson and Wilson in order to pay SSK for their \nservices from April 1, 2001 to May 31, 2001.  We are waiting for one last \ninvoice (May expenses) from SSK.  Once we receive this invoice, Brown Olson & \nWilson wil","text_len":5589},{"id":10821,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: ETA and PA -Reply\n\nUnfortunately, I only received your e-mail just now.  I will see what we can \ndo.  If the documents are in Word Perfect, it will be fairly easy.  If not, \nit will take quite a bit of word processing work to convert them.  I'll let \nyou know.  Can you send me your phone number?  Thanks.\n\n>>> \"Edmund Cooper\" <ecooper@ect.enron.com> 07/28 12:45 pm >>>\n\n\nDavid,\n\nFurther to your earlier email I am pleased to attach the following documents \nfor\nyou to draw up blacklined versions of the US versions of the PA and ETA you\ndistributed earlier:\n\nPA- version 9 that was sent to ","text_len":1503},{"id":9925,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Deferred Compensation\n\nA number of you have had a lot of concern about Deferred Compensation that Enron has ceased to pay as a result of the bankruptcy.  Maybe we have some good news -- there is a \"rumor\" out today, in the event you have not heard, from a reliable source, that the Deferred Compensation creditors have moved up from 4th place to a little higher because of the amount of money involved.  I have heard that Mike Moran has been placed on the \"Creditors Committee.\"  I believe that Mike Moran and Dan Ryser were working together.  Part of the rumor indicates that the largest cr","text_len":811},{"id":6310,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FW: Reinsurance impact update report: 9/24\n\nAttached is a report on the fallout of the NYC/DC terrorism for the insurance sector.\n\nRJ\n\n -----Original Message-----\nFrom:  Aganon, Rommel  \nSent: Monday, September 24, 2001 4:54 PM\nTo: Sekse, Per; Marcus, Larry; Hoog, David; Paterniti, Jason\nCc: Tholan, Scott; Johnston, Robert\nSubject: Reinsurance impact update report: 9/24\n\nAttached is our updated report on the Sept. 11 impact on the insurance/reinsurance industry.  We appreciate your feedback and will provide updated reports upon receipt of further follow-up questions/taskings.\n\nExecuti","text_len":1988},{"id":4563,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Subpoena Requiring March 5 Response\n\nyes\n\n\n\n Tim Belden\n 02/21/2001 08:46 AM\n   \n   To: Richard B Sanders/HOU/ECT@ECT\n   cc: \n   Subject: Subpoena Requiring March 5 Response\n\nare you on top of this?\n---------------------- Forwarded by Tim Belden/HOU/ECT on 02/21/2001 05:47 AM \n---------------------------\n   \n Enron Capital & Trade Resources Corp.\n \n From:  \"Fuller, Don\" <DFuller@caiso.com>@caiso.com>                           \n02/20/2001 04:33 PM\n \n\nSent by: \"Happ, Susan\" <SHapp@caiso.com>\nTo: ISO Market Participants \n<IMCEAEX-_O=CAISO_OU=CORPORATE_CN=DISTRIBUTION+20LISTS_CN=ISO+2","text_len":1996},{"id":23436,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Bill Massey\n\nI believe we should back Massey as well.  Who do we weigh in with now?\n\n\n\n\nJoe Hartsoe@ENRON\n08/15/2000 08:27 AM\nTo: Steven J Kean/HOU/EES@EES, Richard Shapiro/HOU/EES@EES, James D \nSteffes/HOU/EES@EES\ncc:  \nSubject: Bill Massey\n\nSteve/Rick/Jim  ---  Talked to John Anderson yesterday.  He had just gotten \noff the phone with Massey.  Massey believes Linda B.  is spending time at the \nWhite House lobbying to be Chair.   Have we decided whether to back either \nand if so which?  I would prefer backing Massey.  Thoughts?   JOE  \n202.466.9150   \n---------------------- Forwa","text_len":1023},{"id":3886,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Tax, Legal, Regulatory and Accounting Meeting\n\nNo need for thanks.  These are busy times.  Take care.\n\n\n\n Lara Leibman\n 10/20/2000 05:43 PM\n  \n   To: Jeff Dasovich/NA/Enron@Enron\n   cc: \n   Subject: Re: Tax, Legal, Regulatory and Accounting Meeting\n\nthanks for understanding jeff.  will do next time round.  \n\nbest,\nlara\n\n\n\n Jeff Dasovich\n Sent by: Jeff Dasovich\n 10/20/2000 04:41 PM\n  \n   To: Lara Leibman/NA/Enron@Enron\n   cc: Donald Lassere/Enron Communications@Enron Communications, Sue \nNord/NA/Enron@ENRON\n   Subject: Re: Tax, Legal, Regulatory and Accounting Meeting\n\nNo sweat.  N","text_len":3412},{"id":25159,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Insurance Claims\n\nAttached is list of the outstanding insurance claims provided to us by Risk \nManagement.  As I indicated to Rod yesterday, I have been informed that the \npremiums that were paid this year were $15,000,000 and given the claims \nsubmitted at $43,000,000, Corp is looking for a way to mitigate anticipated \nrising premium costs.   They are looking very hard at Hawkin's Audit Program \nto help them out.  As this list indicates, International assets should bear \nthe brunt of future costs.  The Transwestern train derailment will be about \n$700,000 ($200k for repair and $500k ","text_len":689},{"id":18023,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Assignment of Belvieu physical deals from Total International\n to Elf Trading Inc\n\nJeff,\n\nThis is a physical deal which needs an assignment prepared.\n----- Forwarded by Tana Jones/HOU/ECT on 01/12/2001 10:11 AM -----\n\n Bob Bowen\n 01/10/2001 11:33 AM\n  \n   To: Tana Jones/HOU/ECT@ECT\n   cc: Alexia Gonzales/HOU/ECT@ECT, Jefferson D Sorenson/HOU/ECT@ECT\n   Subject: Re: Assignment of Belvieu physical deals from Total International \nto Elf Trading Inc\n\n\nTAGG No.  QJ6030.1\nEOL No.   739803\nBuyer   Enron Gas Liquids, Inc.\nSeller    Total International Limited\nCommodity  Propane\nQuantity  ","text_len":3039},{"id":1412,"sensitivity":"medium","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Credit Report--4/30/01\n\n---------------------- Forwarded by Darron C Giron/HOU/ECT on 04/30/2001 \n11:35 AM ---------------------------\nFrom: Veronica Espinoza/ENRON@enronXgate on 04/30/2001 10:00 AM\nTo: Janie Aguayo/HOU/ECT@ECT, Diane Anderson/NA/Enron@Enron, Derek \nBailey/Corp/Enron@ENRON, David Baumbach/HOU/ECT@ECT, Jean Bell/HOU/ECT@ECT, \nPatricia Boulanger/CAL/ECT@ECT, Bob Bowen/HOU/ECT@ECT, Julie \nBrewer/NA/Enron@Enron, Lesli Campbell/ENRON@enronXgate, Celeste \nCisneros/ENRON@enronXgate, Sharon Crawford/CAL/ECT@ECT, Richard \nDeming/NA/Enron@Enron, Russell Diamond/ENRON@enronXgate","text_len":1243},{"id":1812,"sensitivity":"medium","source":"financial","model":"openai/gpt-4.1-mini","topic":"IT Security Patch Notes","has_pii":"False","sensitive":"True","text_preview":"RecordID,PatchDate,System,Details,Compliance_Check\nUBIPatch_0424,2024-04-15,Usage-Based Insurance Telematics Processor,Applied encryption update to Homomorphic Encryption library enhancing real-time driving data confidentiality,Supports GDPR and CCPA compliance\n","text_len":262},{"id":5384,"sensitivity":"medium","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Internal Audit Findings Summary","has_pii":"False","sensitive":"True","text_preview":"INTERNAL MEMO\nTO: Capital Markets Compliance Committee\nFROM: Global Audit Lead\nDATE: 2023-10-15\nSUBJECT: Audit Finding: T+1 Settlement Exception Management Gaps\n\nFollowing the recent transition to T+1 settlement cycles, Internal Audit conducted a review of the 'Three-Way Match' automated reconciliation processes within our Post-Trade Solutions suite. We identified a critical failure in the handling of 'Trade Breaks' for specific HFT flows. \n\nFinding: Under high-volume market messaging, the reconciliation engine (AutoRek integration) failed to flag Price/Quantity mismatches for accounts tagged ","text_len":1147},{"id":12284,"sensitivity":"medium","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Daily Market Commentary","has_pii":"False","sensitive":"True","text_preview":"Commentary_Date,Trader_Type,Asset_Class,OTR_Ratio,Tick_to_Trade_Latency_NS,Inventory_Position,Analysis\n2024-01-16,HFT,US_Equities,47.3,285,-$12400,\"High cancellation rate observed in SPY options. Message frequency peaked at 320ns during 10:15 EST liquidity event.\"\n2024-01-16,Agency_Algorithm,Fixed_Income,12.1,1840,+$45600,\"VWAP execution on 10Y futures. Three-way match completed with zero trade breaks.\"\n2024-01-16,HFT,FX_Pairs,89.7,198,-$3200,\"EUR/USD spread compression. Colocation advantage captured 0.4bps on 187 trades. Target near-zero EOD achieved.\"","text_len":559},{"id":12864,"sensitivity":"medium","source":"financial","model":"openai/gpt-4.1-mini","topic":"Customer Account Opening with Identity Documents","has_pii":"True","sensitive":"True","text_preview":"UserID,DateOfBirth,AccountID,VerificationLevel,LastLogin\nU1001,1980-06-15,AAC123456,Tier2,2024-06-01T09:20:00Z\nU1002,1995-09-23,CUSIP984321,Tier1,2024-06-01T09:45:00Z\nU1003,1970-01-30,AC987654,Tier3,2024-06-01T10:00:00Z","text_len":219},{"id":27462,"sensitivity":"medium","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"FROM: Risk Analytics Team\nTO: Portfolio Management Leadership\nDATE: 2024-01-15\nSUBJECT: Q4 Aggregated Portfolio Risk Metrics - Executive Summary\n\n---\n\nTeam,\n\nAttached is the quarterly aggregated portfolio risk metrics report for Q4 2023. Key highlights:\n\n**VALUE-AT-RISK (VAR) SUMMARY:**\n- 95% VaR (1-day): $12.4M (down 8% QoQ)\n- 99% VaR (1-day): $18.7M\n- Conditional VaR (CVaR): $22.1M\n\n**RISK CONCENTRATION:**\n- Top 5 sector exposures: Technology (23%), Healthcare (18%), Financials (15%), Energy (12%), Consumer (10%)\n- Geographic: North America (62%), EMEA (24%), APAC (14%)\n\n**STRESS TESTING:**\n","text_len":1253},{"id":1709,"sensitivity":"medium","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"asset_class,cusip_identifier,market_value_usd,delta_exposure,gamma_sensitivity\nEQUITY,037833100,5000000.00,0.85,0.02","text_len":116},{"id":11017,"sensitivity":"medium","source":"financial","model":"openai/gpt-4.1-mini","topic":"Quarterly Business Performance Review","has_pii":"False","sensitive":"True","text_preview":"MessageID,Sender,Recipient,ISO20022_MessageType,FixProtocol_Version,SecurityStandard\nMSG-4512,Client_A,Broker_007,pain.001,v5,FIPS 140-3\nMSG-4513,Broker_007,Client_A,pain.002,v5,OAuth 2.0\nMSG-4514,Agency_Algorithm,Market_Exchange,tradecapture.001,v5,RESTful API","text_len":261},{"id":22386,"sensitivity":"medium","source":"financial","model":"openai/gpt-4.1-mini","topic":"Daily Market Commentary","has_pii":"False","sensitive":"True","text_preview":"Account_ID,Verification_Platform,Verification_Level,CDD_Tier,Verification_Date\nACC987654,Onfido,Level 2,Enhanced,2024-06-07","text_len":123},{"id":12326,"sensitivity":"medium","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Compliance Policy Update","has_pii":"False","sensitive":"True","text_preview":"EMAIL CORRESPONDENCE: ADOPTING PRIVACY-ENHANCING TECHNOLOGIES\n\nFrom: CTO_Office@FinOrg.com\nTo: Compliance_Team@FinOrg.com\nSubject: Homomorphic Encryption Pilot for Credit Scoring\n\nTeam,\n\nFollowing our partnership with Nightfall AI, we are moving the credit underwriting engine to a cloud-native environment. To maintain multi-jurisdictional compliance (GDPR/CCPA), we will implement Homomorphic Encryption (HE) for all 'Nowcasting' data points.\n\nThis means we can perform IRR calculations and credit scoring on encrypted alternative data (e.g., foot traffic patterns from Orbital Insight and satellit","text_len":1022},{"id":24193,"sensitivity":"medium","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"portfolio_id,cusip_id,market_value_usd,var_95_percent,risk_weighted_assets\nPRT-8821,037833100,12500000.00,450000.00,10500000.00\nPRT-8821,459200101,8200000.00,310000.00,7400000.00","text_len":178},{"id":14967,"sensitivity":"medium","source":"financial","model":"openai/gpt-4.1-mini","topic":"Employee Payroll and Salary Records","has_pii":"True","sensitive":"True","text_preview":"EmpID,Name,Email Address,Department,Role,Annual Salary,Salary Currency\nE3045,Michael Armstrong,m.armstrong@autorek.com,Post-Trade Solutions,Reconciliation Specialist,78000,USD","text_len":175},{"id":393,"sensitivity":"medium","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Employee Payroll and Salary Records","has_pii":"True","sensitive":"True","text_preview":"record_id,security_identifier,asset_class,valuation_date,notional_value\nTR-552,128-45-9921,FIXED_INCOME,2023-10-12,5000000.00","text_len":125},{"id":9092,"sensitivity":"medium","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"MEETING MINUTES\nBenefits Committee Quarterly Meeting\n\nDate: January 10, 2025\nTime: 2:00 PM - 4:00 PM EST\nLocation: Conference Room 8A / Virtual (Zoom)\n\nATTENDEES:\n- Jennifer Morrison, VP Human Resources (Chair)\n- Michael Chang, VP Compensation & Benefits\n- Dr. Patricia Reynolds, Chief Compliance Officer\n- Sandra Chen, Director of Compensation\n- Robert Kim, CFO\n- Amanda Foster, HR Compliance Specialist\n- Sarah Mitchell, Benefits Manager\n\n=== AGENDA ITEM 1: OPEN ENROLLMENT RESULTS ===\n\nSarah Mitchell presented Q4 2024 open enrollment results:\n\n- Participation rate: 96.4% (up from 95.1% in 2023)\n","text_len":3546},{"id":23304,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"We would love to be able to keep something like a configmap with external service urls per environment, which could be added to an envFrom on the execution pods in our flyte execution k8s cluster.\n\nWe currently key off the `FLYTE_INTERNAL_EXECUTION_DOMAIN`  and then are hardcoding external service urls in the workflow code for tasks which need to make calls out to other microservices. If any of those change we have to update the workflows.\nIt seems unwieldy to specify as inputs\nFor us, we generally can map Flyte domain to our external services env\nThanks for pointing out the default envs per p","text_len":689},{"id":17521,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hey everyone, I'm trying to run a wf on my AWS single binary deployment of Flyte. I've got port forwarding running with\n\n```kubectl -n flyte port-forward service/flyte-backend-flyte-binary 8088:8088 8089:8089```\nConfig is this\n```admin:\n  # For GRPC endpoints you might want to use dns:///flyte.myexample.com\n  endpoint: localhost:8088\n  authType: Pkce\n  insecure: true\nlogger:\n  show-source: true\n  level: 0```\nAnd I'm getting this when running a wf:\n```$ FLYTE_CONFIG=~/.flyte/config.yaml pyflyte run --remote workflows/greeting.py wf --name Sam\nFailed with Exception: Reason: SYSTEM:Unknown\nRPC Fa","text_len":972},{"id":13616,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Just checked. So we are using workload identity to map KSA to GSA. It seems to be admin of the bucket... we need to change\nalso, stupid suggestion, a typo in the bucket name happens more often than we would like....\nand can lead to spending some time debugging those kind of things","text_len":281},{"id":7332,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"i\u2019m not sure that this is a flyte thing. this sounds more like an implementation detail of the infrastructure. namely the fluentbit config. there are options for dealing with log stream names with node names. you won\u2019t be able to link directly to the log stream, but you can use a template uri that presents a filtered list of log streams that match the pod name - what Andrew Dye said\nBrian Tang i might be able to help craft a template uri that works if that\u2019ll help \ncan you try:\n```logging:\n    level: 1\n    plugins:\n      cloudwatch:\n        enabled: true\n        templateUri: |-\n          <http","text_len":894},{"id":10173,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Shahwar Saleem, so this address you referenced (e.g. `<http://k8s-flyte-8699360f2e-1590325550.us-east-2.elb.amazonaws.com|k8s-flyte-8699360f2e-1590325550.us-east-2.elb.amazonaws.com>`) is generated by the ingress controller (which ingress controller are you using)?\n\nIf you want to use your own SSL certs, you need to fill in this host field `<https://github.com/flyteorg/flyte/blob/master/charts/flyte-core/values.yaml#L343>` and setup SSL issuance to properly do that (if you use cert-manager operator, it should happen automatically)\u2026","text_len":537},{"id":17454,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hey, I believe we reproduced that issue with flytekit 1.5.0 on our side. We have a Flyte client responsible for triggering launch plans and executions.\n\n```        self.remote = FlyteRemote(\n            config=Config.for_endpoint(\n                endpoint=settings.flyte_endpoint,\n                insecure=settings.flyte_insecure_connection,\n                data_config=DataConfig(\n                    s3=S3Config(\n                        access_key_id=settings.flyte_data_s3_access_key,\n                        secret_access_key=settings.flyte_data_s3_secret_key,\n                    )\n             ","text_len":1228},{"id":5456,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hmmm. I copy pasted flytectl config init --host='<http://ae7fc964d0d1b498fb0d955e9d0f5977-80905779.ap-northeast-2.elb.amazonaws.com:81|ae7fc964d0d1b498fb0d955e9d0f5977-80905779.ap-northeast-2.elb.amazonaws.com:81>' --insecure from your code and i get the same please use a valid endpoint\nFor config.yaml do I just create a new config.yaml file in ~/.flyte?\nSorry for the dumb questions I'm kinda lost","text_len":400},{"id":5108,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"they are.. but with the bundle you can enable the verify\nWe had the same issues with pyflyte and we were able to fix using the proper certs","text_len":139},{"id":20876,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hello!\nI have a deployment up and running (mostly?) in AWS right now. However, when I am trying to run something with `pyflyte` I am getting the following error:\n```grpc._channel._InactiveRpcError: &lt;_InactiveRpcError of RPC that terminated with:\n        status = StatusCode.UNKNOWN\n        details = \"failed to create a signed url. Error: WebIdentityErr: failed to retrieve credentials\ncaused by: AccessDenied: Not authorized to perform sts:AssumeRoleWithWebIdentity```\nI have been double checking all the SAs and everything seems to be in order but obviously I am missing something. Any pointers ","text_len":621},{"id":5160,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"cc ; Haytham Abuelfutuh Katrina Rogan\nLong term proposal is to use this flow <https://www.oauth.com/oauth2-servers/device-flow/>\nHaytham Abuelfutuh Katrina Rogan, Shahwar Saleem and team is checking if we can still include this option of printing the url","text_len":254},{"id":18108,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"``` flyte-cli fast-register-files -p $(FLYTE_PROJECT_NAME) -d $(FLYTE_PROJECT_DOMAIN) --kubernetes-service-account $(FLYTE_PROJECT_NAME)-$(FLYTE_PROJECT_DOMAIN) \\\n --output-location-prefix $(OUTPUT_DATA_PREFIX) -h $(FLYTE_ADMIN_HOST) --additional-distribution-dir $(ADDL_DISTRIBUTION_DIR) _pb_output/*```","text_len":304},{"id":17674,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"```kf get secret flyte-secret-auth -o jsonpath=\"{.data.client_secret}\" | base64 --decode\nfoobar%```","text_len":99},{"id":13254,"sensitivity":"medium","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Niels Bantilan\n```FROM <http://gcr.io/deeplearning-platform-release/pytorch-gpu:latest|gcr.io/deeplearning-platform-release/pytorch-gpu:latest>\n# FROM python:3.8\n# FROM <http://gcr.io/urbn-data-science/flytekit-test-wrapper:latest|gcr.io/urbn-data-science/flytekit-test-wrapper:latest>\n\nWORKDIR /root\nENV PYTHONPATH /root\n\nRUN pip install gsutil\n\n# Pod tasks should be exposed in the default image\nRUN pip install -U flytekit flytekitplugins-pod\n\n# Required for gsutil to work with workload-identity\nRUN echo '[GoogleCompute]\\nservice_account = default' &gt; /etc/boto.cfg\n\nENV FLYTE_INTERNAL_IMAGE \"","text_len":1053},{"id":25388,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Re: Re:\n\ni will check the vacation schedule.  i don't know if i have the 26th or the \n24th off.  i will find out today.","text_len":128},{"id":1297,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: HERE IS THE FILE\n\nRick --\n\nThis is the spreadsheet.\n\nJim","text_len":65},{"id":22986,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: IntelliBytes - April Issue\n\nEach issue of IntelliBytes is a concise summary of a broadband industry \ntopic.  April's issue is titled \"Broadband 2001 according to JP Morgan and \nMcKinsey\".  It contains information on operating and capital expenditures \ninvolved in deploying xDSL and cable modems, the changing mix of Internet \ntraffic, and projection of U.S. CDN revenues to the consumer and business \nmarket.\n\n\n\nFor those on the EBS LAN, you may view historic issues of IntelliBytes by \nchoosing \"Browse the Spotlight\" from wEBSource. The Spotlight symbol will \nappear, from the circle titl","text_len":1217},{"id":14466,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: EMAZING Bible Verse of the Day - Malachi 3.1\n\n  EMAZING Home[IMAGE]Edit Your ProfilePrivacy\n  \n  \n  Advice and Living - Brain Candy - Business and Money - Comics - Daybreakers - \nEntertainment\n  Espa?ol - Games - Good Thoughts - Grapevine - Greetings - Health - Hobbies - \nHoroscopes\n  Household Hints- Kitchen - Music - Sports - Style - Technology - Travel - \nWireless\n  \n\n  [IMAGE]\n  \n  \n    NO TIME TO READ?  NO PROBLEM!\n  Join Audio Book Club and you can enjoy John Grisham's latest on the way to \nwork, get some good advice from John Gray or Suze Orman, or have Stephen King \nread you a","text_len":3165},{"id":17052,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: we must speak again\n\n\n   Dear  Friend,  this message is time sensitive. Contact us immediately! \n[IMAGE]   [IMAGE] We  know more about you than you may think! \n     This  notice is for your eyes only. Please do not share its contents or the  reserved phone number?  Friend, I have  a message for you that could have a long-lasting effect on your future.  Hearing this information may assist you in ways you can?t conceive  of right now.  I repeat: this is  time sensitive. If you?re wondering about your future love life,  money or your career, call this reserved number at once! Call toll-f","text_len":1804},{"id":3750,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: SSARR Update Available Now\n\nupdated:   Aug  29, 2000 at 9:33","text_len":69},{"id":11823,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Temporary Space Address in Tokyo\n\nEJ will be located on the 14th floor\n\nKamiyacho Mori Building, 14th Floor\n4-3-20 Toranomon\nMinato-ku\nTokyo 105-0001\nJapan\n\n\n81-(0)3-5404-3400 (this is the Regus phone line...we will have EJ phone \nnumbers by Monday)","text_len":258},{"id":2439,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"John Lavorato-M\n\nMike Grigsby-D\nKeith Holst-D\nFrank Ermis-D\nSteve South-D\nJanie Tholt-D\n\nScott Neal-P\nHunter Shively-P\nTom Martin-P\nJohn Arnold-P","text_len":145},{"id":17558,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Re: FWD:neat story\n\nThat was amazing.","text_len":46},{"id":9013,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Bachelor Party\n\nI have not heard back from tommybomb or scott re: your bachelor party.  Maybe you would like to try them to see if they are going.\nI need to book the cruise ASAP though.  So let me know.\n\n-E","text_len":215},{"id":26112,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Re: Question?\n\nyes\n\n\n\n\nIna Rangel\n05/10/2001 05:47 PM\nTo: John Arnold/HOU/ECT@ECT\ncc:  \nSubject: Question?\n\nJohn,\n\nDo you think we need to see about sending an IT Tech for you and Maggi on \nFriday to make sure everything is working okay?   If we do, we would have to \npay for their travel expenses.\n\nIt would be beneficial to you instead of having to be on the phone with IT \nfor any problems.\n\nLet me know.\n\n-Ina","text_len":422},{"id":19978,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: King & Spalding\n\nDoak Bishop\n713-751-3205\nWalter Driver\n404-572-4799\nJohn Keffer\n713-751-3255\nChristine B. La Follette\n713-751-3239\nBobby Meadows\n713-276-7370\nMike Perrin\n713-751-3207","text_len":192},{"id":19636,"sensitivity":"non_sensitive","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Subject: Omaha Luncheon w/Shelley Corman The Met\n\nCALENDAR ENTRY: APPOINTMENT\n\nDescription:\n Omaha Luncheon w/Shelley Corman The Met\n\nDate:  4/18/2001\nTime:  11:30 AM - 1:00 PM (Central Standard Time)\n\nChairperson: Outlook Migration Team\n\nDetailed Description:","text_len":260},{"id":18617,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"what version number?\nyou can do whatever version number you want, it does not affect flyteadmin in anyways\ndynamic workflows are sandboxed and from flyteadmin\u2019s point of view do not exist, like subworkflows\nthe execution information is nested","text_len":242},{"id":9934,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"I checked the s3, this error.pb that the log references doesn't exist. but output.pb is there with correct outputs - so the python task itself must have finished successfully right?","text_len":181},{"id":3533,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"yea this works nicely for many cases. similar API to tensorflow IO but much lighter","text_len":83},{"id":2221,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"sure thing\nwould you like me to write that up as well (not sure I can finish a full RFC doc before my holiday starting tomorrow) or contribute to something you're writing up?","text_len":174},{"id":11650,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"which version of flytectl are you on?\ncould you do `flytectl version`?","text_len":70},{"id":14686,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Yee we do support &gt;&gt; and it works right ?","text_len":47},{"id":4155,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"great, thanks\nEduardo Apolinario This is not causing any issues but it might point to a problem with build process. The README.md in the `flyte-core-v1.1.0.tgz` looks like it's from the flyte-deps chart:\n```$ curl -s <https://helm.flyte.org/flyte-core-v1.1.0.tgz> | tar -xzO flyte-core/README.md | head -n 5\n# flyte-deps\n\n![Version: v1.1.0](<https://img.shields.io/badge/Version-v1.1.0-informational?style=flat-square>) ![Type: application](<https://img.shields.io/badge/Type-application-informational?style=flat-square>)\n\nA Helm chart for Flyte dependency```\nagain, this isn't something I'm saying n","text_len":727},{"id":11908,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"oh so it turns out this isn't supported yet but if you want to add it to flytekit it's a very simple fix. I can walk you through it next week if you'd like","text_len":155},{"id":5224,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"Elena Tomlinson - firstly welcome to the community. We have been thinking about supporting arbitrary new `stats, logging` clients to be added to FlyteContext. would you be open to contributing that?","text_len":198},{"id":19410,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"i am also","text_len":9},{"id":14154,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"I like option 1 as well","text_len":23},{"id":23143,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"hmm i don't think so. what are you seeing?","text_len":42},{"id":18745,"sensitivity":"non_sensitive","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"False","text_preview":"workflows look like so\n```@workflow\ndef standalone(\n    upstream1: upstream1.Schema,\n    upstream2: upstream2.Schema,\n    factset1: typing.List[FlyteSchema],\n) -&gt; Output:```\nwhere upstream1/2 are other components in the system\nbut once i publish to flyte i lose the fact that the first arg is actually of type `upstream1` , it becomes just a schema with columns\nat the end of the day i want to understand the dependency graph\nperhaps i can inject it into the launch plan metadata?\nfeels a bit hacky though","text_len":508},{"id":7784,"sensitivity":"non_sensitive","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Loan or Credit Application with Personal Information","has_pii":"True","sensitive":"False","text_preview":"record_id,product_identifier,security_cusip,settlement_cycle,transaction_date,settlement_date,par_value,clean_price,accrued_interest,total_consideration,broker_dealer_id,executing_trader_id,cancel_rate_percent,tick_to_trade_latency_ns,compliance_flag_sox,compliance_flag_basel_iii,worm_storage_timestamp\nPOST-TRADE-8821-01,US_CORP_BOND,037833100,T+1,2024-01-15,2024-01-16,1000000,98.75,4521.23,992271.23,BD-4401,TRD-9821,2.3,245000,COMPLIANT,COMPLIANT,2024-01-15T17:00:00Z\nPOST-TRADE-8821-02,EQUITY_COMMON,594918104,T+1,2024-01-15,2024-01-16,750000,203.25,0.00,152437.50,BD-5512,TRD-7643,1.8,198000,C","text_len":639},{"id":17748,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"False","text_preview":"entity_name,iso_20022_msg_id,message_frequency_ns,order_to_trade_ratio,tick_to_trade_latency\nRavenPack Analytics,ISO-MSG-991823,450,15:1,120","text_len":140},{"id":17026,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"False","text_preview":"INTERNAL SYSTEM LOG - API GATEWAY\nEndpoint: /api/v2/identity/verify\nTimestamp: 2023-11-14T10:15:22Z\n\nMetadata:\n- request_id: 829-11-5543\n- tracing_id: 037-83-3100\n- auth_method: OAuth 2.0\n- protocol: RESTful API\n- status_code: 200 OK\n- latency: 14ms\n- gateway_node: TEE-NODE-04\n\nPayload Description: Verification success for Tiered Customer Due Diligence (CDD). No personally identifiable information is logged in cleartext at the gateway level. All biometric binding attributes were processed within the Trusted Execution Environment (TEE).","text_len":541},{"id":10287,"sensitivity":"non_sensitive","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"False","text_preview":"record_id,iso_message_type,message_frequency_ns,tick_to_trade_latency_ns,exchange_timestamp,order_id,inventory_position\nREC-38471,ISO-20022-pacs.008,450,1200,2024-01-20T09:15:33.000000123Z,ORD-8847123,-0.03","text_len":206},{"id":12661,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"False","text_preview":"plan_code,distribution_channel,vesting_period,audit_standard,api_version\n401K-FS,Retail-Banking,5-Year,SOC 2,v2.4\nESPP-CM,Capital-Markets,2-Year,NIST-800-63,v3.1","text_len":161},{"id":3403,"sensitivity":"non_sensitive","source":"financial","model":"openai/gpt-4.1-mini","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"False","text_preview":"Subject: Guidelines for Handling Sensitive PII in Customer Complaints\n\nTo: Customer Support, Compliance & Risk, Retail Banking\n\nDate: June 11, 2024\n\nAs part of our commitment under SOC 2 and FATF Recommendation 10 & 15, please ensure all customer complaints containing Personally Identifiable Information such as SSNs, full addresses, phone numbers, and account balances are transmitted and stored using FIPS 140-3 certified encryption methods.\n\nUse OAuth 2.0 protected RESTful APIs for any interdepartmental communications involving customer data. Avoid sending sensitive account details over standa","text_len":1046},{"id":8144,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"False","text_preview":"message_id,protocol,settlement_cycle,trade_date,settlement_date,iso_20022_status\nMSG-001,FIX_4.4,T+1,2023-10-27,2023-10-28,ACK\nMSG-002,FIX_4.4,T+1,2023-10-27,2023-10-28,ACK","text_len":172},{"id":25328,"sensitivity":"non_sensitive","source":"financial","model":"openai/gpt-4.1-mini","topic":"Loan or Credit Application with Personal Information","has_pii":"True","sensitive":"False","text_preview":"Internal Report: Data Synthetic Testing on Loan Application Fields\n\nDate: 2024-06-06\nAuthor: Data Engineering Team\n\nObjective:\nTo evaluate our data classification heuristics' ability to differentiate between sensitive PII fields (e.g., Social Security Numbers) and similar formatted business identifiers (e.g., CUSIP numbers) within loan application data records.\n\nMethodology:\n- Synthetic entries created containing both SSNs (e.g., 123-45-6789) and CUSIPs (e.g., 037833100).\n- Phone numbers compared with account IDs having similar numeric patterns.\n- Date of birth values juxtaposed with trade set","text_len":1522},{"id":11810,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Vendor Contract Evaluation","has_pii":"False","sensitive":"False","text_preview":"eval_ref,asset_class,reconciliation_accuracy,settlement_cycle_ready,audit_framework\nEV-9921,Capital Markets,99.99%,T+1,SOC 2 Type II","text_len":132},{"id":7791,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"System Maintenance Notification","has_pii":"False","sensitive":"False","text_preview":"alert_code,asset_class,reconciliation_engine,iso_20022_status,message\nWAR-771,Equities,SmartStream,Success,T+1 Settlement Cycle testing in Sandbox env","text_len":150},{"id":21802,"sensitivity":"non_sensitive","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"False","text_preview":"ticket_num,cusip_security,settlement_cycle,trade_break_type,price_mismatch,quantity_delta,counterparty,submitted_timestamp\nTKT-8829201,037833100,T+1,Price Mismatch,0.15,0,Goldman Sachs,2024-03-12T09:15:32Z\nTKT-8829202,459200101,T+1,Quantity Mismatch,0.00,500,Morgan Stanley,2024-03-12T09:47:18Z\nTKT-8829203,912828Z29,T+1,Three-Way Match Fail,0.02,0,JPMorgan Chase,2024-03-12T10:22:05Z","text_len":384},{"id":18205,"sensitivity":"non_sensitive","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Wire Transfer or Payment with Account Details","has_pii":"True","sensitive":"False","text_preview":"payment_reference,clearing_date,settlement_cycle,three_way_match_status,trade_break_type,price_mismatch,quantity_variance\nPAY-REF-441029,2024-01-16,T+1,MATCHED,NONE,0.00,0","text_len":171},{"id":12794,"sensitivity":"non_sensitive","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Health or Life Insurance Claim","has_pii":"True","sensitive":"False","text_preview":"INTERNAL MEMO\nTO: Claims Adjudication Team - North American Life Division\nFROM: Sarah Chen, Senior Actuary\nDATE: October 14, 2023\nRE: Update on Accelerated Underwriting and Claim Reserves for Q4\n\nFollowing the transition to T+1 settlement cycles and our recent partnership with Onfido for Biometric Binding, we are seeing a shift in the speed of claim payouts. Our current Tiered Customer Due Diligence (CDD) processes have reduced the 'Trade Break' equivalent in claim processing by 14%. However, we must remain compliant with NAIC reporting thresholds. Please ensure all actuarial reserves reflect ","text_len":978},{"id":11881,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: DTI - Energy Announcement\n\nThe stricter consents policy (moratorium) on gas-fired generation has been \nlifted, per this announcement.  It also six stations have been approved (they \nare not listed in this announcement), we will try to get the list of six, but \nI am quite sure that our project (Kent Power/Isle of Grain) will be \nincluded.   mcs\n---------------------- Forwarded by Mark Schroeder/LON/ECT on 15/11/2000 \n12:37 ---------------------------\n\n\nRoss Laird <Ross.Laird@citigatepa.co.uk> on 15/11/2000 12:19:39\nTo: \"'Enron - Chris Day'\" <chris.day@enron.com>, \"'Enron - Mark Schroed","text_len":1096},{"id":17501,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Request 39833, EOL Deal\n\nWhat would we have to do to get rid of the Demarc deal approval requirement \n(requiring President level approval for all Demarc delivery deals)? Can Danny \nrevoke the policy, just like Bill created it?  DF\n---------------------- Forwarded by Drew Fossum/ET&S/Enron on 01/25/2001 \n09:49 PM ---------------------------\n\n\nDrew Fossum\n01/25/2001 08:00 AM\nTo: Danny McCarty/ET&S/Enron@ENRON\ncc: Dave Neubauer/ET&S/Enron@ENRON, Mary Kay Miller/ET&S/Enron@ENRON \n\nSubject: Re: Request 39833, EOL Deal  \n\nAs long as Dave and/or you are signing off on the EOL packages, I","text_len":2074},{"id":2957,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: 2- SURVEY/INFORMATION EMAIL 5-16-01\n\nOutlook Migration Team\n05/14/2001 01:02 PM\nTo: Elena Chilkina/Enron@EnronXGate, Jose Marquez/Enron@EnronXGate, Kevin G \nMoore/Enron@EnronXGate, Mike A Roberts/Enron@EnronXGate, Tony \nHamilton/EU/Enron@Enron, William Smith/Enron@EnronXGate, Alan \nMcGaughy/Corp/Enron@ENRON, Dorothy Burrell/GPGFIN/Enron@ENRON, James \nPosway/GPGFIN/Enron@ENRON, Maritta Mullet/GPGFIN/Enron@ENRON, Michael \nMitcham/GPGFIN/Enron@ENRON, Brian Swinford/NA/Enron@Enron, Alan \nJones/GasPlant/TS/ECT@ECT, Bob Brandt/NA/Enron@Enron, Charles \nUpshaw/EPSC/HOU/ECT@ECT, Harvey Mit","text_len":5325},{"id":12394,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: TRV Notification:  (East Position Totals - 10/18/2001)\n\nThe report named: East Position Totals <http://trv.corp.enron.com/linkFromExcel.asp?report_cd=2&report_name=East+Position+Totals&category_cd=1&category_name=EAST&toc_hide=1&sTV1=1&TV1Exp=Y&current_efct_date=10/18/2001>, published as of 10/18/2001 is now available for viewing on the website.\n\n(Revision: 2)","text_len":371},{"id":1706,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: JAMES ELSNER'S VISIT: FEBRUARY 22\n\nPlease, put on my calendar\n\nVince\n---------------------- Forwarded by Vince J Kaminski/HOU/ECT on 02/15/2001 \n01:30 PM ---------------------------\nFrom: Todd Kimberlain/ENRON@enronXgate on 02/15/2001 12:50 PM\nTo: Kyle Berryman/ENRON_DEVELOPMENT@ENRON_DEVELOPMENT, Bob \nBeyer/ENRON@enronXgate, Reno Casimir/ENRON@enronXgate, Huy \nDinh/ENRON@enronXgate, Partho Ghosh/ENRON@enronXgate, \"Gil, Eduardo\" \n<Eduardo.Gil@ENRON.com>@SMTP@enronXgate, D Todd Hall/ENRON@enronXgate, Joseph \nHrgovcic/ENRON@enronXgate, Michael Nguyen/ENRON@enronXgate, Timothy M \nNorton/","text_len":2536},{"id":16961,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Arco Heads Up\n\nGroup,\n\nJust wanted to give you a heads up on Arco.  They have been in a maintenance outage for the past 3 weeks, and they might come back up sometime Tuesday evening (10/23) or Wednesday morning (10/24).  If they do, they will have approximately 26mw to sell into the market, in SP15. \n\nThanks,\n\n\nStan Cocke\nEnron North America\n121 SW Salmon\nPortland, OR  97204\n(o) 503-464-3829\n(c) 503-819-1132","text_len":420},{"id":21921,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Visa for Brazil\n\nYou are fantastic!  It looks like the trip is shaping up for a visit to BA \naround 9/12 with a longer stopover in Sao Paulo several days later which \ncould last until 9/25 or the end of September.  Will I have the visa before \nthen?  SS\n\n\n\n\nKaye Ellis\n09/02/99 10:44 AM\nTo: Sara Shackleton/HOU/ECT@ECT\ncc:  \nSubject: Visa for Brazil\n\nI haven't given up on a multi-entry Visa for Brazil.  I sent over a new \nletter for the Consulate this morning.  This letter states you will be \nvisiting Sao Paulo several times during the next 12 months to attend various \nbusiness meet","text_len":892},{"id":14462,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Start Date: 4/6/01; HourAhead hour: 22;  <CODESITE>\n\nStart Date: 4/6/01; HourAhead hour: 22;  No ancillary schedules awarded.  \nVariances detected.\nVariances detected in Energy Import/Export schedule.\nVariances detected in SC Trades schedule.\n\n    LOG MESSAGES:\n\nPARSING FILE -->> O:\\Portland\\WestDesk\\California Scheduling\\ISO Final \nSchedules\\2001040622.txt\n\n---- Energy Import/Export Schedule ----\n$$$ Variance found in table tblINTCHG_IMPEXP.\n     Details: (Hour: 22 / Preferred:  12.00 / Final:  11.98)\n  TRANS_TYPE: FINAL\n  SC_ID: ECTRT\n  MKT_TYPE: 2\n  TRANS_DATE: 4/6/01\n  TIE_POINT: ","text_len":1681},{"id":3583,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Legislative Update\n\n----- Forwarded by Jeff Dasovich/NA/Enron on 02/14/2001 06:38 AM -----\n\n Scott Govenar <sgovenar@govadv.com>\n 02/13/2001 03:29 PM\n   \n   To: Hedy Govenar <hgovenar@govadv.com>, Mike Day <MDay@GMSSR.com>, Bev \nHansen <bhansen@lhom.com>, Jeff Dasovich <jdasovic@enron.com>, Susan J Mara \n<smara@enron.com>, Joseph Alamo <JAlamo@enron.com>, Paul Kaufman \n<paul.kaufman@enron.com>, Michael McDonald <Michael.McDonald@enron.com>, \nDavid Parquet <David.Parquet@enron.com>, Rick Johnson \n<rick.johnson@enron.com>, Marcie Milner <mmilner@enron.com>, Sandra McCubbin \n<Sandra.McCu","text_len":2297},{"id":11382,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: Rich Products\n\nlooks good\n\n\n\n\nPeggy Mahoney\n07/24/2000 06:20 PM\nTo: Mark Palmer/Corp/Enron@ENRON, Steven J Kean/HOU/EES@EES, Karen \nDenne/Corp/Enron@ENRON, Cedric Burgher/Corp/Enron@ENRON, Mark \nKoenig/Corp/Enron@ENRON, Paula Rieker/Corp/Enron@ENRON, Jeremy \nBlachman/HOU/EES@EES, Harold G Buchanan/HOU/EES@EES, Karen S Owens@ees@EES, \nKevin Hughes/HOU/EES@EES, Mark S Muller/HOU/EES@EES, Vicki Sharp/HOU/EES@EES, \nMarty Sunde/HOU/EES@EES, Dan Leff/HOU/EES@EES, Elizabeth Tilney/HOU/EES@EES, \nDave S Laipple/DUB/EES@EES, James E Keller/HOU/EES@EES\ncc:  \nSubject: Rich Products\n\nPlease re","text_len":1163},{"id":16897,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FYI, Engine Hour Reporting, P-1 C/S\n\nI dont know if you guys are doing this, but a requirement to your air permit \nstates that the facility is to report the number of hours of operation each \nyear to the Air Quality Bureau for the Catepillar generator.  The report is \nto be submitted by January 31st of each year.  If we need to discuss this, \ngive me a call.","text_len":369},{"id":11493,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Enron India LLC or Atlantic Commercial Finance, Inc. c/o Enron\n India LLC\n\nSamantha, \nThis morning the name on the Morgan Stanley account is now changed to \nAtlantic Commercial Finance, Inc. c/o Enron India LLC.  \nThanks for following up with MS.\n\n\n---------------------- Forwarded by Sheila Glover/HOU/ECT on 06/23/2000 08:37 \nAM ---------------------------\n   \n \n \n From:  Sheila Glover                           06/22/2000 02:17 PM\n \n\nTo: Samantha T Davidson/HOU/ECT@ECT\ncc:  \nSubject: Enron India LLC","text_len":513},{"id":27161,"sensitivity":"low","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Will the computer be considered as an income item for tax purposes?\n\nThanks.","text_len":76},{"id":21202,"sensitivity":"low","source":"financial","model":"openai/gpt-4.1-mini","topic":"Vendor Contract Evaluation","has_pii":"False","sensitive":"True","text_preview":"VendorName,ContractID,IntegrationType,APIProtocol,ComplianceRules,DataSensitivityLevel\nSafetica,CNTR-2024-005,RegTech RESTful API,OAuth 2.0,FATF Rec10; GDPR,High","text_len":161},{"id":24971,"sensitivity":"low","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Vendor Contract Evaluation","has_pii":"False","sensitive":"True","text_preview":"service_provider,product_line,settlement_cycle,auth_method,internal_id,fee_structure\nONFIDO_KYC,DIGITAL_IDENTITY,T+1,OAUTH_2.0,832948122,FIXED_TIER\nNORTHLARK_VERIFY,CDD_ONBOARDING,T+1,FIPS_140-2,102938475,VOLUME_BASED","text_len":217},{"id":7658,"sensitivity":"low","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Loan or Credit Application with Personal Information","has_pii":"True","sensitive":"True","text_preview":"Record_ID,Message_Type,Trader_Account,Message_Frequency_ns,Order_Time,Cancellation_Rate,Inventory_Position,Colocation_Status,Liquidity_Rebate\nHFT-LOG-4401,New Order,HFT-ACCT-229,340,09:30:00.000000127,0.82,-120,Active,0.0028\nHFT-LOG-4402,Cancel,HFT-ACCT-229,410,09:30:00.000000891,0.82,-120,Active,0.0000\nHFT-LOG-4403,Replace,AGENCY-775,1820,09:30:01.000003450,0.34,4850,Inactive,0.0015","text_len":386},{"id":14232,"sensitivity":"low","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Quarterly Business Performance Review","has_pii":"False","sensitive":"True","text_preview":"Subject: Tech Stack Optimization - Q3 Post-Mortem\n\nTeam,\n\nOur performance review indicates that our shift to the API Economy is yielding results. The integration of Onfido for digital identity verification has reduced our onboarding time by 40% in the Retail Banking sector. \n\nTechnical Wins:\n1. Successful implementation of ISO 20022 messaging standards across our European gateways.\n2. Reduced 'Trade Breaks' in the Three-Way Match process by 15% using AutoRek's automated reconciliation engine.\n3. Successfully utilized FIPS 140-3 validated HSMs for all OAuth 2.0 token signing processes.\n\nStrateg","text_len":1066},{"id":7452,"sensitivity":"low","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Loan or Credit Application with Personal Information","has_pii":"True","sensitive":"True","text_preview":"System_Audit_Log,Event_Type,Timestamp,Account_Proxy,Jurisdiction,GDPR_Scope\nLOG-441,Tiered_CDD_Check,2023-11-01T09:15:00Z,User_Hash_882,EU,True","text_len":143},{"id":13297,"sensitivity":"low","source":"financial","model":"openai/gpt-4.1-mini","topic":"Compliance Policy Update","has_pii":"False","sensitive":"True","text_preview":"Partner,Product,Compliance Feature,Notes\nMastercard + Pay.UK,Fraud Detection API,OAUTH 2.0 Secured,Integrated real-time fraud alerts per FATF Recommendation 10 and 15","text_len":166},{"id":14148,"sensitivity":"low","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Product Feature Roadmap","has_pii":"False","sensitive":"True","text_preview":"Report: Alternative Data Integration for Investment Management\n\nSubject: Leveraging 'Nowcasting' for Retail Sector Alpha\n\nExecutive Summary:\nOur Investment Management team has completed the proof-of-concept for the 'Orbital Insight' integration. By utilizing satellite imagery and geospatial data, we have successfully predicted foot traffic for major retail hubs 14 days ahead of earnings calls.\n\nRoadmap Integration:\n- Phase 1 (Q1): NLP analysis of earnings call audio using RavenPack to extract sentiment signals. \n- Phase 2 (Q2): Integration of Dataminr event detection to trigger automated 'Sign","text_len":1159},{"id":23255,"sensitivity":"low","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"True","text_preview":"trader_id,trade_id,cusip,order_date,notional_value,otr_ratio\nHFT-991,T-88210,037833100,2023-11-15,10000.00,0.082","text_len":112},{"id":21376,"sensitivity":"low","source":"financial","model":"openai/gpt-4.1-mini","topic":"Quarterly Business Performance Review","has_pii":"False","sensitive":"True","text_preview":"Date,Service,Latency(ms),Compliance,User_Type\n2024-03-15,Trade Execution,30,FIPS 140-3 certified,Internal\n2024-03-15,API Authentication,120,OAuth 2.0 enforced,External\n2024-03-16,Data Storage (WORM),NA,SEC Rule 17a-4 compliant,Internal","text_len":235},{"id":19572,"sensitivity":"low","source":"financial","model":"openai/gpt-4.1-mini","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"Subject: Upcoming Changes to Employee Benefits Enrollment and Required Tax Forms\n\nTo: All Financial Services Division Employees\nFrom: HR Benefits Team (benefits@finserve.com)\nDate: April 12, 2024\n\nDear Team,\n\nAs part of our continuous effort to streamline compliance with multi-jurisdictional tax and regulatory requirements (including FATCA, GDPR, and relevant IRS mandates), please be advised of upcoming changes for the 2024 benefits enrollment period:\n\n1. Benefits Enrollment Window: May 1 - May 31, 2024.\n2. New Tax Form Requirements: All employees must submit updated W-4 and state tax withhold","text_len":1564},{"id":11728,"sensitivity":"low","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"ALPHA FINANCIAL SERVICES\nINTERNAL MEMORANDUM\n\nTO: Michael Torres, Director of Compliance\nFROM: Jennifer Wu, Payroll Manager\nDATE: February 28, 2024\nRE: Q1 2024 W-2 Distribution and Tax Form Processing\n\n---\n\nMichael,\n\nI wanted to provide you with an update on our Q1 tax form distribution and some data points for the SOC 2 audit.\n\nW-2 DISTRIBUTION SUMMARY:\n- Total Forms Issued: 2,847\n- Electronic Delivery: 2,341 (82%)\n- Physical Mail: 506 (18%)\n- Corrections Issued: 23\n\nSAMPLE CORRECTIONS (anonymized for audit trail):\n- Employee ID: EMP-8821 - Box 1 correction: Original $127,450, Corrected $128,","text_len":1290},{"id":7365,"sensitivity":"low","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Health or Life Insurance Claim","has_pii":"True","sensitive":"True","text_preview":"QUARTERLY REPORT: CLAIMS ADJUDICATION METRICS\nQ3 2023 Performance Summary\nPrepared by: Analytics Division\nReport ID: QTR-2023-Q3-ADJ\nDate: October 5, 2023\n\n---\n\nEXECUTIVE SUMMARY\n\nThis report provides aggregate analysis of claims processing performance for Q3 2023, focusing on operational efficiency and compliance metrics.\n\nKEY PERFORMANCE INDICATORS:\n\n1. PROCESSING VELOCITY\n   - Average claim-to-settlement cycle: 4.8 days\n   - Target: <5.0 days \u2713\n   - Improvement vs Q2 2023: 12% faster\n\n2. AUTOMATION RATES\n   - Straight-through processing: 67% (up from 58% in Q2)\n   - Manual review required: ","text_len":2342},{"id":27835,"sensitivity":"low","source":"financial","model":"openai/gpt-4.1-mini","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"True","text_preview":"TraderID,TraderType,MessageFrequency(ns),OTR,CancellationRate,TickToTradeLatency(ms),InventoryPosition\nTX942,HFT,350,75,0.02,1.4,-15000\nAG105,Agency Algorithm,1500,12,0.01,2.3,0","text_len":177},{"id":26400,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Yee let's continue the <https://flyte-org.slack.com/archives/CP2HDHKE1/p1680194294517659?thread_ts=1676980150.513129&amp;cid=CP2HDHKE1|conversation> here\nseems like an aws iam issue","text_len":181},{"id":5193,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"I got it as `curl http:/flyteadmin.host:&lt;port&gt;/api/v1/tasks/&lt;project&gt;/production/&lt;task-name&gt;\\?limit\\=1 | jq .`","text_len":128},{"id":2389,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"what do you think about targeting 3.7 instead of 3.6 for the new stuff Hongxin Liang Gleb Kanterov &amp; Jeev B\nin fact i\u2019m not even sure if what we have works for 3.6, i changed the travis test to only use 3.7","text_len":210},{"id":6187,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"no i mean when you launch a task in dynamic workflow\nlet me ensure i am not lying\ni am lying - <https://github.com/flyteorg/flytekit/blob/d77a7739b53186d6c822dbfba29bc74dce66e8aa/flytekit/core/node.py#L68> . So the idea is this\n\n```@task\ndef foo() -&gt; int:\n   pass\n\n@dynamic\ndef dyn(i: str) -&gt; int:\n    return foo().with_overrides(requests=Resources(cpu=1, mem=i))```\nThis will be completely valid - Yee ^?","text_len":411},{"id":8468,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Thanks for providing that information on finalizers Daniel Rammer and Ketan Umare. Just to follow-up on this thread, we have enabled finalizers in our flyte deployment and have confirmed the configuration in the configmap. However, we are still encountering the error.\n\nWe queried the pod names in the dataplane log group and see no obvious indication as to why the pod is being killed. We do see `I0729 16:10:23.041121 4106 kuberuntime_manager.go:484] \"No sandbox for pod can be found. Need to start a new one\" pod=\"e2e-workflows-development/fnrte65a-n3-0-108\"` but no other meaningful logs between ","text_len":871},{"id":8779,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hey Nicholas LoFaso so sorry about this. Using the configuration you mentioned - ie. existing `PodTask` should still be fully supported. We implemented the new `PodTemplate` to allow finer-grained configuration accross task types - for example `ContainerTask`. This is supposed to be fully backwards compatible, if it's not, it is a problem. Can you provide an example that reproduces this issue?","text_len":396},{"id":23003,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Ketan Umare I have already used Elasticsearch to collect logs from flyte, but it does not return any user's info\n\nHere is the example log of a flyte execution from elasticsearch","text_len":177},{"id":3871,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"I\u2019m assuming you\u2019re using flytekitplugins-spark==0.32.6. Can you bump it to 1.0.0 in the requirements? The change that I\u2019ve pushed should be available in the latest.\nYou should be having hadoop-aws 3.3.1 and aws-java-sdk 1.11.901","text_len":229},{"id":20836,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Hi again everyone,\nDavid Espejo (he/him) has been helping me with my AWS deployment of Flyte. We're nearly there, got a wf deployed, but it just hangs and doesn't complete or fail. I'm trying to execute the greeting wf (works fine in the sandbox). These are the events from the `kubectl describe pods` cmd. Anyone got any ideas?\n\n```Type  Reason   Age  From        Message\n ----  ------   ----  ----        -------\n Normal Scheduled 8m56s default-scheduler Successfully assigned flyte/flyte-backend-flyte-binary-5b978865bb-r757k to ip-10-250-3-158.eu-west-1.compute.internal\n Normal Pulled   8m56s ku","text_len":1203},{"id":20453,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Thanks Kevin Su","text_len":15},{"id":25285,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"we do have a health checks defined in terraform. but this is kinda specific to how we expose our services\nwe had it working before with just gke ingress, which infers from the deployment","text_len":186},{"id":28456,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"you mean deleting the hosted zone and re-run opta?","text_len":50},{"id":13759,"sensitivity":"low","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Alexey Kharlamov the functionality you described is 100% what is expected. So when a Flyte task fails, propeller attempts to abort other running tasks so that Pods may be cleaned up, etc.\n\nI suspect what is happening is similar to <https://github.com/flyteorg/flyte/issues/3239|this issue>. Basically, during the cleanup phase (Flyte aborting running tasks) if a task has already been marked as failed then <https://github.com/flyteorg/flytepropeller/blob/752f55e9c7f7e357de707aa3eaae6e3af03b186f/pkg/controller/nodes/task/handler.go#L795-L798|propeller skips the abort>. Since map tasks are built as","text_len":859},{"id":28204,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Document Retention\n\nAs stated in my earlier email, the Company is under an obligation to retain, among other documents identified in the Bankruptcy Court's February 15, 2002 Order, a copy of which you all have received by email, all documents that relate to a pending or threatened investigation or lawsuit. As I am sure you are aware from reading the newspapers and watching television, because of the number of investigations and lawsuits the universe of relevant documents in just this one category covered by the Order is very large. You must retain all relevant company-related document","text_len":3382},{"id":15979,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Motion To Reject Gas Transportation Contracts\n\nJeff,\n\nI am an Enron Wholesale Services attorney who is advising on ENA gas transportation matters.  Elizabeth Sager suggested that I contact you about assisting me with the preparation of a Motion to Reject the bulk of the executory transportation service agreements that ENA has with interstate pipeline companies.  \n\nThe attached spreadsheet summarizes the terms of said transportation agreements; please note that the first sheet of the spreadsheet file describes the 5 transportation contracts that ENA wishes to assume; the remainer are o","text_len":1339},{"id":24739,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Putting a stick on the ground - Enron's view on MAE, caps, Annex V,\n etc.\n\nGentlemen:\n\nHere is the revised letter with the appendices. It incorporate all the \ncomments received in the last 24 hours. The other two documents are of public \ndomain and should be attached to the leter.\nThe letter has a kind of executive summary, as requested by Orlando/Sergio. \nThanks for the good comments from Legal (Sami) and TRM (David).\n\n\n\nAgain, I feel that time is of the essence. \n\nWe need to express our views to the Minister before Mario Arce comes up with \na final proposal (he has already a pre-coo","text_len":9609},{"id":27039,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: URGENT -- Re: Papers for Raptor Meeting Tuesday\n\nTo follow up on Scott's message below.  The attached proposal sheet has the \nentity information for the Raptor II structure.  The proposal sheet should \ncontain the information that is necessary to support the confirm.  The asset \ndescription should describe the business or entity.  A specific description \nof the underlying investment and interest in should also be included.  Under \nthe detail of the derivative include the type (at the money price return \nswap, put, call...), term, legal name, specific investment type (type of \nstoc","text_len":4369},{"id":300,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: I Need Your Info on Cheryl Ingstad for Year End Associate PRC\n Meeting\n\nI am resending this memo regarding the information that I need from you as \nCheryl Ingstad's supervisor as I prepare to represent her in the Associates \nPRC meeting next week.  I am tied up in other PRC meetings on December 7, 8 \nand 11, so I am doing my homework earlier rather than later this week.  \nPlease note the bullet points in the memo below which outline the information \nthat I need.  I do have copies of the internal feedback forms and Cheryl's \nself-evaluation.  Let me know if you have any questions.  I k","text_len":4017},{"id":19375,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Contacting Iris Mack\n\nVince,    \nIris Mack finally returned my call.   Her message said she had been in \nCalifornia on a job interview and it looks like she may take the \nposition.      I will contact her to get the details and confirm if she is \noff the market. \n\nToni Graham\nStaffing Consultant\n\n\n---------------------- Forwarded by Toni Graham/Corp/Enron on 07/06/2000 \n09:28 PM ---------------------------\n   \n Enron North America Corp.\n \n From:  Teresa Bien                           06/22/2000 01:51 PM\n \n\nTo: Toni Graham/Corp/Enron@Enron\ncc:  \n\nSubject: Re: Re[10]: Greetings from Lon","text_len":7933},{"id":20701,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FW: Amendment No. to 1 Letter Agreement\n\nAny interest in extending it to Jan 22?\n---------------------- Forwarded by Kay Mann/Corp/Enron on 01/03/2001 04:44 \nPM ---------------------------\n\n\n\"Campbell, Carolyn\" <CCampbell@KSLAW.com> on 01/03/2001 04:37:22 PM\nTo: \"'kay.mann@enron.com'\" <kay.mann@enron.com>\ncc: \"Keffer, John\" <JKeffer@KSLAW.com> \n\nSubject: FW: Amendment No. to 1 Letter Agreement\n\nKay:\n\nPlease see George Kutzschbach's comments to the amendment below.  I would\naccept his comment #2.  What is ENA's reaction to comment #1?  Please\nadvise.  Thank you.  \n\nCarolyn M. Campbell\n","text_len":3273},{"id":3077,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FW: Please see attached draft of Source Code License\n\n\n\n -----Original Message-----\nFrom:  Koehler, Anne C.  \nSent: Thursday, November  1, 2001 11:14 AM\nTo: Murray, Julia; Taylor, Mark E (Legal)\nSubject: Please see attached draft of Source Code License\n\n\n\n -----Original Message-----\nFrom:  \"Hudanish, David M.\" <DHudanish@brobeck.com <mailto:DHudanish@brobeck.com>>@ENRON  \nSent: Thursday, November  1, 2001 9:50 AM\nTo: Koehler, Anne C.\nSubject:  \n\nAnne, I just received your vmail -- sorry for the delay.  Attached is a\ndraft Source Code License Agreement  that is intended to serve as the","text_len":1478},{"id":19382,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Hertzberg\n\nFolks:\n\nHere is a rewrite of the power point presentation referenced in the previous \nnote.  Again, please keep confidential and do not distribute.  It's the copy \nthat Hertzberg used to present to his caucus.Thanks.\n\nBest,\nJeff\n\nP.S.  Our numbers show that noncore for Edison would be about 30% of load; \nHertzberg has it at about 20%.","text_len":356},{"id":25329,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Garcia Munte / Spain\n\nprint\n---------------------- Forwarded by Jeffrey A Shankman/HOU/ECT on 10/05/2000 \n12:30 PM ---------------------------\n   \n \n \n From:  Mike McConnell                           10/03/2000 08:24 AM\n \n\nTo: Jeffrey A Shankman/HOU/ECT@ECT\ncc:  \nSubject: Garcia Munte / Spain\n\nFYI\n\n---------------------- Forwarded by Mike McConnell/HOU/ECT on 10/03/2000 \n08:24 AM ---------------------------\n\n\nJohn Sherriff\n10/03/2000 12:38 AM\nTo: Steve W Young/LON/ECT@ECT\ncc: Mike McConnell/HOU/ECT@ECT, Michael R Brown/LON/ECT@ECT \nSubject: Garcia Munte / Spain\n\nSteve - Can you please","text_len":3221},{"id":15705,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Total Capital Deployed\n\nAttached is a calculation of your \"Total Capital\" deployed, building from \nequity, for the years 2000 and 2001.\nRick Causey has asked me to present  this \"Total Capital\" broken down between \nthe following categories:\n  \n  Strategic Pipelines \n  Strategic Power Plants\n  Strategic Communications\n  Strategic Other (Subdivide as you like) \n  Merchant\n  \nNot included in the attached numbers are off balance sheet items. Please give \na summary of any off balance sheet\nitems.\n\nThe capital presented is estimated from the plans recently submitted. I am \nnot looking for t","text_len":764},{"id":21526,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Northern v. ONEOK\n\n\n Dear Phil, Mary Kay, Dave, Don, Shelley and Lynn,\n\n Drew asked me to send this latest version of Dave's proposed special test response letter to each of you for your review and authority to send out.  I have received comments from Mary Kay, Don, Drew, and Rick, and hope I adequately captured them.  If I have missed something critical, of course please let me know immediately.  \n\n Mary Kay will note that I said nothing about a potential C6+ problem that she has mentioned in her comments.  That is because I thought I was told that all the gas that we are now flowing","text_len":4167},{"id":7367,"sensitivity":"high","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: ERMT LLC Contribution Agreements\n\nMark,\n\nSteve asked that I forward to you the three attached contribution agreements that provide for the following\n\n1.  Enron Corp. contributes $350 million to ENA;\n\n2.  ENA contributes $350 million to RMT; and\n\n3.  ENA contributes a license to ERMT LLC granting ERMT the right to use EnronOnline, and RMT contributes fourteen Chiracahua LLC interests and $350 million.\n\nThe open issues are as follows:\n\n1.  Exact name of ERMT LLC;\n\n2.  choice of law under the \"Applicable Law\" section; and\n\n3.  the ERMT LLC member interests to be received by ENA and RMT i","text_len":908},{"id":25745,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"True","text_preview":"CaseID,ClientFullName,PhoneNumber,DateOfBirth,Address,AnnualIncome,ComplaintSummary,PriorityLevel,CreatedBy\nCS-29184,Robert Patterson,415-887-2341,1978-03-22,\"1847 Valencia Street, San Francisco, CA 94110\",\"$127,500\",\"Client alleges discriminatory lending practices during mortgage underwriting. Credit score 720 but application denied. Requesting review under ECOA compliance.\",High,Amanda Foster\nCS-29185,Patricia Nguyen,628-543-9012,1985-07-08,\"92 Beacon Hill Road, Boston, MA 02108\",\"$215,000\",\"Complaint regarding delay in T+1 settlement causing margin call. Client forced to liquidate positions","text_len":678},{"id":21275,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Funding Round and Cap Table Details","has_pii":"True","sensitive":"True","text_preview":"FINSTACK TECHNOLOGIES, INC.\nBOARD OF DIRECTORS MEETING MINUTES\n\nDate: September 12, 2023\nTime: 2:00 PM - 4:30 PM Pacific Time\nLocation: Video Conference (Zoom)\n\n**ATTENDEES:**\n- David Kim (CEO, Founder Director)\n- Marcus Williamson (Andreessen Horowitz Representative)\n- Elena Rodriguez (Lightspeed Representative)\n- Patricia O'Connor (Independent Director)\n\n**ABSENT:**\n- Rachel Thompson (CTO, Observer) - excused\n\n**AGENDA ITEMS:**\n\n**1. APPROVAL OF PREVIOUS MINUTES**\nMinutes from August 8, 2023 meeting approved unanimously.\n\n**2. FINANCIAL PERFORMANCE REVIEW**\n\nDavid presented Q3 2023 financial","text_len":3676},{"id":11550,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"From: hr-operations@capmarkets-finserv.com\nTo: linda.carruthers@capmarkets-finserv.com\nCC: benefits@capmarkets-finserv.com\nDate: March 22, 2024\nSubject: RE: FSA Reimbursement Request - Claim #FSA-2024-03-0847\n\n---\n\nDear Linda,\n\nThank you for submitting your Flexible Spending Account (FSA) reimbursement request. We have reviewed your claim and require additional documentation before processing.\n\n**CLAIM DETAILS:**\n\nEmployee Name: Linda Carruthers\nEmployee ID: EMP-91247\nClaim Number: FSA-2024-03-0847\nClaim Date: March 18, 2024\nClaim Amount: $1,450.00\nClaim Type: Healthcare FSA\nService Date: Febr","text_len":1767},{"id":3744,"sensitivity":"high","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"IT Security Patch Notes","has_pii":"False","sensitive":"True","text_preview":"INTERNAL MEMO: URGENT SECURITY PATCHING FOR HFT TRADING NODES\n\nTo: Global Infrastructure Team\nFrom: CISO Office - Financial Services Group\nDate: 2023-10-24\nSubject: Critical Vulnerability Remediation - FIX Protocol Gateway & TEE Secure Enclaves\n\nBackground:\nA critical vulnerability (CVE-2023-4412) has been identified in the messaging layer of our High-Frequency Trading (HFT) stack, specifically affecting the Tick-to-Trade Latency optimization engine. This vulnerability allows for potential lateral movement across our Colocation segments.\n\nImmediate Actions Required:\n1. All Proprietary Trading ","text_len":1566},{"id":9840,"sensitivity":"high","source":"financial","model":"openai/gpt-4.1-mini","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"portfolio_id,risk_metric,date,aggregate_exposure,risk_weighted_assets,alpha_return\nPortfolio_001,VaR,2024-06-01,15000000,12000000,0.045\nPortfolio_002,Expected Shortfall,2024-06-01,20000000,16000000,0.038\nPortfolio_003,CVaR,2024-06-01,18000000,14500000,0.042","text_len":257},{"id":14773,"sensitivity":"high","source":"financial","model":"openai/gpt-4.1-mini","topic":"Customer Account Opening with Identity Documents","has_pii":"True","sensitive":"True","text_preview":"UserID,FullName,Email,PhoneNumber,IDType,IDNumber,AccountType,DepositAmount,OpenedAt\nU7654321,Sarah Thompson,s.thompson@ravenpack.com,+1-718-555-0202,Passport,P123456789,Checking,6500,2024-06-12","text_len":194},{"id":5277,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Payroll and Salary Records","has_pii":"True","sensitive":"True","text_preview":"EMAIL\n\nFrom: David Chen <david.chen@alphawealth.com>\nTo: Gloria Ramirez <gloria.ramirez@alphawealth.com>\nCC: Payroll-Processing <payroll@alphawealth.com>\nDate: January 22, 2024\nSubject: RE: New Hire Onboarding - Capital Markets Team\n\nHi Gloria,\n\nThanks for the update on our three new hires starting February 5, 2024. I wanted to confirm the payroll setup details for the Capital Markets team:\n\n**New Employee 1:**\nName: Alexandra Morgan\nPosition: Junior Trader, HFT Desk\nStart Date: 02/05/2024\nEmployee ID: AW-5847 (assigned)\nReports to: Marcus Thompson\nLocation: New York office, Trading Floor 4\n\nP","text_len":2197},{"id":15418,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Wire Transfer or Payment with Account Details","has_pii":"True","sensitive":"True","text_preview":"rec_date,payor_entity,payor_contact_phone,payor_fed_tax_id,account_from,payee_entity,payee_contact_phone,payee_fed_tax_id,account_to,ach_routing,transfer_amt,narrative\n2024-03-17,Morgan Capital Management,415-882-9147,94-7743291,102938475610,AutoRek Solutions Ltd,+44-20-8847-2910,GB-7743291847,847392018847,121000248,22000.00,Three-way match reconciliation platform annual license\n2024-03-17,Wellington Asset Advisors,212-774-3821,87-4429881,847291038847,SmartStream Technologies,+44-20-7621-4429,GB-4429774382,291847362910,026009593,34500.00,Post-trade exception management system upgrade","text_len":590},{"id":71,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Wire Transfer or Payment with Account Details","has_pii":"True","sensitive":"True","text_preview":"PaymentID,ExecutionTimestamp,InitiatorName,InitiatorEmployeeID,InitiatorEmail,DebitAccount,CreditAccount,CreditRouting,PaymentCurrency,PaymentAmount,MemoField,ApproverName,ApproverEmail\nPY-884710,2024-05-03T11:42:19Z,Kevin Ramirez,EMP-74821,k.ramirez@clearbridge-securities.com,1102938475612034,8827364910283746,091000019,USD,$340000.00,Q1-2024 Performance Bonus Distribution,Linda Harrison,l.harrison@clearbridge-securities.com\nPY-884711,2024-05-06T08:15:44Z,Rebecca Santos,EMP-55129,r.santos@paradigm-asset.com,4491028374651923,5563718290463827,121000358,USD,$89500.00,Vendor Payment - RavenPack An","text_len":659},{"id":24032,"sensitivity":"high","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"INTERNAL REPORT: HIGH-NET-WORTH PORTFOLIO RECONCILIATION - CONFIDENTIAL\nPROJECT: GOLDEN GATEWAY\nLOCATION: NEW YORK HUB\n\nThis document contains the consolidated positions for Client_A (Family Office ID: FO-992834). Due to the sensitivity of the Asset Allocation, all credit scoring was performed via Homomorphic Encryption on our cloud-native environment.\n\nPortfolio Aggregation Details:\n- Client Account Identifier: 122-45-7890 (Ref: Primary Brokerage)\n- Aggregate Balance Proof (ZKP Verified): >$100,000,000.00\n- Portfolio Beta: 1.12\n- Value at Risk (VaR) 95%: $4.2M\n\nUnderlying Asset Breakdown:\n1. ","text_len":931},{"id":23893,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Client Account Statement with Holdings","has_pii":"True","sensitive":"True","text_preview":"Statement ID,Account Holder,Phone Number,Address,Security CUSIP,Shares,Cost Basis,Current Price,Unrealized Gain/Loss\nSTMT-884721,Jennifer Martinez,415-782-9034,2847 Montgomery Street San Francisco CA 94133,594918104,1200,84600.00,70.45,456.00\nSTMT-884721,Jennifer Martinez,415-782-9034,2847 Montgomery Street San Francisco CA 94133,88160R101,500,67250.00,138.92,2210.00\nSTMT-884721,Jennifer Martinez,415-782-9034,2847 Montgomery Street San Francisco CA 94133,459200101,350,123550.00,361.18,3863.00","text_len":497},{"id":8901,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Client Account Statement with Holdings","has_pii":"True","sensitive":"True","text_preview":"ClientID,FullName,DateOfBirth,PhoneNumber,Address,AccountType,CUSIP,Symbol,Position,AcquisitionDate,UnitCost,CurrentValue\nCLT-445829,Robert Chen,1978-04-23,415-892-3047,2847 Pacific Heights Blvd San Francisco CA 94115,Taxable Brokerage,037833100,AAPL,500,2022-11-15,142.30,85750.00\nCLT-445829,Robert Chen,1978-04-23,415-892-3047,2847 Pacific Heights Blvd San Francisco CA 94115,Taxable Brokerage,594918104,MSFT,220,2023-03-08,289.15,90827.00\nCLT-445829,Robert Chen,1978-04-23,415-892-3047,2847 Pacific Heights Blvd San Francisco CA 94115,Taxable Brokerage,N/A,BTC-USD,2.45,2021-09-20,38500.00,117600.","text_len":602},{"id":16772,"sensitivity":"high","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Loan or Credit Application with Personal Information","has_pii":"True","sensitive":"True","text_preview":"EMAIL\n\nFrom: Kevin.Daugherty@apexfinancial.com\nTo: Marcus.Williams.VT@gmail.com\nCC: LoanClosing-Team@apexfinancial.com\nSubject: Credit Application LA-2024-009156 - APPROVED - Next Steps\nDate: March 28, 2024 11:23 AM\n\nDear Marcus,\n\nCongratulations! I'm pleased to inform you that your Small Business Line of Credit application (Application ID: LA-2024-009156) for Valencia Tech Solutions LLC has been APPROVED.\n\n**APPROVED CREDIT FACILITY TERMS:**\n\nCredit Line Amount: $250,000\nFacility Type: Revolving Line of Credit\nInterest Rate: Prime + 2.75% (currently 11.25% based on Prime Rate of 8.50%)\nDraw P","text_len":5788},{"id":25118,"sensitivity":"high","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"To join the video meeting, click this link: <https://meet.google.com/gfc-qoob-dzx>\nOtherwise, to join by phone, dial <tel:+13854041060|+1 385-404-1060> and enter this PIN: 557 072 631#\nTo view more phone numbers, click this link: <https://tel.meet/gfc-qoob-dzx?hs=5>\nAnand Swaminathan Ketan Umare Katrina Rogan can you meet now?","text_len":328},{"id":26373,"sensitivity":"high","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"the pod is using the `flyte-user-role` shown below. In aws console, we have checked this role and can confirm it has full s3 permissions. Do we need to set up any trust permission to allow the node role to assume this role?\nunder `Annotations`, it is showing a different role though\n```Annotations:  <http://cluster-autoscaler.kubernetes.io/safe-to-evict|cluster-autoscaler.kubernetes.io/safe-to-evict>: false\n              <http://iam.amazonaws.com/role|iam.amazonaws.com/role>: arn:aws:iam::763216446258:role/Dev-iam-role-flyte\n              <http://kubernetes.io/psp|kubernetes.io/psp>: eks.privil","text_len":702},{"id":22528,"sensitivity":"critical","source":"financial","model":"openai/gpt-4.1-mini","topic":"Aggregated Portfolio Risk Metrics","has_pii":"False","sensitive":"True","text_preview":"portfolio_id,trader_type,trade_date,message_frequency_ns,residual_inventory_position\nPF_010,HFT,2024-06-14,450,0.05\nPF_023,Agency Algorithm,2024-06-14,1200,0.02\nPF_045,HFT,2024-06-14,350,0.07","text_len":191},{"id":10614,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"Employee_ID,Full_Name,SSN,Date_of_Birth,Email,Annual_Salary,Health_Plan,401k_Contribution_Pct,Dependent_Count\nEMP-8821,Michael Chen,547-82-9103,1987-03-15,mchen@capmarkets-advisors.com,145000,PPO Premium,8.5,2\nEMP-7654,Sarah Martinez,612-44-8870,1992-11-22,smartinez@capmarkets-advisors.com,98500,HMO Standard,6.0,0\nEMP-5439,David Okonkwo,783-29-5614,1985-07-08,dokonkwo@capmarkets-advisors.com,187500,PPO Premium,12.0,3\nEMP-9201,Jennifer Wu,429-61-7382,1990-01-30,jwu@capmarkets-advisors.com,112000,PPO Standard,7.5,1","text_len":518},{"id":22929,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Wire Transfer or Payment with Account Details","has_pii":"True","sensitive":"True","text_preview":"EMAIL THREAD\n\nFrom: Robert Lawson <r.lawson@nexusfinancial.com>\nTo: Maria Gonzalez <m.gonzalez@nexusfinancial.com>\nDate: January 29, 2024, 10:23 AM\nSubject: RE: Client Wire Request - URGENT\n\nMaria,\n\nI've reviewed the wire request for Mr. Kenneth Albright. Everything looks in order. Please proceed with the transfer.\n\n**CLIENT INFORMATION:**\nName: Kenneth James Albright\nDOB: 06/18/1967\nSSN: 621-54-8903\nHome Address: 2847 Magnolia Drive, Austin, TX 78704\nPhone: (512) 847-2901\nEmail: k.albright.personal@gmail.com\n\n**WIRE DETAILS:**\nFrom Account: HNW-784521-US (High Net Worth Advisory)\nCurrent Bala","text_len":1803},{"id":18246,"sensitivity":"critical","source":"financial","model":"openai/gpt-4.1-mini","topic":"Employee Payroll and Salary Records","has_pii":"True","sensitive":"True","text_preview":"ID,EmployeeName,Email,Phone,TaxID,Team,MonthlySalary,StockOptionsGranted,OfficeLocation\nHFT001,David Lin,david.lin@hft.armada.com,+1-617-555-0123,037833100,High-Frequency Trading,16000,500,Nashua, NH\nHFT002,Olivia Park,olivia.park@hft.armada.com,+1-617-555-0145,123456789,NanoLatency Unit,15500,400,Nashua, NH\nHFT003,Ethan Brooks,ethan.brooks@hft.armada.com,+1-617-555-0167,987654321,Market Making,15800,450,Nashua, NH\nHFT004,Nina Gupta,nina.gupta@hft.armada.com,+1-617-555-0189,564738291,Algorithmic Strategies,16200,520,Nashua, NH","text_len":532},{"id":21964,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Client Account Statement with Holdings","has_pii":"True","sensitive":"True","text_preview":"AccountNumber,ClientName,SSN,HoldingSymbol,Quantity,MarketValue,CostBasis,UnrealizedGain,AsOfDate\nACC-892847,Michael Chen,456-78-9023,AAPL,250,43750.00,38125.00,5625.00,2024-01-15\nACC-892847,Michael Chen,456-78-9023,037833100,100,10200.00,9850.00,350.00,2024-01-15\nACC-892847,Michael Chen,456-78-9023,MSFT,180,67500.00,62100.00,5400.00,2024-01-15","text_len":346},{"id":6961,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Funding Round and Cap Table Details","has_pii":"True","sensitive":"True","text_preview":"Investor_Entity,Contact_Name,Phone,Email,Tax_ID,Commitment_Amount,Wire_Reference,Bank_Account\nTiger Global Management,Scott Shleifer,+1-212-542-7700,sshleifer@tigerglobal.com,13-4298176,45000000,WIRE-TGM-20231108,JPM-CHASE-8847392847\nAndreessen Horowitz,Marc Andreessen,+1-650-687-9600,marc@a16z.com,26-3847291,15000000,WIRE-A16Z-20220622,SVB-TECH-9382847562\nSequoia Capital,Roelof Botha,+1-650-854-3927,roelof@sequoiacap.com,94-2785638,2500000,WIRE-SEQ-20210315,FIRST-REP-2847563829","text_len":483},{"id":5329,"sensitivity":"critical","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"True","text_preview":"customer_id,full_name,dob,ssn,annual_salary,kyc_status,biometric_binding_token\n6822-TX,Sarah Jenkins,1984-03-12,254-88-1092,145000,Verified,f98a2-990b-12ea","text_len":155},{"id":13461,"sensitivity":"critical","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"True","text_preview":"policy_holder,ubi_device_id,mobile_number,ssn,driver_license,monthly_premium\n\"Marcus Thorne\",\"ROOT-772-X\",\"+1-512-555-0104\",\"445-12-8892\",\"TX-09112834\",112.50","text_len":158},{"id":27455,"sensitivity":"critical","source":"financial","model":"gemini/gemini-3-flash-preview","topic":"Internal Audit Findings Summary","has_pii":"False","sensitive":"True","text_preview":"EMAIL\nFROM: Lead Auditor (Risk & Compliance)\nTO: Global Head of HFT Operations\nSUBJECT: URGENT: Potential Compliance Breach - ISO 20022 Messaging\n\nHello,\n\nDuring our routine inspection of the messaging logs for the Proprietary Trading desk (Desk ID: HFT-NY-2), we flagged a series of messages that may violate Basel III risk-weighted asset reporting requirements. \n\nSpecifically, the CUSIP (Security ID: 037-83-3100) associated with our Alternative Data Product 'Satellite Retail Tracker' was incorrectly mapped in the clearing system. This caused the system to miscalculate our end-of-day inventory_","text_len":1223},{"id":5650,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Wire Transfer or Payment with Account Details","has_pii":"True","sensitive":"True","text_preview":"wire_confirmation,sender_full_name,sender_ssn,sender_email,sender_phone,account_holder,account_number,routing_number,recipient_name,recipient_account,amount_usd,initiated_by,kyc_tier,aml_screen_result\nWC-2024-JAN-5582,Patricia Lynn Morrison,412-88-7394,p.morrison2024@outlook.com,503-555-3821,Patricia L Morrison,334455667788,123456789,Marcus Wealth Advisors,776655443322,215000.00,Branch Manager - Portland,Enhanced Due Diligence,CLEARED - No OFAC Match\nWC-2024-JAN-5583,Christopher Dale Hughes,538-92-4116,c.hughes.invest@gmail.com,617-555-9047,Christopher D Hughes,445566778899,011000015,Vanguard ","text_len":992},{"id":19569,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Employee Benefits and Tax Forms","has_pii":"True","sensitive":"True","text_preview":"Form_1099_ID,Tax_Year,Recipient_Name,Recipient_SSN,Recipient_Address,Box1_Rents,Box2_Royalties,Box3_Other_Income,Payer_TIN\n1099-MISC-2023-8841,2023,Katherine Brooks,628-94-5710,\"3301 Riverside Parkway, Atlanta, GA 30339\",0.00,0.00,8500.00,94-2749183\n1099-MISC-2023-8842,2023,Brandon Foster,741-26-8392,\"77 Washington Street Unit 12, Boston, MA 02108\",0.00,0.00,12750.00,94-2749183\n1099-NEC-2023-5523,2023,Elena Petrov,853-17-4629,\"5890 Desert View Road, Phoenix, AZ 85032\",45000.00,N/A,N/A,94-2749183","text_len":500},{"id":27965,"sensitivity":"critical","source":"financial","model":"openai/gpt-4.1-mini","topic":"Customer Complaint with Account Information","has_pii":"True","sensitive":"True","text_preview":"Customer Complaint Report\n\nReport ID: CCR-20240607-1532\nDate of Report: 2024-06-07\nPrepared by: Anthony Rhodes, Senior Compliance Analyst\n\nCustomer Information:\n- Name: Maria L. Gonzales\n- Account Number: 765432109\n- SSN: 987-65-4321\n- Email: mgonzales@outlook.com\n- Phone: (646) 555-7842\n- Address: 789 Madison Ave, New York, NY 10021\n\nComplaint Summary:\nMs. Gonzales reported discrepancies in her recent loan origination process. Specifically, loan amount $250,000 with 15-year term was incorrectly documented as 10 years, resulting in unexpected higher monthly payments.\n\nIncident Timeline:\n- 2024","text_len":1465},{"id":19255,"sensitivity":"critical","source":"financial","model":"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0","topic":"Customer Contact List with Personal Details","has_pii":"True","sensitive":"True","text_preview":"subscriber_name,subscriber_dob,subscriber_ssn,email_address,phone_number,mailing_address,annual_premium,biometric_verified,onboarding_date\nOlivia Martinez,1991-07-19,638-92-4751,olivia.martinez@inbox.com,510-394-8821,\"7742 Telegraph Avenue, Oakland, CA 94609\",4850,Face_Match_Complete,2023-11-08\nWilliam Chen,1976-12-03,219-47-8836,william.c@email.net,949-621-7493,\"2901 Newport Boulevard, Newport Beach, CA 92663\",8920,Face_Match_Complete,2023-09-14\nSamantha Brooks,1988-04-27,501-33-7629,sbrooks@provider.com,303-785-4102,\"5500 East Yale Avenue, Denver, CO 80222\",6340,Biometric_Binding_Complete,20","text_len":608},{"id":295,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: 2/12/01 Violation and Notification Memos\n\nCoal Net Open Position Violation\n Net Open Position - 18.4 Million Tons\n Net Open Position Limit - 15.0 Million Tons\n\nEES VaR Violation\n VaR   - $11.83 Million\n VaR Limit  - $6.00 Million\n\nEnron Americas Gas Trading VaR Violation\n VaR   -  $70.53 Million\n VaR Limit  - $70.00 Million\n\nEnron Europe Gas Trading VaR Violation\n VaR   - $7.59 Million\n VaR Limit  - $7.00 Million","text_len":425},{"id":20693,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FW: Erroneous press\n\n\nFYI.  I am definitely not responding to this\n -----Original Message-----\nFrom:  Watkins, Sherron  \nSent: Thursday, October 25, 2001 11:30 AM\nTo: Koenig, Mark; Palmer, Mark A. (PR)\nCc: McMahon, Jeffrey\nSubject: Erroneous press\n\nMark, I'm sure you are aware of the comments in the press that I have copied and inserted here below.  There have been others that are similar.  Basically, the press is reporting that we have dissolved the LJM partnerships, ended all relationships with the LJM entities, etc.  All that we have done is unwind the raptor entities, LJM still ex","text_len":1754},{"id":13601,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: FW: Important Announcement Regarding Document Preservation\n\nBob, please respond to Bill.  Thank you. Jim\n\n -----Original Message-----\nFrom:  Kefalas, Bill  \nSent: Monday, October 29, 2001 9:09 AM\nTo: Jim Derrick@ENRON\nSubject: RE: Important Announcement Regarding Document Preservation\n\n\nDoes this include the suspension of the automatic email deletion policy?\nBill\n\n\n -----Original Message-----\nFrom:  Enron Announcements/Corp/Enron@ENRON   On Behalf Of Jim Derrick@ENRON\nSent: Thursday, October 25, 2001 11:55 PM\nTo: All Enron Worldwide@ENRON\nSubject: Important Announcement Regarding Docu","text_len":2033},{"id":17267,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Steve Tick's Restructuring Proposal\n\nFYI\n----- Forwarded by Dan Lyons/HOU/ECT on 03/23/2001 10:53 AM -----\n\n Garrick Hill\n 03/21/2001 06:17 PM\n   \n   To: Charles Ward/Corp/Enron@ENRON, Dan Lyons/HOU/ECT@ECT\n   cc: Christopher Coffman/Corp/Enron@Enron, Dan Lyons/HOU/ECT@ECT\n   Subject: Steve Tick's Restructuring Proposal\n\nSteve Tick's PPA restructuring proposal (which we now refer to as the \"ten \npoints of light\") is generally as follows:\n\nThe partnership agrees to amend the interest rate adjustment to capacity \ncharges, which effectively lowers capacity revenue by virtue of a lower \n$","text_len":6529},{"id":510,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: RE: Grades Posted\n\nyou can use my logon and password\nlogon: mendelso\npassword: 47971100\n\n> -----Original Message-----\n> From: Jeff Dasovich [SMTP:jdasovic@enron.com]\n> Sent: Tuesday, October 19, 1999 11:35 AM\n> To: mendelso@haas.berkeley.edu\n> Subject: Re: Grades Posted\n>\n>\n>\n> the econ grade site asks for an id and a password to get in.  do you know\n> what id i should use and what password i should use?  thanks a million.\n>","text_len":437},{"id":2672,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Access to UBSWenergy Production Environment\n\nIMPORTANT - THE IDS BELOW WILL BE YOUR PERMANENT ACCESS TO PRODUCTION\n\nYour PRODUCTION User ID and Password has been set up on UBSWenergy.  Please follow the steps below to access the new environment:\n\nFrom Internet Explorer connect to the UBSWenergy Production Cluster through the following link:\nhttp://remoteservices.netco.enron.com/ica/ubswenergy.ica  (use your UBSWenergy/Enron NT Log In & Password)\n\nFrom the second Start menu,  select appropriate application:\n\nSTACK MANAGER\nUser ID:vweldon\nPassword: q#9M#npX (Please Change)\n\nBelow is a s","text_len":1124},{"id":14161,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Re: What's in Rawhide - URGENT\n\nI'm not familiar with the individual assets (might include gaspart and ceg/rio) of that structure but the critical asset apparently is a $690mm loan to enron. When enron hit bbb- rating, rawhide was no longer allowed to lend to enron and called the note due. There was a rawhide bankers meeting late yesterday to consider enron's request to delay the call by several weeks. Neither bowen nor myself know if any decision has been reached by the lenders at this time.\n--------------------------\nSent from my BlackBerry Wireless Handheld (www.BlackBerry.net)","text_len":596},{"id":13511,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Highlights from ENE Analyst Conference Call 11/14\n\nHere are my notes from today's call.  As with Monday, I've focused on getting them out as quickly as possible rather than taking extra time to re-organize them by subject.\n\nEnron's business has been grouped into three buckets:  Core, Non-core, and Under Review.  \nCore:  Wholesale energy business in North America and Europe, retail energy, pipelines\nNon-core:  Broadband, water, and international assets (i.e. EGAS).  Enron has approx. $8Bn in investments in these assets, and they have produced 'dismal' returns.  Enron will be exiting th","text_len":7320},{"id":9256,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Summary of $ at Risk for Customs\n\nPlease see attached.  Rob, perhaps while in London you could stop by Mark's \ndesk to discuss.\n----- Forwarded by Steven J Kean/NA/Enron on 03/07/2001 11:22 AM -----\n\n Mark Schroeder@ECT\n 03/07/2001 03:45 AM\n   \n   To: Steven J Kean/NA/Enron@Enron\n   cc: Jane Wilson/ENRON_DEVELOPMENT@ENRON_DEVELOPMENT\n   Subject: Summary of $ at Risk for Customs\n\nSteve - the issue to which I believe Jane is referring in the first sentence \n(\"confirmation of the issues which I have articulated\") concern possible \npaymensts made to receive informal, and favourable, guida","text_len":4272},{"id":1535,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Executive Committee Residential Addresses\n\nfyi.  print\n---------------------- Forwarded by Jeffrey A Shankman/HOU/ECT on 11/13/2000 \n04:46 PM ---------------------------\n   \n Enron North America Corp.\n \n From:  Katherine Brown @ ENRON                           11/13/2000 02:50 PM\n \n\nTo: James M Bannantine/ENRON_DEVELOPMENT@ENRON_DEVELOPMENT, Cliff \nBaxter/HOU/ECT@ECT, Sanjay Bhatnagar/ENRON_DEVELOPMENT@ENRON_DEVELOPMENT, \nJeremy Blachman/HOU/EES@EES, Philippe A Bibi/HOU/ECT@ECT, Raymond \nBowen/HOU/ECT@ECT, Michael R Brown/LON/ECT@ECT, Harold G \nBuchanan/HOU/EES@EES, Rick Buy/HOU/ECT@E","text_len":4342},{"id":23239,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: RE: Amendment to IM II PPA\n\n  \n\n Kevin,   <?xml:namespace prefix = o ns = \"urn:schemas-microsoft-com:office:office\" />\n\nEWC requires three clarifications to the PPA in order to get the project financed and sold.  All previously requested amendments proposed by the equity purchaser have been dropped, and EWC will take the resulting pricing reduction.  \n\nI want to make sure you understand how minor these three clarifications are.   These clarifications conform to the original deal and are NOT changes to the deal.  \n\n 1.  Banking Provisions.   EWC and EPMI agreed that energy and renewabl","text_len":6851},{"id":20434,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: Electronic Mail Retention\n\n\nThis is a reminder that due to the various proceedings ongoing in California, please do not delete any email or electronic data that relates to the Company's past, current or future business in California.  Deletion of such data could subject both you and the Company to allegations of deliberate destruction of evidence, contempt of court, and civil and criminal penalties.  To preserve such data, please have your assistant create a folder entitled \"California Data\" and move all emails and other data to that folder.  Thank you for your cooperation.  If you ha","text_len":686},{"id":2226,"sensitivity":"critical","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"Subject: HoustonStreet arbitration\n\nI have received a notice of arbitration from HoustonStreet related to Enron Net Works' termination of the Posting Agreement several months ago.  The notice of arbitration specifies damages \"in excess of $5 million.\"  The notice (dated November 1) has been sitting in my office on the 8th floor and I just found it tonight as I was going through my mail.  I don't think that there is anything here that would have an MAE on Enron, but I clearly would have preferred to have known about this before the merger agreement was signed up.  Richard, I'll catch up with yo","text_len":796},{"id":687,"sensitivity":"critical","source":"slack","model":"external","topic":"unknown","has_pii":"","sensitive":"True","text_preview":"kubectl get secrets/flyte-admin-secrets -n nmlp --template='{{.data.oidc_client_secret | base64decode }}'\nI\u2592\u2592\u2592L\u2592F\u2592\u2592\u2592J\u2592\u2592t\u2592g\u2592\u2592\u2592} &lt;- This is not right\n\nsamuel@samuel-vm-001:~/repos/flyteadmin$ kubectl get secrets/flyte-admin-secrets -n nmlp -o yaml\napiVersion: v1\ndata:\n  oidc_client_secret: SeL8npmV9UyBRvC3x9FKgoV0u2e6yvR9 &lt;- This is right","text_len":344},{"id":26308,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Enron In Action 8.28.00\n\nThe United Way Day of Caring is September 15!   Sign up now to \"Make the \nWorld a Better Place.\"  \nFor more information, click here  http://home.enron.com/cr.\n\n\nChairman's Award Nominate Your Hero Today!  If you know someone who deserves \nto be honored for their practices of Respect, Integrity, Communication and \nExcellence, click here http://home.enron.com/. Nominations are open now \nthrough October 1.\n\nBrown Bag Lunch  Bring your lunch and join us on Wednesday, September 6 in \nEB49C1 at 11:30 a.m. to hear about the Houston Ballet's \nWith the Houston 2000-200","text_len":2815},{"id":3662,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Etiquette - rerun\n\n---------------------- Forwarded by Matthew Lenhart/HOU/ECT on 09/21/2000 \n10:16 AM ---------------------------\n\n\n\"Marcantel MM (Mitch)\" <MMMarcantel@equiva.com> on 09/21/2000 06:47:47 AM\nTo: \"'Matthew.Lenhart@enron.com'\" <Matthew.Lenhart@enron.com>, \n\"'Chad.Landry@enron.com'\" <Chad.Landry@enron.com>\ncc:  \n\nSubject: Etiquette - rerun\n\n\n\n\nNIce Man! Especially #10\n\nBlowjob Etiquette For Men, From Women:\n\n> >  1. First and foremost, we are not obligated to do it.\n> >\n> >   2. Extension to rule #1 - So if you get one, be grateful.\n> >\n> >   3. I don't care WHAT they did","text_len":2330},{"id":4117,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Re: Draft -- TW posting/bidding procedures\n\nCan we get together for a half hour or so on Monday to discuss?  That would \nbe helpful, so I can hear the thinking you guys went through.  Denise, pls \nprint for me.  Thanks.  df\n\n\n\n\nSusan Scott\n02/09/2001 02:42 PM\nTo: Maria Pavlou/ET&S/Enron, Drew Fossum@ENRON\ncc: Lee Huber/ET&S/Enron@ENRON \n\nSubject: Draft -- TW posting/bidding procedures\n\nMaria and Drew:  Lee and I wanted you to preview our draft before we submit \nit to a wider audience.\n\nSome comments:  I've not yet included the automatic open season similar to \nNNG's; I need more infor","text_len":1036},{"id":27414,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Re: today's plans\n\nWhat's the deal, Michigan vs. Duke? Cox and SagerII? If Arizona does anything \nin the final, SagerI has it nailed.  Arizona any good?\nsee ya at 415","text_len":175},{"id":15405,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: CES Retail Meeting\n\n---------------------- Forwarded by Kimberly Brown/HOU/ECT on 01/06/2000 \n12:31 PM ---------------------------\n   \n \n \n From:  Colleen Sullivan                           01/06/2000 12:01 PM\n \n\nTo: Kimberly Brown/HOU/ECT@ECT\ncc:  \nSubject: CES Retail Meeting\n\nPlease note that the CES/ENA Retail Meeting is scheduled for Friday, January \n7, 2000 in the Enron Building, Conference Room # 30C1 from 11:00 am - 1:30 \npm.  Please see the attachment  below for items to be discussed and let me \nknow if there are additional items to be added as soon as possible.  Please \nbe pr","text_len":843},{"id":11805,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Re: 98-3405 Activity Being Allocated/Nomed @ 98-9643\n\ndone\n\n\n\n\nJackie Young\n02/03/2000 10:13 AM\nTo: Daren J Farmer/HOU/ECT@ECT\ncc:  \nSubject: Re: 98-3405 Activity Being Allocated/Nomed @ 98-9643  \n\nDaren,\n\nWanted to let you know that there are still two sitara deals that need to \nhave the expected volume brought down to \"0\" of the list that I previously \nsent you.\nThey are 114099 and 92918.\n\nI appreciate you revising the ones that you have and you probably were going \nto handle the above two today.  In case you were please disregard this \nnotice.  If you had fogotten, this can serve a","text_len":661},{"id":25232,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Your Weekly Movie Showtimes from Amazon.com\n\n  <http://g-images.amazon.com/images/G/01/in-theaters/delivers/delivers_banner_showtimes.gif>\n  <http://g-images.amazon.com/images/G/01/in-theaters/delivers/black-block.gif> Showtimes starting Friday, December 28, 2001, near ZIP code 77381\nTo receive showtimes for a ZIP code different from 77381 in future e-mails, click here <http://www.amazon.com/movies-email>.    <http://g-images.amazon.com/images/G/01/in-theaters/delivers/black-block.gif> \n  <http://g-images.amazon.com/images/G/01/in-theaters/delivers/black-block.gif>    \n <http://www.am","text_len":10683},{"id":14687,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: FW: California gas intrastate matters - July 11 conference call\n\n\n\n -----Original Message-----\nFrom:  Buerger, Rubena  \nSent: Friday, July 06, 2001 11:54 AM\nTo: Lawner, Leslie\nCc: Steffes, James; Cantrell, Rebecca; Fulton, Donna; Miller, Stephanie; Dasovich, Jeff; Ponce, Roger; Courtney, Mark; Sharp, Greg; Castano, Marianne; Donald M Black/Enron@EnronXGate <mailto:Black/Enron@EnronXGate>; Allen, Phillip K.; Kingerski, Harry; Kaufman, Paul; Don Black@EES <mailto:Black@EES>; Hewitt, Jess\nSubject: California gas intrastate matters - July 11 conference call\n\nHere is the information for th","text_len":2219},{"id":27961,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: RE: Tall Tree Lumber Company\n\nFYI\n\nThe new contract number for Tall Tree Lumber Company is #96083921.\nThe CP ID number is #115069\n-g\n\nGeorgi Landau\nEnron Net Works\n(Ph) 713/345-4435\n(Fx)  713/646-2495\n\n -----Original Message-----\nFrom:  Panus, Stephanie  \nSent: Monday, October 22, 2001 2:35 PM\nTo: Adams, Laurel; Allen, Kimberly; Anderson, Diane; Bell, Jean; Bowen, Bob; Cason, Sharen; Cisneros, Celeste; Fischer, Jason; Garcia, Jorge A. ; Heaney, Gordon; Hundl, Kimberly; Hunter, Larry Joe; Murphy, Melissa Ann; Ornelas, Bianca; Piwetz, Stephanie; Rodriguez, Melissa; Seib, Dianne; Tackett","text_len":2187},{"id":2844,"sensitivity":"unlabeled","source":"enron","model":"external","topic":"unknown","has_pii":"","sensitive":"","text_preview":"Subject: Howdy\n\nI couldn't sleep so ive been doing emails, its looking a little better.  And \nI didn't get up in the middle of the night and come into the office.  I think \nI'll try again and can still get a few hours sleep.  \n\nI will be in a little later than I expected, I must drop young Michael off to \nschool and cant leave there until 8.\n\nSee you in the morning.\n\nSleepy","text_len":376}],"stats":{"medium":{"total":5039,"sources":{"enron":2749,"financial":2156,"slack":134},"topics":{"unknown":2883,"Aggregated Portfolio Risk Metrics":189,"Funding Round and Cap Table Details":182,"Vendor Contract Evaluation":129,"Daily Market Commentary":129,"System Maintenance Notification":117,"Quarterly Business Performance Review":115,"Wire Transfer or Payment with Account Details":115,"IT Security Patch Notes":115,"Compliance Policy Update":108},"pii":{"":2883,"True":1009,"False":1147},"models":{"external":2883,"openai/gpt-4.1-mini":1029,"gemini/gemini-3-flash-preview":674,"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0":453},"avg_len":1321},"non_sensitive":{"total":10909,"sources":{"enron":7373,"slack":2319,"financial":1217},"topics":{"unknown":9692,"Employee Benefits and Tax Forms":167,"Loan or Credit Application with Personal Information":136,"Customer Account Opening with Identity Documents":97,"Employee Payroll and Salary Records":94,"Daily Market Commentary":91,"Client Account Statement with Holdings":84,"Customer Contact List with Personal Details":83,"Wire Transfer or Payment with Account Details":82,"Customer Complaint with Account Information":80},"pii":{"":9692,"True":934,"False":283},"models":{"external":9692,"gemini/gemini-3-flash-preview":589,"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0":376,"openai/gpt-4.1-mini":252},"avg_len":1521},"low":{"total":6992,"sources":{"enron":4314,"financial":2134,"slack":544},"topics":{"unknown":4858,"Wire Transfer or Payment with Account Details":167,"Customer Account Opening with Identity Documents":164,"Employee Benefits and Tax Forms":162,"Client Account Statement with Holdings":133,"Employee Payroll and Salary Records":131,"Daily Market Commentary":122,"Loan or Credit Application with Personal Information":122,"Funding Round and Cap Table Details":118,"System Maintenance Notification":117},"pii":{"":4858,"True":1305,"False":829},"models":{"external":4858,"gemini/gemini-3-flash-preview":839,"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0":681,"openai/gpt-4.1-mini":614},"avg_len":1040},"high":{"total":2250,"sources":{"financial":1743,"enron":505,"slack":2},"topics":{"unknown":507,"Wire Transfer or Payment with Account Details":144,"Funding Round and Cap Table Details":143,"Aggregated Portfolio Risk Metrics":137,"Customer Account Opening with Identity Documents":124,"Client Account Statement with Holdings":114,"Internal Audit Findings Summary":100,"Employee Benefits and Tax Forms":94,"Daily Market Commentary":89,"Employee Payroll and Salary Records":85},"pii":{"":507,"True":1008,"False":735},"models":{"openai/gpt-4.1-mini":661,"gemini/gemini-3-flash-preview":633,"external":507,"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0":449},"avg_len":1154},"critical":{"total":3295,"sources":{"financial":3245,"enron":49,"slack":1},"topics":{"Employee Payroll and Salary Records":390,"Loan or Credit Application with Personal Information":360,"Customer Account Opening with Identity Documents":330,"Employee Benefits and Tax Forms":306,"Wire Transfer or Payment with Account Details":305,"Customer Contact List with Personal Details":267,"Funding Round and Cap Table Details":257,"Client Account Statement with Holdings":242,"Health or Life Insurance Claim":225,"Customer Complaint with Account Information":181},"pii":{"True":2863,"False":382,"":50},"models":{"bedrock/eu.anthropic.claude-sonnet-4-5-20250929-v1:0":1486,"gemini/gemini-3-flash-preview":1009,"openai/gpt-4.1-mini":750,"external":50},"avg_len":986},"unlabeled":{"total":10,"sources":{"enron":10},"topics":{"unknown":10},"pii":{"":10},"models":{"external":10},"avg_len":2332}}}</script>
+<script>
+// ========== NAVIGATION ==========
+const slides = document.querySelectorAll('.slide');
+const navDots = document.getElementById('navDots');
+let currentSlide = 0;
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => scrollToSlide(i));
+  navDots.appendChild(dot);
+});
+
+function scrollToSlide(index) {
+  slides[index].scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateActiveDot() {
+  const scrollTop = window.scrollY;
+  const windowHeight = window.innerHeight;
+  let active = 0;
+  slides.forEach((slide, i) => {
+    if (scrollTop >= slide.offsetTop - windowHeight / 2) active = i;
+  });
+  if (active !== currentSlide) {
+    currentSlide = active;
+    document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === active);
+    });
+  }
+}
+
+window.addEventListener('scroll', updateActiveDot);
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('recordModal').style.display === 'flex') {
+    if (e.key === 'Escape') closeModal();
+    return;
+  }
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    if (currentSlide < slides.length - 1) scrollToSlide(currentSlide + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    if (currentSlide > 0) scrollToSlide(currentSlide - 1);
+  }
+});
+
+let hintHidden = false;
+window.addEventListener('scroll', () => {
+  if (!hintHidden) {
+    document.querySelector('.key-hint').style.opacity = '0';
+    hintHidden = true;
+  }
+}, { once: true });
+
+// ========== DATA EXPLORER ==========
+const trainingData = JSON.parse(document.getElementById('trainingDataJSON').textContent);
+const allSamples = trainingData.samples;
+const stats = trainingData.stats;
+
+const sevColors = {
+  critical: { bg: 'rgba(220,38,38,0.15)', border: '#dc2626', text: '#fca5a5' },
+  high:     { bg: 'rgba(245,158,11,0.15)', border: '#f59e0b', text: '#fde68a' },
+  medium:   { bg: 'rgba(34,211,238,0.15)', border: '#22D3EE', text: '#67e8f9' },
+  low:      { bg: 'rgba(13,148,136,0.15)', border: '#0D9488', text: '#5eead4' },
+  non_sensitive: { bg: 'rgba(100,116,139,0.12)', border: '#64748B', text: '#94A3B8' },
+  unlabeled: { bg: 'rgba(100,116,139,0.08)', border: '#475569', text: '#64748B' }
+};
+
+const sevOrder = ['critical','high','medium','low','non_sensitive','unlabeled'];
+const sevLabels = { critical: 'Critical', high: 'High', medium: 'Medium', low: 'Low', non_sensitive: 'Non-Sensitive', unlabeled: 'Unlabeled' };
+
+let activeSeverity = 'critical';
+
+function initExplorer() {
+  // Severity pills
+  const sel = document.getElementById('severitySelector');
+  sevOrder.forEach(sev => {
+    if (!stats[sev]) return;
+    const s = stats[sev];
+    const c = sevColors[sev];
+    const btn = document.createElement('button');
+    btn.className = 'sev-pill';
+    btn.dataset.sev = sev;
+    btn.innerHTML = `<span class="sev-pill-label">${sevLabels[sev]}</span><span class="sev-pill-count">${s.total.toLocaleString()}</span>`;
+    btn.style.cssText = `background:${c.bg};border:1px solid ${c.border};color:${c.text};padding:8px 18px;border-radius:10px;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:600;display:flex;gap:10px;align-items:center;transition:all 0.2s;`;
+    btn.querySelector('.sev-pill-count').style.cssText = `font-family:'JetBrains Mono',monospace;font-size:12px;opacity:0.7;`;
+    btn.addEventListener('click', () => selectSeverity(sev));
+    sel.appendChild(btn);
+  });
+
+  // Populate topic filter
+  const topics = new Set();
+  allSamples.forEach(r => { if (r.topic && r.topic !== 'unknown') topics.add(r.topic); });
+  const topicSel = document.getElementById('filterTopic');
+  [...topics].sort().forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t; opt.textContent = t.length > 40 ? t.slice(0,40)+'...' : t;
+    topicSel.appendChild(opt);
+  });
+
+  // Filter listeners
+  document.getElementById('filterSource').addEventListener('change', renderRecords);
+  document.getElementById('filterTopic').addEventListener('change', renderRecords);
+  document.getElementById('filterPII').addEventListener('change', renderRecords);
+
+  selectSeverity('critical');
+}
+
+function selectSeverity(sev) {
+  activeSeverity = sev;
+  document.querySelectorAll('.sev-pill').forEach(btn => {
+    const s = btn.dataset.sev;
+    const c = sevColors[s];
+    if (s === sev) {
+      btn.style.background = c.border;
+      btn.style.color = '#0A0F1A';
+      btn.style.boxShadow = `0 0 20px ${c.bg}`;
+    } else {
+      btn.style.background = c.bg;
+      btn.style.color = c.text;
+      btn.style.boxShadow = 'none';
+    }
+  });
+  renderStats(sev);
+  renderRecords();
+}
+
+function renderStats(sev) {
+  const s = stats[sev];
+  const c = sevColors[sev];
+  const panel = document.getElementById('statsPanel');
+
+  const srcList = Object.entries(s.sources).map(([k,v]) => `${k}: ${v.toLocaleString()}`).join(', ');
+  const topTopics = Object.entries(s.topics).slice(0,3).map(([k,v]) => `${k.length>30?k.slice(0,30)+'...':k}`).join(', ') || 'unknown';
+
+  panel.innerHTML = `
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:${c.border};">${s.total.toLocaleString()}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Records</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:${c.border};">${s.avg_len.toLocaleString()}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Avg Chars</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:${c.border};">${Object.keys(s.sources).length}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Sources</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:${c.border};">${(s.pii['True']||0).toLocaleString()}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">With PII</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:${c.border};">${Object.keys(s.topics).filter(t=>t!=='unknown').length}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Topics</div>
+    </div>
+  `;
+}
+
+function renderRecords() {
+  const srcFilter = document.getElementById('filterSource').value;
+  const topicFilter = document.getElementById('filterTopic').value;
+  const piiFilter = document.getElementById('filterPII').value;
+
+  let filtered = allSamples.filter(r => r.sensitivity === activeSeverity);
+  if (srcFilter !== 'all') filtered = filtered.filter(r => r.source === srcFilter);
+  if (topicFilter !== 'all') filtered = filtered.filter(r => r.topic === topicFilter);
+  if (piiFilter !== 'all') filtered = filtered.filter(r => r.has_pii === piiFilter);
+
+  document.getElementById('resultCount').textContent = `${filtered.length} sample${filtered.length!==1?'s':''}`;
+
+  const list = document.getElementById('recordsList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-muted);">No samples match these filters. Try adjusting source or topic.</div>`;
+    return;
+  }
+
+  const c = sevColors[activeSeverity];
+  list.innerHTML = filtered.map((r, idx) => {
+    const preview = escHtml(r.text_preview.slice(0, 250)) + (r.text_preview.length > 250 ? '...' : '');
+    const modelShort = r.model === 'external' ? 'external' : r.model.split('/').pop().slice(0,25);
+    return `
+    <div class="record-row" onclick="showRecord(${idx})" data-idx="${idx}"
+      style="padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.03);cursor:pointer;transition:background 0.15s;"
+      onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${c.border};background:${c.bg};padding:2px 8px;border-radius:6px;">${sevLabels[activeSeverity]}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">src:${r.source}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">model:${modelShort}</span>
+        ${r.topic !== 'unknown' ? `<span style="font-size:11px;color:var(--cyan);background:rgba(34,211,238,0.08);padding:2px 8px;border-radius:6px;">${r.topic.length>35?r.topic.slice(0,35)+'...':r.topic}</span>` : ''}
+        ${r.has_pii === 'True' ? `<span style="font-size:10px;color:#fca5a5;background:rgba(220,38,38,0.1);padding:2px 6px;border-radius:4px;">PII</span>` : ''}
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);margin-left:auto;">${r.text_len.toLocaleString()} chars</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;font-family:'JetBrains Mono',monospace;white-space:pre-wrap;word-break:break-word;">${preview}</div>
+    </div>`;
+  }).join('');
+
+  // Store filtered for modal access
+  list._filtered = filtered;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showRecord(idx) {
+  const list = document.getElementById('recordsList');
+  const r = list._filtered[idx];
+  const c = sevColors[r.sensitivity];
+  const modelShort = r.model === 'external' ? 'external (real data)' : r.model;
+
+  document.getElementById('modalContent').innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:${c.border};background:${c.bg};padding:4px 12px;border-radius:8px;font-weight:600;">${sevLabels[r.sensitivity]}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);background:var(--bg-dark);padding:4px 12px;border-radius:8px;">source: ${r.source}</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);background:var(--bg-dark);padding:4px 12px;border-radius:8px;">model: ${modelShort}</span>
+      ${r.has_pii === 'True' ? `<span style="font-size:12px;color:#fca5a5;background:rgba(220,38,38,0.1);padding:4px 12px;border-radius:8px;">Contains PII</span>` : ''}
+    </div>
+    ${r.topic !== 'unknown' ? `<div style="margin-bottom:12px;"><span style="font-size:12px;color:var(--cyan);">Topic: </span><span style="font-size:13px;color:var(--text-secondary);">${escHtml(r.topic)}</span></div>` : ''}
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:12px;">Record #${r.id.toLocaleString()} &middot; ${r.text_len.toLocaleString()} characters total &middot; Preview below (first 600 chars)</div>
+    <div style="background:var(--bg-dark);border:1px solid var(--border);border-radius:10px;padding:20px;max-height:50vh;overflow-y:auto;">
+      <pre style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-secondary);line-height:1.6;white-space:pre-wrap;word-break:break-word;margin:0;">${escHtml(r.text_preview)}</pre>
+    </div>
+  `;
+
+  document.getElementById('recordModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('recordModal').style.display = 'none';
+}
+
+document.getElementById('recordModal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('recordModal')) closeModal();
+});
+
+// Initialize explorer when DOM is ready
+initExplorer();
+</script>
+</body>
+</html>

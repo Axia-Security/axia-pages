@@ -1,0 +1,1998 @@
+{
+  "metadata": {
+    "generated_date": "2026-03-03",
+    "analysis_title": "AXIA Training Data vs. Official Benchmark Use Case Comparison",
+    "training_data_total_samples": 28495,
+    "training_data_named_topics": 18,
+    "training_data_unknown_samples": 17950,
+    "training_data_unknown_pct": 63.0,
+    "axia_benchmark_examples_count": 55,
+    "sources_in_training_data": [
+      "enron (48% of sample)",
+      "financial (35% of sample)",
+      "slack (27% of sample)"
+    ]
+  },
+  "training_data_overview": {
+    "total_samples": 28495,
+    "by_sensitivity": {
+      "critical": 3295,
+      "high": 2250,
+      "medium": 5039,
+      "low": 6992,
+      "non_sensitive": 10909,
+      "unlabeled": 10
+    },
+    "named_topics_with_counts": {
+      "Wire Transfer or Payment with Account Details": 813,
+      "Employee Benefits and Tax Forms": 729,
+      "Customer Account Opening with Identity Documents": 715,
+      "Funding Round and Cap Table Details": 700,
+      "Employee Payroll and Salary Records": 700,
+      "Loan or Credit Application with Personal Information": 618,
+      "Client Account Statement with Holdings": 573,
+      "Daily Market Commentary": 431,
+      "Customer Contact List with Personal Details": 350,
+      "Aggregated Portfolio Risk Metrics": 326,
+      "Customer Complaint with Account Information": 261,
+      "System Maintenance Notification": 234,
+      "Health or Life Insurance Claim": 225,
+      "Vendor Contract Evaluation": 129,
+      "Quarterly Business Performance Review": 115,
+      "IT Security Patch Notes": 115,
+      "Compliance Policy Update": 108,
+      "Internal Audit Findings Summary": 100
+    },
+    "sources": {
+      "enron": 15000,
+      "financial": 10495,
+      "slack": 3000
+    }
+  },
+  "section_A_training_gaps_vs_axia": {
+    "summary": "18 named training topics found in training data. Of these, 7 have no matching AXIA benchmark example, and 11 have only partial matches.",
+    "absent_from_axia": [
+      {
+        "training_topic": "Employee Benefits and Tax Forms",
+        "training_sample_count": 729,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example specifically covers employee benefits/tax form exfiltration. This is a significant training data category (729 samples) with no AXIA benchmark equivalent."
+      },
+      {
+        "training_topic": "Health or Life Insurance Claim",
+        "training_sample_count": 225,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example covers health/insurance claim data. Training data has 225 samples in critical tier. Possible gap - AXIA may not have benchmarked insurance claim scenarios."
+      },
+      {
+        "training_topic": "Daily Market Commentary",
+        "training_sample_count": 431,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example covers daily market commentary. Training data has 431 samples across high/medium/low sensitivity. Likely low-risk content that AXIA did not need to benchmark."
+      },
+      {
+        "training_topic": "System Maintenance Notification",
+        "training_sample_count": 234,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example for system maintenance notifications. Training data has 234 samples (medium/low). Expected - these are generally benign and do not represent IRM scenarios."
+      },
+      {
+        "training_topic": "Compliance Policy Update",
+        "training_sample_count": 108,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example for compliance policy updates. 108 training samples (medium). Not a typical IRM scenario."
+      },
+      {
+        "training_topic": "Quarterly Business Performance Review",
+        "training_sample_count": 115,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example for quarterly business reviews. 115 training samples (medium). Could partially relate to ALCO or board materials scenarios but no direct match."
+      },
+      {
+        "training_topic": "IT Security Patch Notes",
+        "training_sample_count": 115,
+        "matched_axia_examples": [],
+        "coverage_assessment": "absent",
+        "gap_analysis": "No AXIA benchmark example for IT security patch notes. 115 training samples (medium). Not a typical IRM scenario - this is IT ops content."
+      }
+    ],
+    "partial_matches_only": [
+      {
+        "training_topic": "Wire Transfer or Payment with Account Details",
+        "training_sample_count": 813,
+        "matched_axia_examples": [
+          5
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers wire transfer data as a document type (structural/PII focus). AXIA example 5 is about MODIFICATION of wire instructions for fraud - a behavioral/fraud scenario not represented in training data. Training data treats this as a sensitivity classification exercise, not as a behavioral fraud pattern."
+      },
+      {
+        "training_topic": "Customer Account Opening with Identity Documents",
+        "training_sample_count": 715,
+        "matched_axia_examples": [
+          7,
+          15
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers KYC/onboarding documents with PII. Partial match to AML/KYC examples. But training data does not capture the INTENT dimension - whether KYC docs are being exported maliciously vs. processed legitimately."
+      },
+      {
+        "training_topic": "Employee Payroll and Salary Records",
+        "training_sample_count": 700,
+        "matched_axia_examples": [
+          23,
+          41,
+          43
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data has payroll records as a document type. Partially matches AXIA payroll oversharing scenarios. But AXIA examples have specific behavioral contexts (wrong recipient, policy bypass) not reflected in training data topics."
+      },
+      {
+        "training_topic": "Loan or Credit Application with Personal Information",
+        "training_sample_count": 618,
+        "matched_axia_examples": [
+          12,
+          13,
+          28
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers loan/credit applications. Partially matches AXIA examples involving credit risk data or mortgage data. Training data is generic PII sensitivity; AXIA examples focus on specific exfiltration scenarios."
+      },
+      {
+        "training_topic": "Funding Round and Cap Table Details",
+        "training_sample_count": 700,
+        "matched_axia_examples": [
+          3,
+          4,
+          55
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers funding/cap table docs. Partially maps to AXIA M&A and insider trading examples. But AXIA specificity (pre-board approval timing, specific recipients) is absent in training data."
+      },
+      {
+        "training_topic": "Client Account Statement with Holdings",
+        "training_sample_count": 573,
+        "matched_axia_examples": [
+          11,
+          24
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data has client statements with portfolio data. Partial match to AXIA wealth management scenarios. Missing the UHNW context and departing employee behavioral signal."
+      },
+      {
+        "training_topic": "Internal Audit Findings Summary",
+        "training_sample_count": 100,
+        "matched_axia_examples": [
+          10,
+          18
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data has internal audit reports. Maps to AXIA audit finding exposure examples. But training data lacks the recipient context (media vs. board vs. personal email)."
+      },
+      {
+        "training_topic": "Customer Contact List with Personal Details",
+        "training_sample_count": 350,
+        "matched_axia_examples": [
+          14,
+          31
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers customer contact lists. Maps to CRM/contact data scenarios in AXIA. Missing the departing employee and bulk export behavioral context of example 14."
+      },
+      {
+        "training_topic": "Aggregated Portfolio Risk Metrics",
+        "training_sample_count": 326,
+        "matched_axia_examples": [
+          48
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data has portfolio/risk metrics. Weak match to ALCO materials scenario. AXIA example 48 is about unauthorized BCC to academic - behavioral context absent in training data."
+      },
+      {
+        "training_topic": "Vendor Contract Evaluation",
+        "training_sample_count": 129,
+        "matched_axia_examples": [
+          25,
+          27,
+          50
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data covers vendor contracts. Maps to AXIA vendor contract sharing examples. Training data is document-type focused; AXIA examples include the recipient relationship (competing vendor, board candidate)."
+      },
+      {
+        "training_topic": "Customer Complaint with Account Information",
+        "training_sample_count": 261,
+        "matched_axia_examples": [
+          39
+        ],
+        "coverage_assessment": "partial",
+        "gap_analysis": "Training data has customer complaints with account details. Loose match to AXIA example 39 (internal forwarding). Training data treats this as document sensitivity; AXIA example is about authorized internal routing."
+      }
+    ],
+    "additional_gaps": {
+      "behavioral_signals_absent": {
+        "description": "Training data is document-type/PII focused. The 'unknown' category (65.1% of all samples, 27,953 records from Enron emails and Slack) covers operational communications but NOT as IRM-specific behavioral scenarios.",
+        "key_missing_behavioral_signals": [
+          "Departing employee pattern (AXIA examples 1, 11, 14, 40)",
+          "Off-hours access pattern (AXIA example 15)",
+          "DLP bypass / encryption concealment (AXIA examples 2, 20, 8)",
+          "Bulk/mass export behavior (AXIA example 14)",
+          "API automation abuse (AXIA example 15)",
+          "Coded language / obfuscation (AXIA example 52)",
+          "Wrong recipient / autocomplete error (AXIA examples 24, 33, 41, 43)",
+          "Destination analysis (personal email, dark web, competitor domain, social media)"
+        ]
+      },
+      "domain_gaps_in_training": [
+        "Source code / IP theft (no training samples covering code repositories or algorithm exfiltration)",
+        "M&A confidential documents (no training samples for merger/acquisition document scenarios)",
+        "SAR/AML filings (no training samples for Suspicious Activity Reports or regulatory filings)",
+        "Insider trading scenarios (no training samples with pre-earnings or coded-language trading scenarios)",
+        "Credentials / API keys (only partial match via KSP-style admin in Slack, not systematically)",
+        "Regulatory examination responses (no training samples for exam response documents)",
+        "Sanctions evasion (no training samples for shell entity/sanctions scenarios)",
+        "Biometric data (no training samples for voice print or biometric data)",
+        "Crypto / digital asset data (no training samples for stablecoin, crypto reserve data)",
+        "CRM bulk exports (no training samples representing CRM system exports)",
+        "ALCO / treasury materials (no training samples for asset-liability committee materials)",
+        "Board minutes / governance documents (no training samples for board meeting records)"
+      ]
+    }
+  },
+  "section_B_axia_gaps_in_training": {
+    "summary": "32 AXIA benchmark examples have NO matching training data. 23 have only partial/weak document-type coverage but no behavioral context match.",
+    "fully_uncovered_count": 32,
+    "partially_covered_count": 23,
+    "fully_uncovered_examples": [
+      {
+        "id": 1,
+        "severity": "critical",
+        "scenario": "Pre-departure source code exfiltration to competitor",
+        "domains": [
+          "data_exfiltration",
+          "ip_theft",
+          "departing_employee",
+          "source_code"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples cover source code files, git repositories, or code exfiltration scenarios. No departing employee behavioral context."
+      },
+      {
+        "id": 2,
+        "severity": "critical",
+        "scenario": "Encrypted archive bypassing DLP to unknown VC",
+        "domains": [
+          "data_exfiltration",
+          "dlp_bypass",
+          "encryption_concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples with encrypted archives, DLP bypass events, or data sent to venture capital entities."
+      },
+      {
+        "id": 6,
+        "severity": "critical",
+        "scenario": "Trading algorithm source code exfiltration",
+        "domains": [
+          "ip_theft",
+          "source_code",
+          "trading_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for trading algorithms, quantitative model code, or proprietary algorithm exfiltration."
+      },
+      {
+        "id": 8,
+        "severity": "critical",
+        "scenario": "Customer credit card data exfiltration (disguised)",
+        "domains": [
+          "pci_data",
+          "data_exfiltration",
+          "concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has PII-containing documents but not credit card data specifically, and not disguise/concealment patterns."
+      },
+      {
+        "id": 9,
+        "severity": "critical",
+        "scenario": "Payment processing API keys exfiltration",
+        "domains": [
+          "credentials_theft",
+          "api_keys",
+          "payment_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for API keys, secrets, or credential documents (only weak Slack match)."
+      },
+      {
+        "id": 17,
+        "severity": "critical",
+        "scenario": "SAR data shared beyond contract scope",
+        "domains": [
+          "sar_data",
+          "aml",
+          "third_party_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for SAR data or AML filing documents."
+      },
+      {
+        "id": 20,
+        "severity": "critical",
+        "scenario": "Merger integration plan via encrypted messaging",
+        "domains": [
+          "ma_confidential",
+          "dlp_bypass",
+          "encryption_concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for M&A integration plans or encrypted messaging channel scenarios."
+      },
+      {
+        "id": 49,
+        "severity": "critical",
+        "scenario": "Customer database migration on public shared drive",
+        "domains": [
+          "data_exposure",
+          "cloud_misconfiguration",
+          "customer_database"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for database migration or public cloud storage misconfiguration scenarios."
+      },
+      {
+        "id": 51,
+        "severity": "critical",
+        "scenario": "Sanctions evasion through shell entity routing",
+        "domains": [
+          "sanctions_evasion",
+          "financial_crime",
+          "shell_entity"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for sanctions evasion, shell entities, or cross-border regulatory scenarios."
+      },
+      {
+        "id": 52,
+        "severity": "critical",
+        "scenario": "Insider trading using coded language",
+        "domains": [
+          "insider_trading",
+          "coded_language",
+          "concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for coded language, steganography, or obfuscated insider trading communications."
+      },
+      {
+        "id": 53,
+        "severity": "critical",
+        "scenario": "Core banking credentials to dark web",
+        "domains": [
+          "credentials_theft",
+          "dark_web",
+          "banking_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for dark web, leaked credentials, or banking system access scenarios."
+      },
+      {
+        "id": 54,
+        "severity": "critical",
+        "scenario": "Biometric voice print data exfiltration",
+        "domains": [
+          "biometric_data",
+          "pii_exfiltration"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for biometric data, voice prints, or behavioral authentication data."
+      },
+      {
+        "id": 16,
+        "severity": "high",
+        "scenario": "CRM data synced to personal cloud (Zapier, no malice)",
+        "domains": [
+          "crm_data",
+          "personal_cloud",
+          "accidental"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has CRM/contact data but not cloud sync via automation tools (Zapier) scenario."
+      },
+      {
+        "id": 19,
+        "severity": "high",
+        "scenario": "Payment fraud investigation files beyond scope to vendor",
+        "domains": [
+          "fraud_investigation",
+          "oversharing",
+          "vendor_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for fraud investigation files or case management data."
+      },
+      {
+        "id": 21,
+        "severity": "high",
+        "scenario": "Product roadmap in public Teams channel (accidental)",
+        "domains": [
+          "product_roadmap",
+          "accidental_exposure",
+          "collaboration_tools"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for product roadmap documents or accidental collaboration tool exposure."
+      },
+      {
+        "id": 22,
+        "severity": "high",
+        "scenario": "Engineering oversharing pattern (6 users, same domains)",
+        "domains": [
+          "pattern_detection",
+          "systematic_oversharing",
+          "source_code"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing systematic pattern detection across multiple users."
+      },
+      {
+        "id": 30,
+        "severity": "high",
+        "scenario": "Transaction monitoring rules via regular email to vendor",
+        "domains": [
+          "aml",
+          "transaction_monitoring",
+          "vendor_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for transaction monitoring rules (AML system configuration data)."
+      },
+      {
+        "id": 42,
+        "severity": "high",
+        "scenario": "Product screenshots posted on LinkedIn",
+        "domains": [
+          "product_roadmap",
+          "social_media",
+          "accidental_exposure"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for product screenshots or LinkedIn/social media posting scenarios."
+      },
+      {
+        "id": 26,
+        "severity": "medium",
+        "scenario": "Underwriting criteria on industry forum",
+        "domains": [
+          "underwriting",
+          "competitive_data",
+          "oversharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for underwriting criteria documents."
+      },
+      {
+        "id": 29,
+        "severity": "medium",
+        "scenario": "Board minutes sent to conflicted members",
+        "domains": [
+          "board_materials",
+          "governance",
+          "conflict_of_interest"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for board minutes or governance documents."
+      },
+      {
+        "id": 33,
+        "severity": "medium",
+        "scenario": "NDA sent to wrong email address",
+        "domains": [
+          "legal_documents",
+          "wrong_recipient"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for NDA documents or wrong-recipient legal document scenarios."
+      },
+      {
+        "id": 44,
+        "severity": "medium",
+        "scenario": "API credentials shared in Slack channel (sandbox)",
+        "domains": [
+          "credentials",
+          "slack",
+          "oversharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Slack samples exist but none specifically for API credential sharing in Slack channels."
+      },
+      {
+        "id": 32,
+        "severity": "low",
+        "scenario": "Open source code contribution (pre-approved)",
+        "domains": [
+          "source_code",
+          "authorized",
+          "open_source"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing authorized open source code contributions."
+      },
+      {
+        "id": 34,
+        "severity": "low",
+        "scenario": "Meeting recording shared with approved consultant",
+        "domains": [
+          "meeting_recording",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for meeting recordings or consultant authorization scenarios."
+      },
+      {
+        "id": 35,
+        "severity": "low",
+        "scenario": "Personal financial spreadsheet by bank employee",
+        "domains": [
+          "personal_data",
+          "bank_employee"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples distinguishing personal vs. company financial data by bank employees."
+      },
+      {
+        "id": 36,
+        "severity": "low",
+        "scenario": "Published industry report shared with client",
+        "domains": [
+          "market_data",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for published market research or authorized client sharing."
+      },
+      {
+        "id": 37,
+        "severity": "low",
+        "scenario": "Regulatory filing draft to external counsel",
+        "domains": [
+          "regulatory_filing",
+          "authorized",
+          "legal"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for regulatory filing drafts sent to external counsel."
+      },
+      {
+        "id": 38,
+        "severity": "low",
+        "scenario": "Anonymized data for approved research",
+        "domains": [
+          "anonymized_data",
+          "authorized",
+          "research"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training data does not include anonymized/de-identified datasets with authorization context."
+      },
+      {
+        "id": 40,
+        "severity": "low",
+        "scenario": "Departing employee downloads personal files only",
+        "domains": [
+          "personal_files",
+          "departing_employee",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing personal file downloads by departing employees."
+      },
+      {
+        "id": 45,
+        "severity": "low",
+        "scenario": "Compliance training records to LMS vendor",
+        "domains": [
+          "training_records",
+          "vendor_sharing",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for compliance training records or LMS vendor data transfers."
+      },
+      {
+        "id": 46,
+        "severity": "low",
+        "scenario": "KYC documents for EDD review (internal)",
+        "domains": [
+          "kyc",
+          "internal",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has KYC documents but not EDD (Enhanced Due Diligence) internal review scenario."
+      },
+      {
+        "id": 47,
+        "severity": "low",
+        "scenario": "Branch performance report to regional manager",
+        "domains": [
+          "performance_data",
+          "internal",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for branch performance reports or regional manager authorized access."
+      }
+    ],
+    "partially_covered_examples": [
+      {
+        "id": 3,
+        "severity": "critical",
+        "scenario": "M&A documents before board approval to advisor",
+        "domains": [
+          "ma_confidential",
+          "insider_trading",
+          "financial_documents"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "No training samples for M&A documents, deal memos, or board approval workflows."
+      },
+      {
+        "id": 4,
+        "severity": "critical",
+        "scenario": "Pre-earnings financial data to investment firm (insider trading)",
+        "domains": [
+          "insider_trading",
+          "financial_documents",
+          "securities_law"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "No training samples for pre-earnings communications or structured insider trading scenarios."
+      },
+      {
+        "id": 5,
+        "severity": "critical",
+        "scenario": "Wire transfer instructions modification (fraud, offshore)",
+        "domains": [
+          "wire_fraud",
+          "financial_crime",
+          "payment_tampering"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has wire transfer DOCUMENTS but not wire transfer MODIFICATION/FRAUD behavioral scenarios."
+      },
+      {
+        "id": 7,
+        "severity": "critical",
+        "scenario": "KYC/AML (SAR) data export to personal email",
+        "domains": [
+          "sar_data",
+          "aml",
+          "kyc",
+          "regulatory_data"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "No training samples specifically representing SAR (Suspicious Activity Report) documents or AML filing data."
+      },
+      {
+        "id": 10,
+        "severity": "critical",
+        "scenario": "Regulatory examination response leaked to media",
+        "domains": [
+          "regulatory_data",
+          "media_leak",
+          "examination_response"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "No training samples for regulatory examination response documents."
+      },
+      {
+        "id": 11,
+        "severity": "critical",
+        "scenario": "UHNW client portfolio to personal device (departing)",
+        "domains": [
+          "client_data",
+          "departing_employee",
+          "wealth_management"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has client account statements but not UHNW (ultra-high-net-worth) context or departing employee signal."
+      },
+      {
+        "id": 12,
+        "severity": "critical",
+        "scenario": "Credit risk model with customer SSNs to academic",
+        "domains": [
+          "pii_exfiltration",
+          "credit_data",
+          "model_theft"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has loan/credit data with SSNs but not framed as model theft sent to academic institution."
+      },
+      {
+        "id": 13,
+        "severity": "critical",
+        "scenario": "Client loan portfolio forwarded to competitor",
+        "domains": [
+          "client_data",
+          "competitor_exfiltration",
+          "loan_data"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has client data but not competitor-directed exfiltration scenario."
+      },
+      {
+        "id": 14,
+        "severity": "critical",
+        "scenario": "CRM bulk export by departing sales rep",
+        "domains": [
+          "crm_data",
+          "departing_employee",
+          "bulk_export"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has customer contact lists but not bulk CRM export by departing sales rep behavioral scenario."
+      },
+      {
+        "id": 15,
+        "severity": "critical",
+        "scenario": "Customer PII exported via API automation (off-hours)",
+        "domains": [
+          "pii_exfiltration",
+          "api_automation",
+          "off_hours"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has PII documents but not API automation abuse off-hours pattern."
+      },
+      {
+        "id": 25,
+        "severity": "critical",
+        "scenario": "Vendor rate sheet shared with competing vendor",
+        "domains": [
+          "competitive_data",
+          "vendor_intelligence"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has vendor contracts but not rate sheet shared with competing vendor scenario."
+      },
+      {
+        "id": 28,
+        "severity": "critical",
+        "scenario": "Mortgage application data un-anonymized to vendor",
+        "domains": [
+          "pii_exfiltration",
+          "loan_data",
+          "vendor_sharing"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has loan application data but not un-anonymized data sent to vendor scenario."
+      },
+      {
+        "id": 55,
+        "severity": "critical",
+        "scenario": "Stablecoin reserve audit data to short seller",
+        "domains": [
+          "financial_documents",
+          "insider_trading",
+          "crypto"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "No training samples for cryptocurrency reserve data, stablecoin audits, or short seller scenarios."
+      },
+      {
+        "id": 24,
+        "severity": "high",
+        "scenario": "Account statements emailed to wrong client (autocomplete)",
+        "domains": [
+          "wrong_recipient",
+          "client_data",
+          "accidental"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has client account statements but not wrong-recipient autocomplete error scenario."
+      },
+      {
+        "id": 43,
+        "severity": "high",
+        "scenario": "Payroll file sent to wrong department",
+        "domains": [
+          "payroll",
+          "wrong_recipient",
+          "accidental"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has payroll files but not wrong-department routing scenarios."
+      },
+      {
+        "id": 48,
+        "severity": "high",
+        "scenario": "ALCO materials with unauthorized BCC to academic",
+        "domains": [
+          "alco",
+          "treasury",
+          "unauthorized_bcc"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has portfolio risk metrics but not ALCO materials with unauthorized BCC scenario."
+      },
+      {
+        "id": 18,
+        "severity": "medium",
+        "scenario": "Internal audit findings to board chair personal email",
+        "domains": [
+          "audit_findings",
+          "personal_email",
+          "oversharing"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has audit findings but not the personal email destination or boardchair recipient context."
+      },
+      {
+        "id": 23,
+        "severity": "medium",
+        "scenario": "Compensation data export for benchmarking (skipped approval)",
+        "domains": [
+          "payroll",
+          "compensation",
+          "policy_bypass"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has payroll data but not compensation benchmarking with policy bypass context."
+      },
+      {
+        "id": 27,
+        "severity": "medium",
+        "scenario": "Internal rate card shared with client",
+        "domains": [
+          "vendor_contract",
+          "pricing",
+          "accidental"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has vendor contracts but not internal rate card shared with client scenario."
+      },
+      {
+        "id": 41,
+        "severity": "medium",
+        "scenario": "Accidental reply-all with salary discussion",
+        "domains": [
+          "payroll",
+          "wrong_recipient",
+          "accidental"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has payroll data but not accidental reply-all communication scenarios."
+      },
+      {
+        "id": 50,
+        "severity": "medium",
+        "scenario": "Vendor contract terms to board candidate",
+        "domains": [
+          "vendor_contract",
+          "governance",
+          "oversharing"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has vendor contracts but not board candidate oversharing scenario."
+      },
+      {
+        "id": 31,
+        "severity": "low",
+        "scenario": "Customer contact list for event planning (proper NDA)",
+        "domains": [
+          "customer_contact",
+          "authorized",
+          "nda"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has customer contact lists but in CRITICAL classification, not this low-risk authorized sharing scenario."
+      },
+      {
+        "id": 39,
+        "severity": "low",
+        "scenario": "Customer complaint forwarded to product team (internal)",
+        "domains": [
+          "customer_complaint",
+          "internal",
+          "authorized"
+        ],
+        "has_training_coverage": true,
+        "gap_type": "only_document_type_not_behavioral",
+        "training_gap_detail": "Training has customer complaints but not the authorized internal routing context."
+      }
+    ],
+    "critical_uncovered": [
+      {
+        "id": 1,
+        "severity": "critical",
+        "scenario": "Pre-departure source code exfiltration to competitor",
+        "domains": [
+          "data_exfiltration",
+          "ip_theft",
+          "departing_employee",
+          "source_code"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples cover source code files, git repositories, or code exfiltration scenarios. No departing employee behavioral context."
+      },
+      {
+        "id": 2,
+        "severity": "critical",
+        "scenario": "Encrypted archive bypassing DLP to unknown VC",
+        "domains": [
+          "data_exfiltration",
+          "dlp_bypass",
+          "encryption_concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples with encrypted archives, DLP bypass events, or data sent to venture capital entities."
+      },
+      {
+        "id": 6,
+        "severity": "critical",
+        "scenario": "Trading algorithm source code exfiltration",
+        "domains": [
+          "ip_theft",
+          "source_code",
+          "trading_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for trading algorithms, quantitative model code, or proprietary algorithm exfiltration."
+      },
+      {
+        "id": 8,
+        "severity": "critical",
+        "scenario": "Customer credit card data exfiltration (disguised)",
+        "domains": [
+          "pci_data",
+          "data_exfiltration",
+          "concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has PII-containing documents but not credit card data specifically, and not disguise/concealment patterns."
+      },
+      {
+        "id": 9,
+        "severity": "critical",
+        "scenario": "Payment processing API keys exfiltration",
+        "domains": [
+          "credentials_theft",
+          "api_keys",
+          "payment_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for API keys, secrets, or credential documents (only weak Slack match)."
+      },
+      {
+        "id": 17,
+        "severity": "critical",
+        "scenario": "SAR data shared beyond contract scope",
+        "domains": [
+          "sar_data",
+          "aml",
+          "third_party_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for SAR data or AML filing documents."
+      },
+      {
+        "id": 20,
+        "severity": "critical",
+        "scenario": "Merger integration plan via encrypted messaging",
+        "domains": [
+          "ma_confidential",
+          "dlp_bypass",
+          "encryption_concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for M&A integration plans or encrypted messaging channel scenarios."
+      },
+      {
+        "id": 49,
+        "severity": "critical",
+        "scenario": "Customer database migration on public shared drive",
+        "domains": [
+          "data_exposure",
+          "cloud_misconfiguration",
+          "customer_database"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for database migration or public cloud storage misconfiguration scenarios."
+      },
+      {
+        "id": 51,
+        "severity": "critical",
+        "scenario": "Sanctions evasion through shell entity routing",
+        "domains": [
+          "sanctions_evasion",
+          "financial_crime",
+          "shell_entity"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for sanctions evasion, shell entities, or cross-border regulatory scenarios."
+      },
+      {
+        "id": 52,
+        "severity": "critical",
+        "scenario": "Insider trading using coded language",
+        "domains": [
+          "insider_trading",
+          "coded_language",
+          "concealment"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for coded language, steganography, or obfuscated insider trading communications."
+      },
+      {
+        "id": 53,
+        "severity": "critical",
+        "scenario": "Core banking credentials to dark web",
+        "domains": [
+          "credentials_theft",
+          "dark_web",
+          "banking_systems"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for dark web, leaked credentials, or banking system access scenarios."
+      },
+      {
+        "id": 54,
+        "severity": "critical",
+        "scenario": "Biometric voice print data exfiltration",
+        "domains": [
+          "biometric_data",
+          "pii_exfiltration"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for biometric data, voice prints, or behavioral authentication data."
+      }
+    ],
+    "high_uncovered": [
+      {
+        "id": 16,
+        "severity": "high",
+        "scenario": "CRM data synced to personal cloud (Zapier, no malice)",
+        "domains": [
+          "crm_data",
+          "personal_cloud",
+          "accidental"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has CRM/contact data but not cloud sync via automation tools (Zapier) scenario."
+      },
+      {
+        "id": 19,
+        "severity": "high",
+        "scenario": "Payment fraud investigation files beyond scope to vendor",
+        "domains": [
+          "fraud_investigation",
+          "oversharing",
+          "vendor_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for fraud investigation files or case management data."
+      },
+      {
+        "id": 21,
+        "severity": "high",
+        "scenario": "Product roadmap in public Teams channel (accidental)",
+        "domains": [
+          "product_roadmap",
+          "accidental_exposure",
+          "collaboration_tools"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for product roadmap documents or accidental collaboration tool exposure."
+      },
+      {
+        "id": 22,
+        "severity": "high",
+        "scenario": "Engineering oversharing pattern (6 users, same domains)",
+        "domains": [
+          "pattern_detection",
+          "systematic_oversharing",
+          "source_code"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing systematic pattern detection across multiple users."
+      },
+      {
+        "id": 30,
+        "severity": "high",
+        "scenario": "Transaction monitoring rules via regular email to vendor",
+        "domains": [
+          "aml",
+          "transaction_monitoring",
+          "vendor_sharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for transaction monitoring rules (AML system configuration data)."
+      },
+      {
+        "id": 42,
+        "severity": "high",
+        "scenario": "Product screenshots posted on LinkedIn",
+        "domains": [
+          "product_roadmap",
+          "social_media",
+          "accidental_exposure"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for product screenshots or LinkedIn/social media posting scenarios."
+      }
+    ],
+    "medium_uncovered": [
+      {
+        "id": 26,
+        "severity": "medium",
+        "scenario": "Underwriting criteria on industry forum",
+        "domains": [
+          "underwriting",
+          "competitive_data",
+          "oversharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for underwriting criteria documents."
+      },
+      {
+        "id": 29,
+        "severity": "medium",
+        "scenario": "Board minutes sent to conflicted members",
+        "domains": [
+          "board_materials",
+          "governance",
+          "conflict_of_interest"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for board minutes or governance documents."
+      },
+      {
+        "id": 33,
+        "severity": "medium",
+        "scenario": "NDA sent to wrong email address",
+        "domains": [
+          "legal_documents",
+          "wrong_recipient"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for NDA documents or wrong-recipient legal document scenarios."
+      },
+      {
+        "id": 44,
+        "severity": "medium",
+        "scenario": "API credentials shared in Slack channel (sandbox)",
+        "domains": [
+          "credentials",
+          "slack",
+          "oversharing"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Slack samples exist but none specifically for API credential sharing in Slack channels."
+      }
+    ],
+    "low_uncovered": [
+      {
+        "id": 32,
+        "severity": "low",
+        "scenario": "Open source code contribution (pre-approved)",
+        "domains": [
+          "source_code",
+          "authorized",
+          "open_source"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing authorized open source code contributions."
+      },
+      {
+        "id": 34,
+        "severity": "low",
+        "scenario": "Meeting recording shared with approved consultant",
+        "domains": [
+          "meeting_recording",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for meeting recordings or consultant authorization scenarios."
+      },
+      {
+        "id": 35,
+        "severity": "low",
+        "scenario": "Personal financial spreadsheet by bank employee",
+        "domains": [
+          "personal_data",
+          "bank_employee"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples distinguishing personal vs. company financial data by bank employees."
+      },
+      {
+        "id": 36,
+        "severity": "low",
+        "scenario": "Published industry report shared with client",
+        "domains": [
+          "market_data",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for published market research or authorized client sharing."
+      },
+      {
+        "id": 37,
+        "severity": "low",
+        "scenario": "Regulatory filing draft to external counsel",
+        "domains": [
+          "regulatory_filing",
+          "authorized",
+          "legal"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for regulatory filing drafts sent to external counsel."
+      },
+      {
+        "id": 38,
+        "severity": "low",
+        "scenario": "Anonymized data for approved research",
+        "domains": [
+          "anonymized_data",
+          "authorized",
+          "research"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training data does not include anonymized/de-identified datasets with authorization context."
+      },
+      {
+        "id": 40,
+        "severity": "low",
+        "scenario": "Departing employee downloads personal files only",
+        "domains": [
+          "personal_files",
+          "departing_employee",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples representing personal file downloads by departing employees."
+      },
+      {
+        "id": 45,
+        "severity": "low",
+        "scenario": "Compliance training records to LMS vendor",
+        "domains": [
+          "training_records",
+          "vendor_sharing",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for compliance training records or LMS vendor data transfers."
+      },
+      {
+        "id": 46,
+        "severity": "low",
+        "scenario": "KYC documents for EDD review (internal)",
+        "domains": [
+          "kyc",
+          "internal",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "Training has KYC documents but not EDD (Enhanced Due Diligence) internal review scenario."
+      },
+      {
+        "id": 47,
+        "severity": "low",
+        "scenario": "Branch performance report to regional manager",
+        "domains": [
+          "performance_data",
+          "internal",
+          "authorized"
+        ],
+        "has_training_coverage": false,
+        "gap_type": "no_training_data",
+        "training_gap_detail": "No training samples for branch performance reports or regional manager authorized access."
+      }
+    ]
+  },
+  "section_C_coverage_matrix": {
+    "total_axia_examples": 55,
+    "not_covered": 32,
+    "partial_coverage": 23,
+    "full_coverage": 0,
+    "note": "Zero AXIA examples have FULL training coverage. All matches are PARTIAL because training data captures document types/PII but not the behavioral, contextual, or intentional signals that define AXIA severity levels.",
+    "matrix": [
+      {
+        "axia_id": 1,
+        "severity": "critical",
+        "scenario": "Pre-departure source code exfiltration to competitor",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 2,
+        "severity": "critical",
+        "scenario": "Encrypted archive bypassing DLP to unknown VC",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 3,
+        "severity": "critical",
+        "scenario": "M&A documents before board approval to advisor",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Funding Round and Cap Table Details"
+        ],
+        "coverage_detail": "Partial match via: Funding Round and Cap Table Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 4,
+        "severity": "critical",
+        "scenario": "Pre-earnings financial data to investment firm (insider trading)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Funding Round and Cap Table Details"
+        ],
+        "coverage_detail": "Partial match via: Funding Round and Cap Table Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 5,
+        "severity": "critical",
+        "scenario": "Wire transfer instructions modification (fraud, offshore)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Wire Transfer or Payment with Account Details"
+        ],
+        "coverage_detail": "Partial match via: Wire Transfer or Payment with Account Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 6,
+        "severity": "critical",
+        "scenario": "Trading algorithm source code exfiltration",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 7,
+        "severity": "critical",
+        "scenario": "KYC/AML (SAR) data export to personal email",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Customer Account Opening with Identity Documents"
+        ],
+        "coverage_detail": "Partial match via: Customer Account Opening with Identity Documents",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 8,
+        "severity": "critical",
+        "scenario": "Customer credit card data exfiltration (disguised)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 9,
+        "severity": "critical",
+        "scenario": "Payment processing API keys exfiltration",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 10,
+        "severity": "critical",
+        "scenario": "Regulatory examination response leaked to media",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Internal Audit Findings Summary"
+        ],
+        "coverage_detail": "Partial match via: Internal Audit Findings Summary",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 11,
+        "severity": "critical",
+        "scenario": "UHNW client portfolio to personal device (departing)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Client Account Statement with Holdings"
+        ],
+        "coverage_detail": "Partial match via: Client Account Statement with Holdings",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 12,
+        "severity": "critical",
+        "scenario": "Credit risk model with customer SSNs to academic",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Loan or Credit Application with Personal Information"
+        ],
+        "coverage_detail": "Partial match via: Loan or Credit Application with Personal Information",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 13,
+        "severity": "critical",
+        "scenario": "Client loan portfolio forwarded to competitor",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Loan or Credit Application with Personal Information"
+        ],
+        "coverage_detail": "Partial match via: Loan or Credit Application with Personal Information",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 14,
+        "severity": "critical",
+        "scenario": "CRM bulk export by departing sales rep",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Customer Contact List with Personal Details"
+        ],
+        "coverage_detail": "Partial match via: Customer Contact List with Personal Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 15,
+        "severity": "critical",
+        "scenario": "Customer PII exported via API automation (off-hours)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Customer Account Opening with Identity Documents"
+        ],
+        "coverage_detail": "Partial match via: Customer Account Opening with Identity Documents",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 17,
+        "severity": "critical",
+        "scenario": "SAR data shared beyond contract scope",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 20,
+        "severity": "critical",
+        "scenario": "Merger integration plan via encrypted messaging",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 25,
+        "severity": "critical",
+        "scenario": "Vendor rate sheet shared with competing vendor",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Vendor Contract Evaluation"
+        ],
+        "coverage_detail": "Partial match via: Vendor Contract Evaluation",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 28,
+        "severity": "critical",
+        "scenario": "Mortgage application data un-anonymized to vendor",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Loan or Credit Application with Personal Information"
+        ],
+        "coverage_detail": "Partial match via: Loan or Credit Application with Personal Information",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 49,
+        "severity": "critical",
+        "scenario": "Customer database migration on public shared drive",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 51,
+        "severity": "critical",
+        "scenario": "Sanctions evasion through shell entity routing",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 52,
+        "severity": "critical",
+        "scenario": "Insider trading using coded language",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 53,
+        "severity": "critical",
+        "scenario": "Core banking credentials to dark web",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 54,
+        "severity": "critical",
+        "scenario": "Biometric voice print data exfiltration",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 55,
+        "severity": "critical",
+        "scenario": "Stablecoin reserve audit data to short seller",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Funding Round and Cap Table Details"
+        ],
+        "coverage_detail": "Partial match via: Funding Round and Cap Table Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 16,
+        "severity": "high",
+        "scenario": "CRM data synced to personal cloud (Zapier, no malice)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 19,
+        "severity": "high",
+        "scenario": "Payment fraud investigation files beyond scope to vendor",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 21,
+        "severity": "high",
+        "scenario": "Product roadmap in public Teams channel (accidental)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 22,
+        "severity": "high",
+        "scenario": "Engineering oversharing pattern (6 users, same domains)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 24,
+        "severity": "high",
+        "scenario": "Account statements emailed to wrong client (autocomplete)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Client Account Statement with Holdings"
+        ],
+        "coverage_detail": "Partial match via: Client Account Statement with Holdings",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 30,
+        "severity": "high",
+        "scenario": "Transaction monitoring rules via regular email to vendor",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 42,
+        "severity": "high",
+        "scenario": "Product screenshots posted on LinkedIn",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 43,
+        "severity": "high",
+        "scenario": "Payroll file sent to wrong department",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Employee Payroll and Salary Records"
+        ],
+        "coverage_detail": "Partial match via: Employee Payroll and Salary Records",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 48,
+        "severity": "high",
+        "scenario": "ALCO materials with unauthorized BCC to academic",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Aggregated Portfolio Risk Metrics"
+        ],
+        "coverage_detail": "Partial match via: Aggregated Portfolio Risk Metrics",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 18,
+        "severity": "medium",
+        "scenario": "Internal audit findings to board chair personal email",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Internal Audit Findings Summary"
+        ],
+        "coverage_detail": "Partial match via: Internal Audit Findings Summary",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 23,
+        "severity": "medium",
+        "scenario": "Compensation data export for benchmarking (skipped approval)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Employee Payroll and Salary Records"
+        ],
+        "coverage_detail": "Partial match via: Employee Payroll and Salary Records",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 26,
+        "severity": "medium",
+        "scenario": "Underwriting criteria on industry forum",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 27,
+        "severity": "medium",
+        "scenario": "Internal rate card shared with client",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Vendor Contract Evaluation"
+        ],
+        "coverage_detail": "Partial match via: Vendor Contract Evaluation",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 29,
+        "severity": "medium",
+        "scenario": "Board minutes sent to conflicted members",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 33,
+        "severity": "medium",
+        "scenario": "NDA sent to wrong email address",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 41,
+        "severity": "medium",
+        "scenario": "Accidental reply-all with salary discussion",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Employee Payroll and Salary Records"
+        ],
+        "coverage_detail": "Partial match via: Employee Payroll and Salary Records",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 44,
+        "severity": "medium",
+        "scenario": "API credentials shared in Slack channel (sandbox)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 50,
+        "severity": "medium",
+        "scenario": "Vendor contract terms to board candidate",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Vendor Contract Evaluation"
+        ],
+        "coverage_detail": "Partial match via: Vendor Contract Evaluation",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 31,
+        "severity": "low",
+        "scenario": "Customer contact list for event planning (proper NDA)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Customer Contact List with Personal Details"
+        ],
+        "coverage_detail": "Partial match via: Customer Contact List with Personal Details",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 32,
+        "severity": "low",
+        "scenario": "Open source code contribution (pre-approved)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 34,
+        "severity": "low",
+        "scenario": "Meeting recording shared with approved consultant",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 35,
+        "severity": "low",
+        "scenario": "Personal financial spreadsheet by bank employee",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 36,
+        "severity": "low",
+        "scenario": "Published industry report shared with client",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 37,
+        "severity": "low",
+        "scenario": "Regulatory filing draft to external counsel",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 38,
+        "severity": "low",
+        "scenario": "Anonymized data for approved research",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 39,
+        "severity": "low",
+        "scenario": "Customer complaint forwarded to product team (internal)",
+        "coverage_status": "PARTIAL",
+        "matched_training_topics": [
+          "Customer Complaint with Account Information"
+        ],
+        "coverage_detail": "Partial match via: Customer Complaint with Account Information",
+        "primary_gap": "behavioral_context_absent"
+      },
+      {
+        "axia_id": 40,
+        "severity": "low",
+        "scenario": "Departing employee downloads personal files only",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 45,
+        "severity": "low",
+        "scenario": "Compliance training records to LMS vendor",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 46,
+        "severity": "low",
+        "scenario": "KYC documents for EDD review (internal)",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      },
+      {
+        "axia_id": 47,
+        "severity": "low",
+        "scenario": "Branch performance report to regional manager",
+        "coverage_status": "NOT_COVERED",
+        "matched_training_topics": [],
+        "coverage_detail": "No training data matches this scenario",
+        "primary_gap": "topic_entirely_absent"
+      }
+    ]
+  },
+  "section_D_observations": {
+    "observation_1_alignment": {
+      "title": "Training data is NOT focused on AXIA risk scenarios",
+      "detail": "AXIA's 55 benchmark examples are insider risk scenarios defined by behavior, intent, destination, and context. The training data is dominated by document-type classification: 'does this document contain PII?' or 'what type of financial document is this?'. Of 30,495 total training samples, 27,953 (91.7%) are from Enron emails and Slack messages classified as 'unknown' topic - they are generic operational communications, not IRM scenarios. The 18 named training topics are document categories (Wire Transfer, Payroll Records, etc.) - these test content sensitivity, not behavioral risk.",
+      "alignment_score": "LOW",
+      "key_mismatch": "AXIA evaluates WHY data is moving and WHERE it is going. Training data evaluates WHAT the data contains."
+    },
+    "observation_2_biggest_gap": {
+      "title": "Behavioral signals are entirely absent from training data",
+      "detail": "AXIA's severity model is driven by behavioral signals: departure timing, off-hours access, DLP bypass attempts, bulk export volume, destination (dark web, competitor, personal email, social media), and concealment methods. None of these behavioral signals appear in the training data as labeled features. The training data has no samples for: departing employee scenarios, encrypted archive bypasses, API automation abuse, coded language for insider trading, credentials on dark web, or any destination-based risk signals. This is the single largest gap: AXIA's entire differentiation is 'contextual engagement' and 'judgment layer' - but the training data only teaches document content classification.",
+      "gap_severity": "CRITICAL",
+      "missing_signal_types": [
+        "Departure proximity (employee resignation + data access)",
+        "DLP bypass (encryption, renaming, chunking)",
+        "Off-hours access patterns",
+        "Bulk/mass download events",
+        "Destination risk (dark web, competitor domain, personal cloud, social media)",
+        "Concealment techniques (steganography, coded language, obfuscation)",
+        "Automated exfiltration (API scripts, sync tools)",
+        "Pattern detection across multiple actors"
+      ]
+    },
+    "observation_3_generic_vs_specific": {
+      "title": "Training data is document-generic; AXIA examples are scenario-specific",
+      "detail": "The training data uses broad document categories like 'Employee Payroll and Salary Records' or 'Wire Transfer or Payment with Account Details'. AXIA's benchmarks are specific scenarios: 'departing sales rep exports CRM via API automation at 2AM' or 'trading algorithm source code zipped and sent to VC firm one week before resignation'. The training data would classify both of these as generically 'high sensitivity' based on document type, but AXIA's severity engine needs to distinguish them from identical documents shared for legitimate business purposes. Example: A wire transfer document sent to an authorized payment processor is LOW risk (example 31-type). The same document modified and sent to an offshore account is CRITICAL (example 5). The training data has no mechanism to distinguish these - they are the same document type.",
+      "specificity_gap": "HIGH",
+      "example_conflict": "Wire Transfer topic: 813 training samples across ALL sensitivity levels (critical to non-sensitive). This spread suggests the model has learned that wire transfers can be any sensitivity, but not WHEN they are each severity."
+    },
+    "observation_4_behavioral_signal_coverage": {
+      "title": "Training data does not cover the behavioral signals AXIA's guidelines emphasize",
+      "detail": "AXIA's IRM guidelines explicitly emphasize: departure proximity, off-hours anomalies, DLP bypass, destination risk, concealment, and pattern-of-life deviations. Checking training data against each: (1) Departure proximity - ZERO training samples. (2) Off-hours access - ZERO training samples with temporal metadata. (3) DLP bypass/encryption - ZERO training samples representing bypass events. (4) Destination analysis - ZERO training samples with recipient risk scoring. (5) Bulk export volume - ZERO training samples with volume/frequency signals. (6) Concealment/obfuscation - ZERO training samples with coded language or steganographic content. The Enron email corpus (48% of samples) captures some corporate communications context, but it was labeled by humans as sensitivity levels for content reasons, not behavioral IRM reasons.",
+      "behavioral_coverage_score": "0%",
+      "recommendation": "Training data needs synthetic scenario generation that embeds behavioral context: recipient profiles, timing metadata, volume signals, and departure/access pattern context alongside document content."
+    },
+    "observation_5_severity_calibration_risk": {
+      "title": "Severity calibration is misaligned between training data and AXIA benchmark",
+      "detail": "Critical training data (3,295 samples) is dominated by PII-containing documents: payroll records, loan applications, account opening forms, employee benefits, wire transfers. These are DOCUMENTS with high PII density. AXIA's CRITICAL examples are defined by INTENT + DESTINATION + BEHAVIORAL CONTEXT: encrypted exfiltration to competitors, insider trading, wire fraud, SAR data abuse. The training data would likely produce a model that flags any payroll document as critical regardless of whether it is an authorized HR process or a malicious exfiltration. Conversely, scenarios like example 52 (insider trading using coded language) have NO PII, would likely be labeled 'low sensitivity' by training data patterns, yet are CRITICAL in AXIA's benchmark. This is a fundamental calibration misalignment.",
+      "misalignment_examples": [
+        "Example 52 (coded insider trading language) = likely LOW in training data vs CRITICAL in AXIA",
+        "Example 6 (trading algorithm code) = likely LOW/MEDIUM vs CRITICAL in AXIA",
+        "Example 21 (product roadmap in Teams) = likely LOW vs HIGH in AXIA",
+        "Example 49 (database migration on public drive) = likely HIGH vs CRITICAL in AXIA"
+      ]
+    },
+    "observation_6_unknown_topic_quality": {
+      "title": "65% of training data is unclassified and of uncertain IRM value",
+      "detail": "27,953 of 30,495 training samples (91.7%) have topic 'unknown'. These come from Enron emails (73% of unknowns) and Slack (27% of unknowns). Enron emails are real corporate communications but were classified for sensitivity by human annotators - they represent generic business communication, not IRM-specific scenarios. Slack messages are engineering/technical communications (kubectl commands, Terraform configs, OAuth debugging) - valuable for detecting technical credential exposure but not for financial services IRM scenarios. The quality of behavioral signal in these 27,953 samples is unknown without content review. Based on the sample review, most appear to be general business communications that happen to contain some sensitive elements, not deliberate IRM scenario construction.",
+      "unknown_percentage": "91.7% of total training data is unclassified by topic",
+      "enron_coverage": "Enron emails may capture some historical financial fraud context (Enron was an accounting fraud case) but are from 2001 and predate modern DLP/IRM threat models",
+      "slack_coverage": "Slack samples appear to be engineering communications - relevant for technical IRM but not for financial services fraud scenarios"
+    },
+    "top_recommendations": [
+      "Generate synthetic training scenarios for the 30+ AXIA benchmark domains with zero training coverage (M&A docs, SAR data, trading algorithms, credentials, sanctions evasion, crypto)",
+      "Add behavioral metadata to training samples: recipient type, timing (off-hours flag), volume (bulk export flag), departure proximity flag",
+      "Create balanced training sets where the SAME document type appears across scenarios with different behavioral contexts (authorized vs. malicious) to teach intent discrimination",
+      "Specifically construct training scenarios for AXIA's critical behavioral signals: DLP bypass, departure correlation, encrypted exfiltration",
+      "Add destination risk as a training signal: personal email vs. corporate email vs. competitor domain vs. dark web vs. social media",
+      "Recalibrate severity labeling: documents with PII should not automatically be CRITICAL if shared in authorized contexts; coded-language trading communications should be CRITICAL even without PII"
+    ]
+  }
+}
