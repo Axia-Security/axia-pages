@@ -1,398 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>The 100% Signal: How AXIA Can Filter 70% of Noise Before AI Even Thinks</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 100% Signal — AXIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --deep:#05252b;
+  --dark:#09434e;
+  --mid:#0D6B5E;
+  --teal:#0D9488;
+  --cyan:#22D3EE;
+  --light:#A7F3D0;
+  --white:#F0FDFA;
+  --orange:#B8540C;
+  --red:#EF4444;
+  --muted:rgba(255,255,255,0.4);
+}
+html,body{height:100%;overflow:hidden;background:var(--deep);color:var(--white);font-family:'Manrope',sans-serif}
+.deck{height:100%;position:relative}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:4rem 6rem;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.6s ease,transform 0.6s ease;
+  pointer-events:none;
+  text-align:center;
+}
+.slide.active{opacity:1;transform:translateY(0);pointer-events:auto}
+.slide.exit-up{opacity:0;transform:translateY(-30px)}
+.slide::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 50% 120%,rgba(13,148,136,0.15) 0%,transparent 70%);
+}
+.slide>*{position:relative;z-index:1}
 
-        :root {
-            --bg-dark: #1a1a2e;
-            --bg-card: #16213e;
-            --accent: #4ecdc4;
-            --accent-light: #95e1d3;
-            --warning: #f39c12;
-            --error: #e74c3c;
-            --success: #27ae60;
-            --text: #eee;
-            --text-muted: #999;
-        }
+h1{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:800;line-height:1.1;letter-spacing:-0.03em;margin-bottom:1.5rem}
+h2{font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;letter-spacing:-0.02em;margin-bottom:1.2rem}
+h3{font-size:clamp(1.2rem,2vw,1.6rem);font-weight:600;line-height:1.3;margin-bottom:1rem}
+p,.narrative{font-size:clamp(1rem,1.8vw,1.35rem);line-height:1.7;color:rgba(240,253,250,0.85);max-width:800px}
+.narrative{margin-bottom:1.5rem}
+.subtitle{font-size:clamp(1rem,2vw,1.5rem);color:var(--cyan);font-weight:500;letter-spacing:0.02em;margin-bottom:2rem}
+.label{font-family:'JetBrains Mono',monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--cyan);margin-bottom:0.5rem}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text);
-            line-height: 1.6;
-            font-size: 16px;
-            padding-bottom: 2rem;
-        }
+.big-number{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(5rem,14vw,11rem);
+  font-weight:800;line-height:1;
+  background:linear-gradient(135deg,var(--cyan),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  margin-bottom:1rem;
+}
+.big-number.red{background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.big-number.green{background:linear-gradient(135deg,var(--light),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
-        /* Mobile-first sections */
-        .section {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid #333;
-            scroll-margin-top: 60px;
-        }
+.highlight{color:var(--cyan);font-weight:700}
+.warn{color:var(--red);font-weight:600}
+.dim{color:var(--muted)}
 
-        /* Tablet and up */
-        @media (min-width: 768px) {
-            .section {
-                padding: 3rem 3rem;
-            }
-        }
+.card-row{display:flex;gap:2rem;margin-top:2rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:1000px}
+.card{
+  background:rgba(13,148,136,0.08);border:1px solid rgba(34,211,238,0.15);
+  border-radius:16px;padding:2rem;flex:1;min-width:260px;max-width:400px;
+  text-align:left;backdrop-filter:blur(10px);
+}
+.card h3{color:var(--cyan);margin-bottom:0.6rem}
+.card p{font-size:1rem;color:rgba(240,253,250,0.7);line-height:1.6}
 
-        /* Desktop */
-        @media (min-width: 1024px) {
-            .section {
-                padding: 4rem 5rem;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-        }
+.tier-stack{display:flex;flex-direction:column;align-items:center;margin-top:2rem;width:100%;max-width:700px}
+.tier-box{width:100%;padding:2rem 2.5rem;text-align:left;position:relative}
+.tier-box.t1{background:linear-gradient(135deg,rgba(13,148,136,0.15),rgba(34,211,238,0.08));border:1px solid rgba(34,211,238,0.25);border-radius:16px 16px 0 0}
+.tier-box.t2{background:linear-gradient(135deg,rgba(9,67,78,0.4),rgba(13,107,94,0.2));border:1px solid rgba(13,148,136,0.3);border-radius:0 0 16px 16px;border-top:none}
+.tier-box .tier-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--cyan);margin-bottom:0.5rem}
+.tier-box h3{margin-bottom:0.3rem}
+.tier-box p{font-size:0.95rem;color:rgba(240,253,250,0.65)}
+.tier-arrow{width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:1.5rem;margin:-0.5rem 0;z-index:2}
+.flow-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em;margin-top:0.3rem}
 
-        h1 {
-            font-size: 1.8rem;
-            color: #fff;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
+.data-table{border-collapse:collapse;margin-top:1.5rem;font-size:clamp(0.85rem,1.3vw,1rem);width:100%;max-width:800px}
+.data-table th{font-family:'JetBrains Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);padding:0.6rem 1rem;text-align:left;border-bottom:1px solid rgba(34,211,238,0.2)}
+.data-table td{padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(240,253,250,0.8)}
+.data-table tr:hover td{background:rgba(13,148,136,0.06)}
+.bar{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;margin-left:0.5rem}
+.bar.full{background:var(--cyan);width:120px}
+.bar.mid{background:var(--teal);width:70px}
+.bar.low{background:var(--orange);width:15px}
+.bar.tiny{background:var(--red);width:5px}
 
-        h2 {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
-        }
+.enhance-list{text-align:left;max-width:750px;margin-top:1.5rem}
+.enhance-item{display:flex;gap:1.2rem;align-items:flex-start;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.enhance-num{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--cyan);min-width:2rem}
+.enhance-item h3{font-size:1.05rem;margin-bottom:0.2rem}
+.enhance-item p{font-size:0.9rem;color:rgba(240,253,250,0.6)}
 
-        h3 {
-            font-size: 1.2rem;
-            color: var(--accent-light);
-            margin: 1.5rem 0 0.75rem;
-        }
+.metrics{display:flex;gap:2.5rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+.metric{text-align:center}
+.metric .val{font-family:'JetBrains Mono',monospace;font-size:clamp(2rem,4vw,3rem);font-weight:700;color:var(--cyan)}
+.metric .desc{font-size:0.85rem;color:var(--muted);margin-top:0.2rem}
 
-        @media (min-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            h3 { font-size: 1.4rem; }
-        }
+.nav{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:0.5rem;z-index:100;
+  background:rgba(5,37,43,0.8);backdrop-filter:blur(20px);
+  padding:0.5rem 1rem;border-radius:50px;border:1px solid rgba(34,211,238,0.1);
+}
+.nav button{
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:transparent;color:var(--muted);cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;
+}
+.nav button:hover{color:var(--cyan);background:rgba(34,211,238,0.1)}
+.dots{display:flex;gap:6px;align-items:center;margin:0 0.5rem}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:all 0.3s;cursor:pointer}
+.dot.active{background:var(--cyan);width:20px;border-radius:3px}
 
-        p { margin-bottom: 1rem; }
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--cyan);z-index:100;transition:width 0.4s ease}
+.logo{position:fixed;top:1.5rem;left:2rem;z-index:100;font-family:'JetBrains Mono',monospace;font-size:0.8rem;letter-spacing:0.2em;color:var(--muted)}
+.slide-counter{position:fixed;top:1.5rem;right:2rem;z-index:100;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--muted)}
 
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin: 1rem 0;
-            border-left: 4px solid var(--accent);
-        }
+.vs-row{display:flex;gap:3rem;margin-top:2rem;align-items:stretch;flex-wrap:wrap;justify-content:center;max-width:900px}
+.vs-box{flex:1;min-width:280px;padding:2rem;border-radius:16px;text-align:left}
+.vs-box.before{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15)}
+.vs-box.after{background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15)}
+.vs-box .vs-label{font-family:'JetBrains Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.8rem}
+.vs-box.before .vs-label{color:var(--red)}
+.vs-box.after .vs-label{color:var(--cyan)}
+.vs-box li{color:rgba(240,253,250,0.7);font-size:0.95rem;margin-bottom:0.4rem;list-style:none;padding-left:1.2rem;position:relative}
+.vs-box li::before{content:'';position:absolute;left:0;top:0.55rem;width:6px;height:6px;border-radius:50%}
+.vs-box.before li::before{background:var(--red)}
+.vs-box.after li::before{background:var(--cyan)}
 
-        /* Tables - scroll on mobile */
-        .table-container {
-            overflow-x: auto;
-            margin: 1rem 0;
-            -webkit-overflow-scrolling: touch;
-        }
+.quote{
+  font-size:clamp(1.2rem,2.5vw,1.8rem);font-style:italic;font-weight:300;
+  color:rgba(240,253,250,0.75);max-width:700px;line-height:1.6;
+  border-left:3px solid var(--cyan);padding-left:1.5rem;margin-top:1rem;
+}
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: 300px;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            border: 1px solid #444;
-            padding: 0.75rem;
-            text-align: left;
-        }
-
-        th {
-            background: var(--bg-card);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Code blocks */
-        pre {
-            background: #0d1117;
-            padding: 1rem;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 0.85rem;
-            margin: 1rem 0;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        code {
-            background: #0d1117;
-            padding: 0.2em 0.4em;
-            border-radius: 4px;
-            font-family: 'SF Mono', 'Consolas', monospace;
-            font-size: 0.9em;
-        }
-
-        pre code {
-            padding: 0;
-            background: none;
-        }
-
-        /* Lists */
-        ul, ol {
-            margin: 1rem 0 1rem 1.5rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Progress bar - top */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: var(--accent);
-            z-index: 200;
-            transition: width 0.2s ease-out;
-        }
-
-        /* Floating nav pill - bottom right */
-        .nav-pill {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            display: flex;
-            align-items: center;
-            gap: 0;
-            background: var(--bg-card);
-            border: 1px solid #333;
-            border-radius: 999px;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-
-        .nav-pill button {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 700;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            transition: background 0.15s;
-        }
-
-        .nav-pill button:hover {
-            background: rgba(78, 205, 196, 0.12);
-        }
-
-        .nav-pill button:active {
-            background: rgba(78, 205, 196, 0.25);
-        }
-
-        .nav-pill .nav-counter {
-            padding: 0 4px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            min-width: 44px;
-            text-align: center;
-            user-select: none;
-        }
-
-        /* SVG diagrams - responsive */
-        svg {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 1.5rem auto;
-            border-radius: 12px;
-        }
-
-        /* Strong/emphasis */
-        strong { color: var(--warning); }
-        em { color: #9b59b6; }
-
-        /* Status colors */
-        .status-ok { color: var(--success); }
-        .status-warn { color: var(--warning); }
-        .status-error { color: var(--error); }
-    </style>
+@media(max-width:768px){
+  .slide{padding:2rem 1.5rem}
+  .card-row{flex-direction:column;align-items:center}
+  .card{max-width:100%}
+  .vs-row{flex-direction:column}
+  .nav{bottom:1rem;padding:0.4rem 0.8rem}
+}
+</style>
 </head>
 <body>
 
+<div class="progress" id="progress"></div>
+<div class="logo">AXIA</div>
+<div class="slide-counter" id="counter">1 / 14</div>
 
-    <section class="section" id="section-1">
-        <h1>The 100% Signal: How AXIA Can Filter 70% of Noise Before AI Even Thinks</h1>
-    </section>
+<div class="deck" id="deck">
 
-    <section class="section" id="section-2">
-        <h2>The Problem Everyone Knows</h2>
-<p>Every CISO has the same complaint: <strong>alert fatigue is killing us.</strong></p>
-<p>DLP systems generate thousands of events per day. Security teams drown in false positives. The real threats — the departing employee exfiltrating source code at 2 AM, the coded insider trading message — get buried under mountains of routine file transfers flagged because they contain a phone number.</p>
-<p>The industry's answer has been smarter AI. Better models. More compute. But what if the answer isn't a bigger brain — it's a better filter?</p>
-    </section>
+  <!-- 1: Title -->
+  <div class="slide active" data-slide="0">
+    <div class="label">Training Data Architecture</div>
+    <h1>The <span class="highlight">100%</span> Signal</h1>
+    <p class="subtitle">How one number in a failed analysis revealed AXIA's most powerful cost advantage</p>
+  </div>
 
-    <section class="section" id="section-3">
-        <h2>What We Found in the Data</h2>
-<p>We analyzed <strong>28,495 training records</strong> against AXIA's own severity guidelines. The headline number was bad: only <strong>37.4% agreement</strong> between training labels and AXIA's behavioral risk framework.</p>
-<p>But buried inside that disappointing number was something remarkable.</p>
-    </section>
+  <!-- 2: The Problem -->
+  <div class="slide" data-slide="1">
+    <div class="label">The Problem</div>
+    <h2>Every CISO has the same complaint</h2>
+    <p class="narrative">DLP systems generate thousands of events per day. Security teams drown in false positives. The real threats get buried under mountains of routine file transfers flagged because they contain a phone number.</p>
+    <p class="narrative">The industry's answer has been smarter AI. Better models. More compute.</p>
+    <p style="color:var(--cyan);font-size:clamp(1.1rem,2vw,1.5rem);font-weight:600;margin-top:1rem">But what if the answer isn't a bigger brain?</p>
+  </div>
 
-    <section class="section" id="section-4">
-        <h2>The 100% Signal</h2>
-<p>When we built the confusion matrix, one row was perfect:</p>
-<div class="table-container"><table>
-<thead><tr><th>Classification Level</th><th>Agreement Rate</th></tr></thead>
-<tbody>
-<tr><td>Non-Sensitive</td><td><strong>100%</strong> (24/24)</td></tr>
-<tr><td>Critical</td><td>58.8%</td></tr>
-<tr><td>Medium</td><td>12.5%</td></tr>
-<tr><td>High</td><td>11.1%</td></tr>
-<tr><td>Low</td><td>4.2%</td></tr>
-</tbody></table></div>
-<p><strong>Non-Sensitive: 100% agreement.</strong> Every single interaction that the simple content classifier called "not sensitive" was genuinely not sensitive under AXIA's behavioral risk framework.</p>
-<p>Not 98%. Not 99%. <strong>One hundred percent.</strong></p>
-    </section>
+  <!-- 3: The Analysis -->
+  <div class="slide" data-slide="2">
+    <div class="label">The Analysis</div>
+    <h2>We tested <span class="highlight">28,495</span> training records against AXIA's severity guidelines</h2>
+    <p class="narrative" style="margin-top:1rem">The training data classifies by <span class="warn">content sensitivity</span> &mdash; what PII is present.<br>AXIA classifies by <span class="highlight">behavioral risk</span> &mdash; why data is moving and where it's going.</p>
+    <p class="narrative dim" style="font-size:0.95rem;margin-top:1.5rem">Same document. Completely different question. How far apart are they?</p>
+  </div>
 
-    <section class="section" id="section-5">
-        <h2>Why This Matters More Than It Looks</h2>
-<p>The training data has a specific failure mode: it <strong>over-labels everything.</strong> Of 24 items labeled "Low" by the content classifier, 22 were actually non-sensitive. Of 24 labeled "Medium," 16 were non-sensitive.</p>
-<p>The simple classifier sees a Slack message about Kubernetes and flags it as "medium sensitivity" because it looks technical. AXIA's guidelines correctly say: that's just developers talking about infrastructure. Zero risk.</p>
-<p>But here's what the classifier <strong>never</strong> does: it never calls something non-sensitive when it actually contains risk. The error is always in one direction — conservative over-flagging.</p>
-    </section>
+  <!-- 4: The Bad Number -->
+  <div class="slide" data-slide="3">
+    <div class="label">Overall Agreement</div>
+    <div class="big-number red">37.4%</div>
+    <h2>Only a third of labels agreed</h2>
+    <p class="narrative">63 of 67 disagreements were the same kind of error: the training data <span class="warn">over-labeled</span> content that AXIA's guidelines consider routine.</p>
+  </div>
 
-    <section class="section" id="section-6">
-        <h2>The Architecture That Changes Everything</h2>
-<p>This one-directional error pattern creates a powerful architectural opportunity:</p>
-<p><strong>Tier 1: The Fast Filter</strong> — A lightweight content classifier (no LLM needed) screens every interaction. If it says "non-sensitive," the interaction is done. No further processing. No expensive compute. No analyst attention.</p>
-<p><strong>Tier 2: AXIA's Judgment Layer</strong> — Only the interactions that Tier 1 flagged as potentially sensitive reach the full behavioral AI. This is where AXIA does what no one else can: understanding <em>why</em> data is moving, <em>who</em> is sending it, and <em>whether the context makes it dangerous.</em></p>
-<p>The result: AXIA's expensive, sophisticated AI only processes the interactions that actually need judgment.</p>
-    </section>
+  <!-- 5: The turn -->
+  <div class="slide" data-slide="4">
+    <h2 style="color:var(--muted);font-weight:400;font-size:clamp(1.2rem,2vw,1.6rem)">But buried inside that disappointing number</h2>
+    <h2 style="margin-top:1rem">was something <span class="highlight">remarkable.</span></h2>
+  </div>
 
-    <section class="section" id="section-7">
-        <h2>The Numbers That Matter</h2>
-<p>In a typical enterprise, <strong>60-80% of DLP events are noise</strong> — routine business activity incorrectly flagged by content-based rules.</p>
-<p>With the two-tier filter:
-<ul><li>Tier 1 eliminates the noise at near-zero cost</li>
-<li>Tier 2 focuses compute on the 20-40% that needs real analysis</li>
-<li><strong>Total processing cost drops by 50-70%</strong></li>
-<li><strong>Mean time to detect real threats drops</strong> because the AI isn't wasting cycles on calendar invites</li>
-</ul>
-This isn't a marginal improvement. It's a fundamentally different cost structure for AI-powered insider risk management.</p>
-    </section>
+  <!-- 6: The 100% -->
+  <div class="slide" data-slide="5">
+    <div class="label">Non-Sensitive Classification</div>
+    <div class="big-number green">100%</div>
+    <h2>Perfect agreement on non-sensitive</h2>
+    <p class="narrative">Every single interaction the content classifier called "not sensitive" was genuinely not sensitive under AXIA's behavioral risk framework. Not 98%. Not 99%.</p>
+  </div>
 
-    <section class="section" id="section-8">
-        <h2>Making the Filter Even Sharper</h2>
-<p>The 100% signal is real, but it's based on the current training data's natural calibration. We can make it dramatically better with targeted enhancements.</p>
-<h3>Enhancement 1: Relabel the Known Misclassifications</h3>
-<p>We already identified the specific samples. 22/24 "Low" and 16/24 "Medium" items were actually non-sensitive. Relabeling these alone shifts the non-sensitive pool from 24 to ~62 samples and teaches the classifier a much tighter boundary.</p>
-<h3>Enhancement 2: Train Against the Three Failure Patterns</h3>
-<p>The analysis revealed exactly why the classifier over-labels:</p>
-<p><strong>Topic confusion</strong> — Content that <em>discusses</em> money or security gets flagged even when it contains zero sensitive data. Solution: add hundreds of policy documents, compliance training materials, and financial discussions labeled non-sensitive.</p>
-<p><strong>Complexity bias</strong> — Technical content gets elevated just because it looks complex. Solution: add code reviews, architecture docs, and technical RFCs labeled non-sensitive.</p>
-<p><strong>Business-content assumption</strong> — Anything "corporate" gets a sensitivity bump. Solution: add routine business comms, meeting agendas, and project updates labeled non-sensitive.</p>
-<h3>Enhancement 3: Build the Critical "About vs. Contains" Dataset</h3>
-<p>This is the highest-impact enhancement. Create a dedicated training subset of content that references sensitive topics but contains no actual sensitive data:</p>
-<ul><li>Emails discussing financial strategy (no account numbers)</li>
-<li>HR policy documents (no employee records)</li>
-<li>Security procedure guides (no credentials)</li>
-</ul>
-These are the interactions the current classifier sends to Tier 2 unnecessarily. Teaching it to distinguish "talks about sensitive things" from "contains sensitive things" is the single biggest volume reducer.
-<h3>Enhancement 4: Scale the Non-Sensitive Baseline</h3>
-<p>24 samples is a proof of concept. A production filter needs thousands of examples across the full spectrum: Slack chatter, calendar invites, code commits, wiki edits, status updates, IT tickets, meeting notes. The more the model sees what "normal" looks like, the tighter its boundary becomes.</p>
-<h3>Enhancement 5: Preserve the Conservative Bias</h3>
-<p>The most important design principle: <strong>never optimize precision at the expense of recall.</strong> A few extra items going to Tier 2 is a cost issue. A truly sensitive interaction slipping through as non-sensitive is a security failure. The filter must always err toward over-flagging.</p>
-    </section>
+  <!-- 7: Full picture -->
+  <div class="slide" data-slide="6">
+    <div class="label">Agreement By Level</div>
+    <h2>The error is always in <span class="highlight">one direction</span></h2>
+    <table class="data-table">
+      <thead><tr><th>Level</th><th>Agreement</th><th></th><th>Pattern</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Non-Sensitive</strong></td><td style="color:var(--cyan);font-weight:700">100%</td><td><span class="bar full"></span></td><td>Perfect</td></tr>
+        <tr><td>Critical</td><td>58.8%</td><td><span class="bar mid"></span></td><td>7 downgraded</td></tr>
+        <tr><td>Medium</td><td>12.5%</td><td><span class="bar low"></span></td><td>16 were non-sensitive</td></tr>
+        <tr><td>High</td><td>11.1%</td><td><span class="bar low"></span></td><td>14 downgraded</td></tr>
+        <tr><td>Low</td><td>4.2%</td><td><span class="bar tiny"></span></td><td>22 were non-sensitive</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:1.5rem;font-size:0.95rem;color:var(--muted)">The classifier <em>never</em> calls something non-sensitive when it actually contains risk. It only over-flags.</p>
+  </div>
 
-    <section class="section" id="section-9">
-        <h2>The Projected Impact</h2>
-<p>With all five enhancements applied:</p>
-<div class="table-container"><table>
-<thead><tr><th>Metric</th><th>Current State</th><th>After Enhancement</th></tr></thead>
-<tbody>
-<tr><td>Non-sensitive filter accuracy</td><td>100% (24 samples)</td><td>100% (1000+ samples)</td></tr>
-<tr><td>Volume sent to Tier 2</td><td>~70-80% of events</td><td>~30-40% of events</td></tr>
-<tr><td>False negative rate</td><td>0%</td><td>0% (by design)</td></tr>
-<tr><td>Cost per interaction</td><td>Full LLM analysis</td><td>~30% of current</td></tr>
-<tr><td>Time to detect real threats</td><td>Buried in noise</td><td>Faster, focused pipeline</td></tr>
-</tbody></table></div>
-    </section>
+  <!-- 8: Why it matters -->
+  <div class="slide" data-slide="7">
+    <div class="label">The Insight</div>
+    <h2>Conservative error = perfect pre-filter</h2>
+    <p class="narrative">A classifier that over-flags is annoying. But a classifier that <em>never misses real risk</em> while correctly identifying all the noise? That's a <span class="highlight">production-grade filter</span>.</p>
+    <p class="narrative">It doesn't need to understand context. It doesn't need to assess intent. It just needs to answer one question:</p>
+    <p style="color:var(--cyan);font-size:clamp(1.2rem,2.2vw,1.7rem);font-weight:600;margin-top:1rem">"Is there anything here worth thinking about?"</p>
+  </div>
 
-    <section class="section" id="section-10">
-        <h2>What This Means for AXIA</h2>
-<p>This isn't just a cost optimization. It's a <strong>competitive moat.</strong></p>
-<p>Every other IRM vendor throws their most expensive AI at every single interaction. AXIA can process the same volume at a fraction of the cost while actually being <em>faster</em> at catching real threats — because the judgment layer isn't wasting cycles on calendar invites and code reviews.</p>
-<p>The two-tier architecture turns AXIA's training data "problem" into AXIA's most defensible advantage: a system that knows what to ignore, so it can focus on what matters.</p>
-    </section>
+  <!-- 9: The Architecture -->
+  <div class="slide" data-slide="8">
+    <div class="label">Two-Tier Architecture</div>
+    <h2>Let the cheap filter handle the noise</h2>
+    <div class="tier-stack">
+      <div class="tier-box t1">
+        <div class="tier-label">Tier 1 &mdash; Fast Filter</div>
+        <h3>Lightweight content classifier</h3>
+        <p>No LLM needed. Pattern matching on content signals. If it says "non-sensitive," the interaction is done. No further processing.</p>
+        <div class="flow-label" style="margin-top:0.8rem">~60-70% of all events filtered here</div>
+      </div>
+      <div class="tier-arrow">&darr;</div>
+      <div class="flow-label">only flagged interactions pass through</div>
+      <div class="tier-arrow">&darr;</div>
+      <div class="tier-box t2">
+        <div class="tier-label">Tier 2 &mdash; AXIA Judgment Layer</div>
+        <h3>Full behavioral AI analysis</h3>
+        <p>Context, intent, destination, timing, role baselines. This is where AXIA does what nobody else can &mdash; understanding <em>why</em> data is moving.</p>
+        <div class="flow-label" style="margin-top:0.8rem">~30-40% of events need real analysis</div>
+      </div>
+    </div>
+  </div>
 
-    <section class="section" id="section-11">
-        <h2>Next Step</h2>
-<p>Validate the filter at scale. Take 10,000 interactions from a real enterprise environment, run them through the two-tier pipeline, and measure: false negative rate (must stay at zero), volume reduction (target: 60%+), and mean detection time improvement.</p>
-<p>The 100% signal is the foundation. Now we build on it.</p>
-    </section>
+  <!-- 10: Enhancements -->
+  <div class="slide" data-slide="9">
+    <div class="label">Making It Sharper</div>
+    <h2>Five enhancements to tighten the filter</h2>
+    <div class="enhance-list">
+      <div class="enhance-item">
+        <div class="enhance-num">1</div>
+        <div><h3>Relabel known misclassifications</h3><p>38 samples already identified as non-sensitive. Shift the training boundary immediately.</p></div>
+      </div>
+      <div class="enhance-item">
+        <div class="enhance-num">2</div>
+        <div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, and business-content assumptions. Add counter-examples for each.</p></div>
+      </div>
+      <div class="enhance-item">
+        <div class="enhance-num">3</div>
+        <div><h3>Build the "about vs. contains" dataset</h3><p>Content that <em>discusses</em> sensitive topics without containing sensitive data. Highest-impact single enhancement.</p></div>
+      </div>
+      <div class="enhance-item">
+        <div class="enhance-num">4</div>
+        <div><h3>Scale the non-sensitive baseline</h3><p>From 24 samples to thousands. Slack chatter, calendar invites, code commits, wiki edits, meeting notes.</p></div>
+      </div>
+      <div class="enhance-item">
+        <div class="enhance-num">5</div>
+        <div><h3>Preserve the conservative bias</h3><p>Never optimize precision at the expense of recall. Extra items to Tier 2 = cost issue. Missed threat = security failure.</p></div>
+      </div>
+    </div>
+  </div>
 
-<!-- Progress bar -->
-<div class="progress-bar" id="progress-bar"></div>
+  <!-- 11: Before/After -->
+  <div class="slide" data-slide="10">
+    <div class="label">Projected Impact</div>
+    <h2>Before and after enhancement</h2>
+    <div class="vs-row">
+      <div class="vs-box before">
+        <div class="vs-label">Current State</div>
+        <ul>
+          <li>100% of events hit the LLM</li>
+          <li>60-80% are noise</li>
+          <li>High compute cost per interaction</li>
+          <li>Real threats buried in queue</li>
+          <li>Alert fatigue for analysts</li>
+        </ul>
+      </div>
+      <div class="vs-box after">
+        <div class="vs-label">With Two-Tier Filter</div>
+        <ul>
+          <li>Only 30-40% reach the LLM</li>
+          <li>Zero false negatives by design</li>
+          <li>50-70% cost reduction</li>
+          <li>Faster threat detection</li>
+          <li>Analysts see signal, not noise</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-<!-- Floating nav pill -->
-<nav class="nav-pill">
-    <button onclick="prevSection()" aria-label="Previous section">&#x25B2;</button>
-    <span class="nav-counter"><span id="current">1</span> / 11</span>
-    <button onclick="nextSection()" aria-label="Next section">&#x25BC;</button>
+  <!-- 12: Metrics -->
+  <div class="slide" data-slide="11">
+    <div class="label">The Numbers</div>
+    <h2>What changes for AXIA</h2>
+    <div class="metrics">
+      <div class="metric">
+        <div class="val">0%</div>
+        <div class="desc">False negatives</div>
+      </div>
+      <div class="metric">
+        <div class="val">~65%</div>
+        <div class="desc">Volume filtered at Tier 1</div>
+      </div>
+      <div class="metric">
+        <div class="val">~30%</div>
+        <div class="desc">Cost per interaction</div>
+      </div>
+      <div class="metric">
+        <div class="val">2x</div>
+        <div class="desc">Faster to real threats</div>
+      </div>
+    </div>
+    <p style="margin-top:2.5rem;font-size:0.9rem;color:var(--muted)">The judgment layer stops wasting cycles on calendar invites and code reviews.</p>
+  </div>
+
+  <!-- 13: The Moat -->
+  <div class="slide" data-slide="12">
+    <div class="label">Competitive Moat</div>
+    <h2>This isn't just cost optimization</h2>
+    <p class="narrative">Every other IRM vendor throws their most expensive AI at every single interaction.</p>
+    <p class="narrative">AXIA processes the same volume at a fraction of the cost while being <span class="highlight">faster</span> at catching real threats &mdash; because the judgment layer isn't wasting cycles on noise.</p>
+    <div class="quote" style="margin-top:2rem">
+      The two-tier architecture turns AXIA's training data "problem" into its most defensible advantage: a system that knows what to ignore, so it can focus on what matters.
+    </div>
+  </div>
+
+  <!-- 14: Next Step -->
+  <div class="slide" data-slide="13">
+    <div class="label">Next Step</div>
+    <h2>Validate at scale</h2>
+    <div class="card-row">
+      <div class="card">
+        <h3>10,000 interactions</h3>
+        <p>Real enterprise environment. Run through the two-tier pipeline end to end.</p>
+      </div>
+      <div class="card">
+        <h3>Three measures</h3>
+        <p>False negative rate (must stay at zero). Volume reduction (target: 60%+). Detection time improvement.</p>
+      </div>
+      <div class="card">
+        <h3>Build from here</h3>
+        <p>The 100% signal is the foundation. Now we prove it holds at production scale.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav" id="nav">
+  <button id="prev" aria-label="Previous">&larr;</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="Next">&rarr;</button>
 </nav>
 
 <script>
-    const sections = document.querySelectorAll('.section');
-    let currentIndex = 0;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+let current=0;
 
-    function updateCurrent() {
-        const scrollPos = window.scrollY + 100;
-        for (let i = sections.length - 1; i >= 0; i--) {
-            if (sections[i].offsetTop <= scrollPos) {
-                currentIndex = i;
-                document.getElementById('current').textContent = i + 1;
-                break;
-            }
-        }
-        // Update progress bar
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
-        document.getElementById('progress-bar').style.width = progress + '%';
-    }
+const dotsEl=document.getElementById('dots');
+for(let i=0;i<total;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+}
+const dots=document.querySelectorAll('.dot');
 
-    function scrollToSection(index) {
-        index = Math.max(0, Math.min(index, sections.length - 1));
-        sections[index].scrollIntoView({ behavior: 'smooth' });
-    }
+function goTo(n){
+  if(n<0||n>=total||n===current)return;
+  const prev=current;
+  slides[prev].classList.remove('active');
+  slides[prev].classList.add(n>prev?'exit-up':'');
+  current=n;
+  slides[current].classList.add('active');
+  setTimeout(()=>slides[prev].classList.remove('exit-up'),600);
+  dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+  document.getElementById('counter').textContent=(current+1)+' / '+total;
+  document.getElementById('progress').style.width=((current+1)/total*100)+'%';
+}
 
-    function nextSection() { scrollToSection(currentIndex + 1); }
-    function prevSection() { scrollToSection(currentIndex - 1); }
+document.getElementById('prev').onclick=()=>goTo(current-1);
+document.getElementById('next').onclick=()=>goTo(current+1);
 
-    // Keyboard navigation (desktop)
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'ArrowRight') {
-            e.preventDefault();
-            nextSection();
-        }
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-            e.preventDefault();
-            prevSection();
-        }
-    });
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();goTo(current+1)}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();goTo(current-1)}
+  if(e.key==='Home'){e.preventDefault();goTo(0)}
+  if(e.key==='End'){e.preventDefault();goTo(total-1)}
+});
 
-    window.addEventListener('scroll', updateCurrent, { passive: true });
+let touchX=0;
+document.addEventListener('touchstart',e=>{touchX=e.changedTouches[0].screenX});
+document.addEventListener('touchend',e=>{
+  const d=e.changedTouches[0].screenX-touchX;
+  if(Math.abs(d)>50){d<0?goTo(current+1):goTo(current-1)}
+});
+
+document.getElementById('progress').style.width=(1/total*100)+'%';
 </script>
-
 </body>
 </html>
