@@ -125,7 +125,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
 <body>
 <div class="progress" id="progress"></div>
 <div class="logo">AXIA</div>
-<div class="slide-counter" id="counter">1 / 26</div>
+<div class="slide-counter" id="counter">1 / 22</div>
 <div class="deck" id="deck">
 
 <!-- 1: Title -->
@@ -246,29 +246,17 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <div class="label">The Improvements</div>
   <h2>Six training fixes + one architectural addition</h2>
   <div class="enhance-list">
-    <div class="enhance-item clickable" onclick="goTo(13)"><div class="enhance-num">1</div><div><h3>Relabel known misclassifications</h3><p>38 samples already identified. Fix the grades, retrain the ensemble.</p></div><div class="arrow">&rarr;</div></div>
-    <div class="enhance-item clickable" onclick="goTo(15)"><div class="enhance-num">2</div><div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, business-content assumptions.</p></div><div class="arrow">&rarr;</div></div>
-    <div class="enhance-item clickable" onclick="goTo(17)"><div class="enhance-num">3</div><div><h3>Content-level contrastive pairs</h3><p>Teach the ensemble that text discussing payroll differs from text containing payroll data.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(12)"><div class="enhance-num">1</div><div><h3>Relabel known misclassifications</h3><p>38 samples already identified. Fix the grades, retrain the ensemble.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(13)"><div class="enhance-num">2</div><div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, business-content assumptions.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(14)"><div class="enhance-num">3</div><div><h3>Content-level contrastive pairs</h3><p>Teach the ensemble that text discussing payroll differs from text containing payroll data.</p></div><div class="arrow">&rarr;</div></div>
     <div class="enhance-item"><div class="enhance-num">4</div><div><h3>Scale the non-sensitive baseline</h3><p>From 24 verified samples to thousands. Expand what "normal" looks like.</p></div></div>
     <div class="enhance-item"><div class="enhance-num">5</div><div><h3>Preserve conservative bias</h3><p>Never optimize precision at the expense of recall. Over-flag, don't under-flag.</p></div></div>
-    <div class="enhance-item new-item clickable" onclick="goTo(19)"><div class="enhance-num">6</div><div><h3>Expand to AXIA's 32 priority scenarios</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; The gate has never seen the content types it's supposed to protect against.</p></div><div class="arrow">&rarr;</div></div>
-    <div class="enhance-item new-item clickable" onclick="goTo(22)"><div class="enhance-num">7</div><div><h3>Behavioral bypass path</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; Address the blind spot the ensemble gate can never fix.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(15)"><div class="enhance-num">6</div><div><h3>Expand to AXIA's 32 priority scenarios</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; The gate has never seen the content types it's supposed to protect against.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(17)"><div class="enhance-num">7</div><div><h3>Behavioral bypass path</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; Address the blind spot the ensemble gate can never fix.</p></div><div class="arrow">&rarr;</div></div>
   </div>
 </div></div>
 
-<!-- 11: ELI5 Enhancement 1 -->
-<div class="slide"><div class="slide-inner">
-  <div class="label">Enhancement 1 &mdash; Simple Version</div>
-  <h2>Fix the <span class="highlight">wrong grades</span></h2>
-  <div class="analogy">
-    <div class="analogy-label">The Analogy</div>
-    <p>Imagine a teacher grading homework. She marks 38 answers "wrong" when they're actually right. Not because the students made mistakes, but because the answer key is outdated.</p>
-    <p>We found 38 of those. 22 emails labeled "Low risk" that are just people chatting about their day. 16 labeled "Medium" that are developers talking about code.</p>
-    <p class="then">The fix: correct the answer key. Retrain SetFit, ModernBERT, and XGBoost on the corrected labels. No new data needed.</p>
-  </div>
-</div></div>
-
-<!-- 12: Evidence Enhancement 1 -->
+<!-- Evidence Enhancement 1 -->
 <div class="slide"><div class="slide-inner">
   <div class="label">Enhancement 1 &mdash; The Evidence</div>
   <h2>Relabel the <span class="highlight">38 known</span> misclassifications</h2>
@@ -281,21 +269,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <div class="ref-box"><div class="ref-label">Next Step</div><p>Update labels in <code>financial_services_training_v2.csv</code> for the 38 identified samples. Retrain all three ensemble classifiers. Validate on held-out set.</p></div>
 </div></div>
 
-<!-- 13: ELI5 Enhancement 2 -->
-<div class="slide"><div class="slide-inner">
-  <div class="label">Enhancement 2 &mdash; Simple Version</div>
-  <h2>Stop the <span class="highlight">three silly mistakes</span></h2>
-  <div class="analogy">
-    <div class="analogy-label">The Analogy</div>
-    <p>The ensemble makes three types of silly mistakes, like a paranoid security guard:</p>
-    <p><span class="warn">Mistake A:</span> Anyone who <em>says the word</em> "money" gets stopped. "Did you see that movie about a bank robbery?" &mdash; DETAINED. Talking about money = stealing money.</p>
-    <p><span class="warn">Mistake B:</span> Anything that <em>sounds complicated</em> must be secret. A recipe in French? Spy code. Kubernetes config? Hacking.</p>
-    <p><span class="warn">Mistake C:</span> Anything from <em>work</em> must be important. Every office email is classified &mdash; even the lunch menu.</p>
-    <p class="then">The fix: add hundreds of harmless examples of each to the training CSV. "See? This is normal."</p>
-  </div>
-</div></div>
-
-<!-- 14: Evidence Enhancement 2 -->
+<!-- Evidence Enhancement 2 -->
 <div class="slide"><div class="slide-inner">
   <div class="label">Enhancement 2 &mdash; The Evidence</div>
   <h2>The <span class="highlight">three failure patterns</span> in detail</h2>
@@ -307,20 +281,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <div class="ref-box"><div class="ref-label">Next Step</div><p>Generate 200+ counter-examples per pattern. Add to training CSV as non-sensitive. Retrain ensemble. Measure gate pass-through rate improvement.</p></div>
 </div></div>
 
-<!-- 15: ELI5 Enhancement 3 -->
-<div class="slide"><div class="slide-inner">
-  <div class="label">Enhancement 3 &mdash; Simple Version</div>
-  <h2>Teach the difference between <span class="highlight">the word</span> and <span class="warn">the thing</span></h2>
-  <div class="analogy">
-    <div class="analogy-label">The Analogy</div>
-    <p>A museum security guard stops everyone who says the word "painting." The art teacher explaining Monet? Stopped. The tour guide? Stopped. Meanwhile, a thief walks out with a canvas under their coat &mdash; no alarm, because they never said the word.</p>
-    <p>Right now, the ensemble flags every email that <em>mentions</em> payroll or credentials. But the text pattern of "discussing salary policy" is actually different from "containing a salary spreadsheet." ModernBERT can learn this &mdash; the token patterns, structure, and formatting are different.</p>
-    <p class="then">The fix: contrastive training pairs. Same topic, different content type. The ensemble learns text-level differences without needing behavioral metadata.</p>
-  </div>
-  <p style="margin-top:.8rem;font-size:.82rem;color:var(--muted)">Note: this only covers what's learnable from text. Behavioral threats need a different solution &mdash; see Enhancement 6.</p>
-</div></div>
-
-<!-- 16: Evidence Enhancement 3 -->
+<!-- Evidence Enhancement 3 -->
 <div class="slide"><div class="slide-inner">
   <div class="label">Enhancement 3 &mdash; The Evidence</div>
   <h2>Content-level <span class="highlight">contrastive pairs</span></h2>
@@ -333,19 +294,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <div class="ref-box"><div class="ref-label">Next Step</div><p>Generate contrastive pairs for each of the 21 topic categories in the synthetic data. Each pair: same topic, one discussing it (non-sensitive), one containing real data (sensitive). Add to training CSV.</p></div>
 </div></div>
 
-<!-- 20: ELI5 Enhancement 6 -->
-<div class="slide"><div class="slide-inner">
-  <div class="label">Enhancement 6 &mdash; Simple Version</div>
-  <h2>Teach the guard what <span class="highlight">the threats actually look like</span></h2>
-  <div class="analogy">
-    <div class="analogy-label">The Analogy</div>
-    <p>You've trained an airport security dog to sniff out explosives. Excellent. But you only ever showed it dynamite. It's never smelled C-4. Never encountered liquid explosives. Never sniffed a detonator cap.</p>
-    <p>Its detection rate on dynamite? <span class="highlight">100%.</span> But a smuggler walks through with C-4 and the dog wags its tail. It doesn't bark because it's never encountered this substance before.</p>
-    <p class="then">The fix: show the dog ALL the threat types it needs to catch. And while you're at it, show it the harmless things that <em>look similar</em> &mdash; so it doesn't bark at every chemistry textbook.</p>
-  </div>
-</div></div>
-
-<!-- 21: Evidence Enhancement 6 -->
+<!-- Evidence Enhancement 6 -->
 <div class="slide"><div class="slide-inner">
   <div class="label">Enhancement 6 &mdash; The Scenarios</div>
   <h2>Expand to AXIA's <span class="highlight">32 priority scenarios</span></h2>
@@ -369,12 +318,12 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
     <p>The same blind spot applies to: a departing employee downloading their normal-looking files at 2 AM, someone using encryption to bypass DLP, bulk exports that look like routine transfers one at a time.</p>
     <p>These threats are <strong>invisible to any content classifier</strong> &mdash; no matter how well trained &mdash; because the risk signal isn't in the text. It's in the behavior, the timing, the context.</p>
   </div>
-  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">Enhancements 1-5 improve the gate. Enhancement 6 addresses what the gate structurally cannot see.</p>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">Enhancements 1-6 improve the gate. Enhancement 7 addresses what the gate structurally cannot see.</p>
 </div></div>
 
 <!-- 18: Enhancement 6 -->
 <div class="slide"><div class="slide-inner">
-  <div class="label">Enhancement 6 &mdash; New</div>
+  <div class="label">Enhancement 7 &mdash; New</div>
   <h2>Add a <span class="highlight">behavioral bypass</span> path</h2>
   <p class="narrative">For certain contexts, route communications to the LLM regardless of what the ensemble says.</p>
   <div class="card-row">
