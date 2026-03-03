@@ -125,7 +125,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
 <body>
 <div class="progress" id="progress"></div>
 <div class="logo">AXIA</div>
-<div class="slide-counter" id="counter">1 / 22</div>
+<div class="slide-counter" id="counter">1 / 26</div>
 <div class="deck" id="deck">
 
 <!-- 1: Title -->
@@ -220,17 +220,39 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <p style="color:var(--cyan);font-size:clamp(1rem,1.6vw,1.3rem);font-weight:600;margin-top:1rem">Same architecture. Better training data. Significantly lower cost.</p>
 </div></div>
 
-<!-- 10: Enhancement overview -->
+<!-- 10: The Use Case Gap -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Deeper Problem</div>
+  <div class="big-number red">0 / 55</div>
+  <h2>AXIA benchmark scenarios <span class="warn">fully covered</span> in training data</h2>
+  <p class="narrative" style="margin-top:.7rem"><span class="highlight">32 of 55</span> priority scenarios have <strong>zero</strong> representation. The gate has never seen source code exfiltration, encrypted archive bypass, trading algorithms, M&A documents, API credentials, coded insider trading, or sanctions evasion.</p>
+  <p class="narrative">The 100% non-sensitive signal is validated against content patterns the ensemble has seen. For these 32 scenarios, the gate's behavior is <span class="warn">completely unknown</span>.</p>
+</div></div>
+
+<!-- 11: The Narrow Training World -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Training Data Composition</div>
+  <h2>The ensemble learned from a <span class="warn">narrow world</span></h2>
+  <div class="card-row">
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">53% Enron Emails</h3><p>Corporate email from 2001. Energy trading, regulatory compliance, internal memos. No modern content types.</p></div>
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">37% Financial Synthetics</h3><p>AI-generated financial documents. Wire transfers, account statements, tax forms. Formulaic patterns.</p></div>
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">11% Slack Messages</h3><p>DevOps and engineering chat. Kubernetes, AWS IAM, infrastructure. Narrow tech vocabulary.</p></div>
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">Missing entirely: source code, M&A documents, credentials/API keys, biometric data, SAR/AML filings, database exports, encrypted archives, sanctions documents, trading algorithms.</p>
+</div></div>
+
+<!-- 12: Enhancement overview -->
 <div class="slide"><div class="slide-inner">
   <div class="label">The Improvements</div>
-  <h2>Five training fixes + one architectural addition</h2>
+  <h2>Six training fixes + one architectural addition</h2>
   <div class="enhance-list">
-    <div class="enhance-item clickable" onclick="goTo(10)"><div class="enhance-num">1</div><div><h3>Relabel known misclassifications</h3><p>38 samples already identified. Fix the grades, retrain the ensemble.</p></div><div class="arrow">&rarr;</div></div>
-    <div class="enhance-item clickable" onclick="goTo(12)"><div class="enhance-num">2</div><div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, business-content assumptions.</p></div><div class="arrow">&rarr;</div></div>
-    <div class="enhance-item clickable" onclick="goTo(14)"><div class="enhance-num">3</div><div><h3>Content-level contrastive pairs</h3><p>Teach the ensemble that text discussing payroll differs from text containing payroll data.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(13)"><div class="enhance-num">1</div><div><h3>Relabel known misclassifications</h3><p>38 samples already identified. Fix the grades, retrain the ensemble.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(15)"><div class="enhance-num">2</div><div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, business-content assumptions.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(17)"><div class="enhance-num">3</div><div><h3>Content-level contrastive pairs</h3><p>Teach the ensemble that text discussing payroll differs from text containing payroll data.</p></div><div class="arrow">&rarr;</div></div>
     <div class="enhance-item"><div class="enhance-num">4</div><div><h3>Scale the non-sensitive baseline</h3><p>From 24 verified samples to thousands. Expand what "normal" looks like.</p></div></div>
     <div class="enhance-item"><div class="enhance-num">5</div><div><h3>Preserve conservative bias</h3><p>Never optimize precision at the expense of recall. Over-flag, don't under-flag.</p></div></div>
-    <div class="enhance-item new-item clickable" onclick="goTo(16)"><div class="enhance-num">6</div><div><h3>Behavioral bypass path</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; Address the blind spot the ensemble gate can never fix.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(19)"><div class="enhance-num">6</div><div><h3>Expand to AXIA's 32 priority scenarios</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; The gate has never seen the content types it's supposed to protect against.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(22)"><div class="enhance-num">7</div><div><h3>Behavioral bypass path</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; Address the blind spot the ensemble gate can never fix.</p></div><div class="arrow">&rarr;</div></div>
   </div>
 </div></div>
 
@@ -311,7 +333,32 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <div class="ref-box"><div class="ref-label">Next Step</div><p>Generate contrastive pairs for each of the 21 topic categories in the synthetic data. Each pair: same topic, one discussing it (non-sensitive), one containing real data (sensitive). Add to training CSV.</p></div>
 </div></div>
 
-<!-- 17: The Blind Spot -->
+<!-- 20: ELI5 Enhancement 6 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 6 &mdash; Simple Version</div>
+  <h2>Teach the guard what <span class="highlight">the threats actually look like</span></h2>
+  <div class="analogy">
+    <div class="analogy-label">The Analogy</div>
+    <p>You've trained an airport security dog to sniff out explosives. Excellent. But you only ever showed it dynamite. It's never smelled C-4. Never encountered liquid explosives. Never sniffed a detonator cap.</p>
+    <p>Its detection rate on dynamite? <span class="highlight">100%.</span> But a smuggler walks through with C-4 and the dog wags its tail. It doesn't bark because it's never encountered this substance before.</p>
+    <p class="then">The fix: show the dog ALL the threat types it needs to catch. And while you're at it, show it the harmless things that <em>look similar</em> &mdash; so it doesn't bark at every chemistry textbook.</p>
+  </div>
+</div></div>
+
+<!-- 21: Evidence Enhancement 6 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 6 &mdash; The Scenarios</div>
+  <h2>Expand to AXIA's <span class="highlight">32 priority scenarios</span></h2>
+  <div class="evidence-grid">
+    <div class="evidence-card"><h4>IP Theft Scenarios</h4><p>Source code exfiltration, trading algorithm theft, database exports to public drives. Zero representation in 28,495 training samples.</p><div class="mono">Benchmark #1, #6, #49</div></div>
+    <div class="evidence-card"><h4>DLP Evasion Scenarios</h4><p>Encrypted archives bypassing controls, disguised credit card data, M&A plans via encrypted messaging.</p><div class="mono">Benchmark #2, #8, #20</div></div>
+    <div class="evidence-card"><h4>Financial Crime Scenarios</h4><p>SAR data beyond contract scope, sanctions evasion via shell entities, banking credentials to dark web.</p><div class="mono">Benchmark #17, #51, #53</div></div>
+    <div class="evidence-card"><h4>The Dual Opportunity</h4><p>For each scenario, add <strong>both</strong>: the sensitive version (actual source code) AND its non-sensitive counterpart (a discussion about coding practices). The gate catches more threats <strong>and</strong> filters more noise.</p></div>
+  </div>
+  <div class="ref-box"><div class="ref-label">Next Step</div><p>Use AXIA's synthetic data pipeline (YAML-configured, Tavily research, multi-model generation) to create training samples for all 32 uncovered benchmark scenarios. Each scenario gets sensitive + non-sensitive contrastive pairs. Priority: IP theft and DLP evasion patterns.</p></div>
+</div></div>
+
+<!-- 22: The Blind Spot -->
 <div class="slide"><div class="slide-inner">
   <div class="label">The Blind Spot</div>
   <h2>What the ensemble gate <span class="warn">can never catch</span></h2>
@@ -353,6 +400,7 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
     <div class="vs-box after"><div class="vs-label">After Enhancements</div><ul>
       <li>Tighter non-sensitive boundary</li>
       <li>"About" vs "contains" distinction</li>
+      <li>32 priority scenarios now in training</li>
       <li>Fewer false sensitives to LLM</li>
       <li>50-70% reduction in LLM calls</li>
       <li>Behavioral bypass catches what gate can't</li>
@@ -366,9 +414,10 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <h2>What changes for AXIA</h2>
   <div class="metrics">
     <div class="metric"><div class="val">0%</div><div class="desc">False negatives (gate)</div></div>
+    <div class="metric"><div class="val">55&rarr;55</div><div class="desc">Benchmark scenarios covered</div></div>
     <div class="metric"><div class="val">~60%</div><div class="desc">More noise filtered at gate</div></div>
     <div class="metric"><div class="val">~40%</div><div class="desc">Fewer LLM calls</div></div>
-    <div class="metric"><div class="val">+1</div><div class="desc">New path for behavioral threats</div></div>
+    <div class="metric"><div class="val">+1</div><div class="desc">Behavioral bypass path</div></div>
   </div>
   <p style="margin-top:1.5rem;font-size:.82rem;color:var(--muted)">The ensemble handles content. The bypass handles behavior. The LLM focuses where it matters.</p>
 </div></div>
@@ -376,10 +425,10 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
 <!-- 21: Moat -->
 <div class="slide"><div class="slide-inner">
   <div class="label">The Bigger Picture</div>
-  <h2>A smarter gate + a behavioral path = <span class="highlight">complete coverage</span></h2>
-  <p class="narrative">The ensemble gate already has the right instinct. It just needs better training data to tighten its boundaries.</p>
-  <p class="narrative">But the gate can only see content. Adding a behavioral bypass for high-risk contexts closes the one gap that no amount of training data can fix.</p>
-  <div class="quote" style="margin-top:1rem">Together, these turn AXIA's classification pipeline from a good content filter into a system that catches threats whether they're visible in the text or hidden in the behavior.</div>
+  <h2>Smarter gate + wider training + behavioral path = <span class="highlight">complete coverage</span></h2>
+  <p class="narrative">The ensemble gate has the right instinct but is trained on a narrow world. Expanding to all 32 priority scenarios while tightening its boundaries transforms it from a financial-email classifier into a true enterprise content gate.</p>
+  <p class="narrative">And adding a behavioral bypass for high-risk contexts closes the one gap that no amount of training data can fix.</p>
+  <div class="quote" style="margin-top:1rem">Together, these turn AXIA's classification pipeline from a good content filter into a system that catches threats whether they're visible in the text or hidden in the behavior &mdash; across every content domain AXIA is designed to protect.</div>
 </div></div>
 
 <!-- 22: Next Steps -->
@@ -388,7 +437,8 @@ p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(24
   <h2>The path forward</h2>
   <div class="card-row">
     <div class="card"><h3>Quick Win (Week 1)</h3><p>Relabel the 38 identified samples. Retrain ensemble. Measure gate improvement on held-out set.</p></div>
-    <div class="card"><h3>Training Expansion (Weeks 2-4)</h3><p>Generate counter-examples for 3 failure patterns + contrastive pairs for 21 topic categories. Retrain and validate.</p></div>
+    <div class="card"><h3>Training Expansion (Weeks 2-4)</h3><p>Counter-examples for 3 failure patterns + contrastive pairs for 21 topic categories. Retrain and validate.</p></div>
+    <div class="card"><h3>Domain Expansion (Weeks 2-4)</h3><p>Generate synthetic training data for all 32 uncovered AXIA benchmark scenarios. Sensitive + non-sensitive pairs for each. Priority: IP theft, DLP evasion, financial crime.</p></div>
     <div class="card"><h3>Behavioral Path (Parallel)</h3><p>Design the bypass triggers: HR integration, UEBA signals, asset classification. Route flagged contexts directly to LLM.</p></div>
     <div class="card"><h3>Validation</h3><p>10,000 real interactions through the improved pipeline. Measure: false negative rate (must stay 0%), LLM call reduction, detection time.</p></div>
   </div>
