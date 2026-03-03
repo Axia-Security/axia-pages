@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Training the Gate — AXIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--deep:#05252b;--dark:#09434e;--mid:#0D6B5E;--teal:#0D9488;--cyan:#22D3EE;--light:#A7F3D0;--white:#F0FDFA;--orange:#B8540C;--red:#EF4444;--muted:rgba(255,255,255,0.4)}
+html,body{height:100%;overflow:hidden;background:var(--deep);color:var(--white);font-family:'Manrope',sans-serif}
+.deck{height:100%;position:relative}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:0;opacity:0;transition:opacity .5s ease,transform .5s ease;pointer-events:none;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(40px)}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.slide.exit-left{opacity:0;transform:translateX(-40px)}
+.slide.exit-right{opacity:0;transform:translateX(40px)}
+.slide-inner{display:flex;flex-direction:column;align-items:center;width:100%;max-width:1000px;margin:auto 0;padding:3.5rem 3rem 5rem}
+.slide::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 50% 120%,rgba(13,148,136,.12) 0%,transparent 70%)}
+.slide-inner>*{position:relative;z-index:1}
+h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:1.5rem}
+h2{font-size:clamp(1.35rem,3vw,2.3rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem}
+h3{font-size:clamp(1rem,1.7vw,1.3rem);font-weight:600;line-height:1.3;margin-bottom:.6rem}
+p,.narrative{font-size:clamp(.88rem,1.4vw,1.15rem);line-height:1.7;color:rgba(240,253,250,.85);max-width:760px}
+.narrative{margin-bottom:1rem}
+.subtitle{font-size:clamp(.9rem,1.7vw,1.25rem);color:var(--cyan);font-weight:500;letter-spacing:.02em;margin-bottom:2rem}
+.label{font-family:'JetBrains Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:var(--cyan);margin-bottom:.5rem}
+.big-number{font-family:'JetBrains Mono',monospace;font-size:clamp(4rem,12vw,9rem);font-weight:800;line-height:1;background:linear-gradient(135deg,var(--cyan),var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+.big-number.red{background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.big-number.green{background:linear-gradient(135deg,var(--light),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.highlight{color:var(--cyan);font-weight:700}.warn{color:var(--red);font-weight:600}.dim{color:var(--muted)}
+.card-row{display:flex;gap:1.1rem;margin-top:1.1rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:960px}
+.card{background:rgba(13,148,136,.08);border:1px solid rgba(34,211,238,.15);border-radius:13px;padding:1.2rem;flex:1;min-width:200px;max-width:400px;text-align:left}
+.card h3{color:var(--cyan);margin-bottom:.3rem;font-size:.95rem}
+.card p{font-size:.84rem;color:rgba(240,253,250,.7);line-height:1.5}
+/* Pipeline diagram */
+.pipeline{display:flex;align-items:center;gap:0;margin-top:1.2rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:900px}
+.pipe-stage{background:rgba(13,148,136,.08);border:1px solid rgba(34,211,238,.12);border-radius:11px;padding:.8rem 1rem;text-align:center;min-width:100px}
+.pipe-stage.active-stage{border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.08)}
+.pipe-stage .pipe-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);margin-bottom:.2rem}
+.pipe-stage .pipe-name{font-size:.85rem;font-weight:600;color:var(--white)}
+.pipe-stage .pipe-detail{font-size:.72rem;color:rgba(240,253,250,.5);margin-top:.15rem}
+.pipe-arrow{color:var(--cyan);font-size:.9rem;margin:0 .3rem;flex-shrink:0}
+.pipe-gate{display:flex;flex-direction:column;align-items:center;gap:.3rem;margin:0 .3rem}
+.pipe-gate .gate-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase}
+.pipe-gate .gate-yes{color:var(--red)}
+.pipe-gate .gate-no{color:var(--cyan)}
+.pipe-branch{display:flex;gap:1rem;margin-top:.6rem;width:100%;max-width:600px;justify-content:center}
+.pipe-branch .branch{padding:.6rem 1rem;border-radius:9px;font-size:.78rem;text-align:center;flex:1}
+.pipe-branch .branch.sensitive{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);color:rgba(240,253,250,.7)}
+.pipe-branch .branch.not-sensitive{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15);color:rgba(240,253,250,.7)}
+/* Data table */
+.data-table{border-collapse:collapse;margin-top:1rem;font-size:clamp(.78rem,1.1vw,.9rem);width:100%;max-width:680px}
+.data-table th{font-family:'JetBrains Mono',monospace;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);padding:.4rem .6rem;text-align:left;border-bottom:1px solid rgba(34,211,238,.2)}
+.data-table td{padding:.4rem .6rem;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(240,253,250,.8)}
+.bar{display:inline-block;height:5px;border-radius:3px;vertical-align:middle;margin-left:.4rem}
+.bar.full{background:var(--cyan);width:85px}.bar.mid{background:var(--teal);width:50px}.bar.low{background:var(--orange);width:11px}.bar.tiny{background:var(--red);width:4px}
+/* Enhancement list */
+.enhance-list{text-align:left;max-width:700px;margin-top:.7rem}
+.enhance-item{display:flex;gap:.9rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.enhance-num{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--cyan);min-width:1.5rem}
+.enhance-item h3{font-size:.9rem;margin-bottom:.1rem}
+.enhance-item p{font-size:.78rem;color:rgba(240,253,250,.5)}
+.enhance-item.clickable{cursor:pointer;border-radius:7px;padding:.5rem;margin:0 -.5rem;transition:background .2s}
+.enhance-item.clickable:hover{background:rgba(34,211,238,.06)}
+.enhance-item .arrow{color:var(--cyan);font-size:.7rem;margin-left:auto;align-self:center;opacity:.5}
+.enhance-item.new-item .enhance-num{color:var(--orange)}
+/* Metrics */
+.metrics{display:flex;gap:1.8rem;margin-top:1.2rem;flex-wrap:wrap;justify-content:center}
+.metric{text-align:center}
+.metric .val{font-family:'JetBrains Mono',monospace;font-size:clamp(1.5rem,3vw,2.4rem);font-weight:700;color:var(--cyan)}
+.metric .desc{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+/* Nav */
+.nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;z-index:200;background:linear-gradient(transparent,rgba(5,37,43,.95) 40%);padding:1.1rem 1rem .9rem}
+.nav-inner{display:flex;align-items:center;gap:.35rem;background:rgba(5,37,43,.92);backdrop-filter:blur(20px);padding:.3rem .7rem;border-radius:50px;border:1px solid rgba(34,211,238,.1)}
+.nav-inner button{width:30px;height:30px;border-radius:50%;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nav-inner button:hover{color:var(--cyan);background:rgba(34,211,238,.1)}
+.dots{display:flex;gap:3px;align-items:center;margin:0 .3rem}
+.dot{width:4px;height:4px;border-radius:50%;background:var(--muted);transition:all .3s;cursor:pointer}
+.dot.active{background:var(--cyan);width:14px;border-radius:3px}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--cyan);z-index:200;transition:width .4s ease}
+.logo{position:fixed;top:1rem;left:1.3rem;z-index:200;font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--muted)}
+.slide-counter{position:fixed;top:1rem;right:1.3rem;z-index:200;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted)}
+/* VS */
+.vs-row{display:flex;gap:1.3rem;margin-top:1rem;align-items:stretch;flex-wrap:wrap;justify-content:center;max-width:820px}
+.vs-box{flex:1;min-width:240px;padding:1.2rem;border-radius:13px;text-align:left}
+.vs-box.before{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15)}
+.vs-box.after{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15)}
+.vs-box .vs-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem}
+.vs-box.before .vs-label{color:var(--red)}.vs-box.after .vs-label{color:var(--cyan)}
+.vs-box li{color:rgba(240,253,250,.7);font-size:.85rem;margin-bottom:.3rem;list-style:none;padding-left:1rem;position:relative}
+.vs-box li::before{content:'';position:absolute;left:0;top:.45rem;width:5px;height:5px;border-radius:50%}
+.vs-box.before li::before{background:var(--red)}.vs-box.after li::before{background:var(--cyan)}
+.quote{font-size:clamp(.95rem,1.8vw,1.35rem);font-style:italic;font-weight:300;color:rgba(240,253,250,.7);max-width:660px;line-height:1.6;border-left:3px solid var(--cyan);padding-left:1.2rem;margin-top:1rem}
+/* Evidence */
+.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:.9rem;width:100%;max-width:800px;text-align:left}
+.evidence-card{background:rgba(13,148,136,.06);border:1px solid rgba(34,211,238,.1);border-radius:10px;padding:.9rem}
+.evidence-card h4{font-size:.82rem;color:var(--cyan);margin-bottom:.25rem;font-weight:600}
+.evidence-card p{font-size:.78rem;color:rgba(240,253,250,.6);line-height:1.4}
+.evidence-card .mono{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--cyan);opacity:.7}
+.ref-box{margin-top:1rem;padding:.7rem 1rem;border-radius:8px;background:rgba(9,67,78,.3);border:1px solid rgba(13,148,136,.2);text-align:left;max-width:700px;width:100%}
+.ref-box .ref-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);margin-bottom:.25rem}
+.ref-box p{font-size:.74rem;color:rgba(240,253,250,.4);line-height:1.4}
+.example-row{display:flex;gap:.9rem;margin-top:.9rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:880px}
+.example-card{flex:1;min-width:220px;max-width:270px;padding:.9rem;border-radius:10px;text-align:left;background:rgba(13,148,136,.06);border:1px solid rgba(34,211,238,.1)}
+.example-card .ex-label{font-family:'JetBrains Mono',monospace;font-size:.52rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.35rem}
+.example-card .ex-label.bad{color:var(--red)}.example-card .ex-label.good{color:var(--cyan)}
+.example-card .ex-content{font-size:.78rem;color:rgba(240,253,250,.6);line-height:1.4;font-style:italic}
+.example-card .ex-verdict{font-family:'JetBrains Mono',monospace;font-size:.62rem;margin-top:.4rem;padding-top:.35rem;border-top:1px solid rgba(255,255,255,.05)}
+.example-card .ex-verdict.wrong{color:var(--red)}.example-card .ex-verdict.right{color:var(--cyan)}
+/* Analogy */
+.analogy{margin-top:1.2rem;padding:1.4rem 1.6rem;border-radius:14px;background:rgba(13,148,136,.06);border:1px solid rgba(34,211,238,.12);max-width:680px;text-align:left}
+.analogy .analogy-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.12em;color:var(--teal);margin-bottom:.5rem}
+.analogy p{font-size:clamp(.88rem,1.3vw,1.05rem);color:rgba(240,253,250,.8);line-height:1.65;margin-bottom:.7rem}
+.analogy p:last-child{margin-bottom:0}
+.analogy .then{color:var(--cyan);font-weight:600;font-size:clamp(.92rem,1.4vw,1.1rem);margin-top:.4rem}
+/* Blind spot */
+.blind-spot{margin-top:1.2rem;padding:1.3rem 1.5rem;border-radius:14px;background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);max-width:700px;text-align:left}
+.blind-spot .bs-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;text-transform:uppercase;letter-spacing:.12em;color:var(--red);margin-bottom:.5rem}
+.blind-spot p{font-size:clamp(.85rem,1.2vw,1rem);color:rgba(240,253,250,.75);line-height:1.6;margin-bottom:.6rem}
+.blind-spot p:last-child{margin-bottom:0}
+@media(max-width:768px){.slide-inner{padding:2.8rem 1.1rem 4.5rem}.card-row,.example-row{flex-direction:column;align-items:center}.card,.example-card{max-width:100%;min-width:0}.vs-row{flex-direction:column}.evidence-grid{grid-template-columns:1fr}.pipeline{flex-direction:column;gap:.4rem}.pipe-arrow{transform:rotate(90deg)}.analogy,.blind-spot{padding:1rem}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="logo">AXIA</div>
+<div class="slide-counter" id="counter">1 / 22</div>
+<div class="deck" id="deck">
+
+<!-- 1: Title -->
+<div class="slide active"><div class="slide-inner">
+  <div class="label">Training Data Analysis</div>
+  <h1>Training the <span class="highlight">Gate</span></h1>
+  <p class="subtitle">How one number revealed the fastest path to improving AXIA's classification pipeline</p>
+</div></div>
+
+<!-- 2: The Problem -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Problem</div>
+  <h2>Every CISO has the same complaint</h2>
+  <p class="narrative">DLP systems generate thousands of events per day. Security teams drown in false positives. The real threats get buried under mountains of routine file transfers flagged because they contain a phone number.</p>
+  <p class="narrative">AXIA's architecture already addresses this with a smart two-stage design. The question is: how well is the gate performing, and how much better can it get?</p>
+</div></div>
+
+<!-- 3: Your Architecture -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">AXIA's Existing Architecture</div>
+  <h2>You already have the <span class="highlight">right design</span></h2>
+  <div class="pipeline">
+    <div class="pipe-stage"><div class="pipe-label">Input</div><div class="pipe-name">Document</div><div class="pipe-detail">Email, chat, file</div></div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-stage"><div class="pipe-label">Step 1</div><div class="pipe-name">Chunking</div><div class="pipe-detail">Split into segments</div></div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-stage active-stage"><div class="pipe-label">Step 2 &mdash; The Gate</div><div class="pipe-name">Ensemble</div><div class="pipe-detail">SetFit + ModernBERT + XGBoost</div></div>
+    <div class="pipe-arrow">&rarr;</div>
+    <div class="pipe-stage"><div class="pipe-label">Step 3</div><div class="pipe-name">Soft Vote</div><div class="pipe-detail">Confidence-weighted</div></div>
+  </div>
+  <div class="pipe-branch">
+    <div class="branch sensitive"><strong style="color:var(--red)">Sensitive</strong> &rarr; LLM Analysis<br><span style="font-size:.7rem;opacity:.6">Reasoning, entities, recommendations</span></div>
+    <div class="branch not-sensitive"><strong style="color:var(--cyan)">Not Sensitive</strong> &rarr; Skip LLM<br><span style="font-size:.7rem;opacity:.6">No expensive compute needed</span></div>
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">The ensemble gate is the cost lever. Everything that passes through it correctly saves an LLM call.</p>
+</div></div>
+
+<!-- 4: The Analysis -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Analysis</div>
+  <h2>We tested <span class="highlight">28,495</span> training records against AXIA's severity guidelines</h2>
+  <p class="narrative" style="margin-top:.7rem">The training data that feeds SetFit, ModernBERT, and XGBoost classifies by <span class="warn">content sensitivity</span> &mdash; what PII is present.</p>
+  <p class="narrative">AXIA's guidelines classify by <span class="highlight">behavioral risk</span> &mdash; why data is moving and where it's going.</p>
+  <p class="narrative dim" style="font-size:.85rem;margin-top:.8rem">How well aligned is the training data with the product's own framework?</p>
+</div></div>
+
+<!-- 5: 37.4% -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Overall Agreement</div>
+  <div class="big-number red">37.4%</div>
+  <h2>Only a third of labels agreed</h2>
+  <p class="narrative">63 of 67 disagreements were the same kind of error: the training data <span class="warn">over-labeled</span> content that AXIA's guidelines consider routine.</p>
+</div></div>
+
+<!-- 6: The turn -->
+<div class="slide"><div class="slide-inner">
+  <h2 style="color:var(--muted);font-weight:400;font-size:clamp(1.1rem,1.8vw,1.5rem)">But buried inside that disappointing number</h2>
+  <h2 style="margin-top:1rem">was something <span class="highlight">remarkable.</span></h2>
+</div></div>
+
+<!-- 7: 100% -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Non-Sensitive Classification</div>
+  <div class="big-number green">100%</div>
+  <h2>Perfect agreement on non-sensitive</h2>
+  <p class="narrative">Every single interaction the training data called "not sensitive" was genuinely not sensitive under AXIA's behavioral risk framework. Not 98%. Not 99%.</p>
+</div></div>
+
+<!-- 8: Agreement table -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Agreement By Level</div>
+  <h2>The error is always in <span class="highlight">one direction</span></h2>
+  <table class="data-table">
+    <thead><tr><th>Level</th><th>Agreement</th><th></th><th>Pattern</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Non-Sensitive</strong></td><td style="color:var(--cyan);font-weight:700">100%</td><td><span class="bar full"></span></td><td>Perfect</td></tr>
+      <tr><td>Critical</td><td>58.8%</td><td><span class="bar mid"></span></td><td>7 downgraded</td></tr>
+      <tr><td>Medium</td><td>12.5%</td><td><span class="bar low"></span></td><td>16 were non-sensitive</td></tr>
+      <tr><td>High</td><td>11.1%</td><td><span class="bar low"></span></td><td>14 downgraded</td></tr>
+      <tr><td>Low</td><td>4.2%</td><td><span class="bar tiny"></span></td><td>22 were non-sensitive</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:.9rem;font-size:.82rem;color:var(--muted)">The ensemble gate never calls something non-sensitive when it contains risk. It only over-flags.</p>
+</div></div>
+
+<!-- 9: Insight -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Insight</div>
+  <h2>Your gate already has the <span class="highlight">right instinct</span></h2>
+  <p class="narrative">The ensemble's conservative bias means it's safe as a filter &mdash; but it's sending too much to the LLM. Every over-flagged non-sensitive document is an unnecessary LLM call.</p>
+  <p class="narrative">The opportunity: <span class="highlight">tighten the gate</span> so more noise is filtered before the LLM, without introducing any false negatives.</p>
+  <p style="color:var(--cyan);font-size:clamp(1rem,1.6vw,1.3rem);font-weight:600;margin-top:1rem">Same architecture. Better training data. Significantly lower cost.</p>
+</div></div>
+
+<!-- 10: The Use Case Gap -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Deeper Problem</div>
+  <div class="big-number red">0 / 55</div>
+  <h2>AXIA benchmark scenarios <span class="warn">fully covered</span> in training data</h2>
+  <p class="narrative" style="margin-top:.7rem"><span class="highlight">32 of 55</span> priority scenarios have <strong>zero</strong> representation. The gate has never seen source code exfiltration, encrypted archive bypass, trading algorithms, M&A documents, API credentials, coded insider trading, or sanctions evasion.</p>
+  <p class="narrative">The 100% non-sensitive signal is validated against content patterns the ensemble has seen. For these 32 scenarios, the gate's behavior is <span class="warn">completely unknown</span>.</p>
+</div></div>
+
+<!-- 11: The Narrow Training World -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Training Data Composition</div>
+  <h2>The ensemble learned from a <span class="warn">narrow world</span></h2>
+  <div class="card-row">
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">53% Enron Emails</h3><p>Corporate email from 2001. Energy trading, regulatory compliance, internal memos. No modern content types.</p></div>
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">37% Financial Synthetics</h3><p>AI-generated financial documents. Wire transfers, account statements, tax forms. Formulaic patterns.</p></div>
+    <div class="card" style="border-left-color:var(--orange)"><h3 style="color:var(--orange)">11% Slack Messages</h3><p>DevOps and engineering chat. Kubernetes, AWS IAM, infrastructure. Narrow tech vocabulary.</p></div>
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">Missing entirely: source code, M&A documents, credentials/API keys, biometric data, SAR/AML filings, database exports, encrypted archives, sanctions documents, trading algorithms.</p>
+</div></div>
+
+<!-- 12: Enhancement overview -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Improvements</div>
+  <h2>Six training fixes + one architectural addition</h2>
+  <div class="enhance-list">
+    <div class="enhance-item clickable" onclick="goTo(12)"><div class="enhance-num">1</div><div><h3>Relabel known misclassifications</h3><p>38 samples already identified. Fix the grades, retrain the ensemble.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(13)"><div class="enhance-num">2</div><div><h3>Train against the three failure patterns</h3><p>Topic confusion, complexity bias, business-content assumptions.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item clickable" onclick="goTo(14)"><div class="enhance-num">3</div><div><h3>Content-level contrastive pairs</h3><p>Teach the ensemble that text discussing payroll differs from text containing payroll data.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item"><div class="enhance-num">4</div><div><h3>Scale the non-sensitive baseline</h3><p>From 24 verified samples to thousands. Expand what "normal" looks like.</p></div></div>
+    <div class="enhance-item"><div class="enhance-num">5</div><div><h3>Preserve conservative bias</h3><p>Never optimize precision at the expense of recall. Over-flag, don't under-flag.</p></div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(15)"><div class="enhance-num">6</div><div><h3>Expand to AXIA's 32 priority scenarios</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; The gate has never seen the content types it's supposed to protect against.</p></div><div class="arrow">&rarr;</div></div>
+    <div class="enhance-item new-item clickable" onclick="goTo(17)"><div class="enhance-num">7</div><div><h3>Behavioral bypass path</h3><p style="color:rgba(184,84,12,.8)">NEW &mdash; Address the blind spot the ensemble gate can never fix.</p></div><div class="arrow">&rarr;</div></div>
+  </div>
+</div></div>
+
+<!-- Evidence Enhancement 1 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 1 &mdash; The Evidence</div>
+  <h2>Relabel the <span class="highlight">38 known</span> misclassifications</h2>
+  <div class="evidence-grid">
+    <div class="evidence-card"><div class="mono">LOW &rarr; NON-SENSITIVE</div><h4>22 of 24 samples</h4><p>Routine scheduling emails, Slack messages about code libraries, IT notifications. Zero PII, zero behavioral risk.</p></div>
+    <div class="evidence-card"><div class="mono">MEDIUM &rarr; NON-SENSITIVE</div><h4>16 of 24 samples</h4><p>DevOps discussions (Flyte, K8s, AWS IAM), internal process emails. Technical complexity confused for sensitivity.</p></div>
+    <div class="evidence-card"><div class="mono">HIGH &rarr; DOWNGRADED</div><h4>14 of 18 samples</h4><p>Enron emails about energy trading. Labeled by topic area, not content. No actual PII or credentials present.</p></div>
+    <div class="evidence-card"><div class="mono">CRITICAL &rarr; CONFIRMED</div><h4>10 of 17 held</h4><p>SSN+financial PII, cleartext credentials, explicit insider trading. When it says Critical, real regulated data is usually there.</p></div>
+  </div>
+  <div class="ref-box"><div class="ref-label">Next Step</div><p>Update labels in <code>financial_services_training_v2.csv</code> for the 38 identified samples. Retrain all three ensemble classifiers. Validate on held-out set.</p></div>
+</div></div>
+
+<!-- Evidence Enhancement 2 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 2 &mdash; The Evidence</div>
+  <h2>The <span class="highlight">three failure patterns</span> in detail</h2>
+  <div class="example-row">
+    <div class="example-card"><div class="ex-label bad">Pattern A: Topic Confusion</div><div class="ex-content">"Meeting to discuss Q3 energy trading strategy and regulatory compliance"</div><div class="ex-verdict wrong">Ensemble: SENSITIVE (trading + regulatory)</div><div class="ex-verdict right">Reality: NOT SENSITIVE (meeting, no data)</div><p style="font-size:.73rem;color:rgba(240,253,250,.4);margin-top:.3rem"><strong>Fix:</strong> Add policy docs, compliance discussions, financial planning emails.</p></div>
+    <div class="example-card"><div class="ex-label bad">Pattern B: Complexity Bias</div><div class="ex-content">"Deployed Flyte workflow for k8s pod scaling. Updated IAM roles for staging."</div><div class="ex-verdict wrong">Ensemble: SENSITIVE (technical infra)</div><div class="ex-verdict right">Reality: NOT SENSITIVE (routine DevOps)</div><p style="font-size:.73rem;color:rgba(240,253,250,.4);margin-top:.3rem"><strong>Fix:</strong> Add code reviews, architecture docs, technical RFCs.</p></div>
+    <div class="example-card"><div class="ex-label bad">Pattern C: Business Assumption</div><div class="ex-content">"Updated project timeline for the client deliverable. Review before Friday standup."</div><div class="ex-verdict wrong">Ensemble: SENSITIVE (business content)</div><div class="ex-verdict right">Reality: NOT SENSITIVE (project email)</div><p style="font-size:.73rem;color:rgba(240,253,250,.4);margin-top:.3rem"><strong>Fix:</strong> Add meeting agendas, status updates, project plans.</p></div>
+  </div>
+  <div class="ref-box"><div class="ref-label">Next Step</div><p>Generate 200+ counter-examples per pattern. Add to training CSV as non-sensitive. Retrain ensemble. Measure gate pass-through rate improvement.</p></div>
+</div></div>
+
+<!-- Evidence Enhancement 3 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 3 &mdash; The Evidence</div>
+  <h2>Content-level <span class="highlight">contrastive pairs</span></h2>
+  <div class="evidence-grid">
+    <div class="evidence-card"><h4>Pair Type A: Policy vs. Data</h4><p>"Our salary review process follows the annual cycle..." (discussing payroll) vs. "John Smith, SSN 123-45-6789, Annual: $145,000..." (containing payroll data). Different token patterns. Learnable.</p></div>
+    <div class="evidence-card"><h4>Pair Type B: Process vs. Credentials</h4><p>"Our password policy requires 12+ characters with rotation..." (discussing security) vs. "admin / P@ssw0rd123! / prod-db-east.internal" (containing credentials). Very different structure.</p></div>
+    <div class="evidence-card"><h4>What the Ensemble CAN Learn</h4><p>Text that discusses a topic uses narrative language, general terms, abstract references. Text that contains actual data has structured fields, specific identifiers, numeric patterns. Transformers see this.</p></div>
+    <div class="evidence-card"><h4>What the Ensemble CANNOT Learn</h4><p>Who sent it. When they accessed it. Whether they're leaving the company. Where it's going. These signals aren't in the text &mdash; they live in metadata the ensemble never sees.</p></div>
+  </div>
+  <div class="ref-box"><div class="ref-label">Next Step</div><p>Generate contrastive pairs for each of the 21 topic categories in the synthetic data. Each pair: same topic, one discussing it (non-sensitive), one containing real data (sensitive). Add to training CSV.</p></div>
+</div></div>
+
+<!-- Evidence Enhancement 6 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 6 &mdash; The Scenarios</div>
+  <h2>Expand to AXIA's <span class="highlight">32 priority scenarios</span></h2>
+  <div class="evidence-grid">
+    <div class="evidence-card"><h4>IP Theft Scenarios</h4><p>Source code exfiltration, trading algorithm theft, database exports to public drives. Zero representation in 28,495 training samples.</p><div class="mono">Benchmark #1, #6, #49</div></div>
+    <div class="evidence-card"><h4>DLP Evasion Scenarios</h4><p>Encrypted archives bypassing controls, disguised credit card data, M&A plans via encrypted messaging.</p><div class="mono">Benchmark #2, #8, #20</div></div>
+    <div class="evidence-card"><h4>Financial Crime Scenarios</h4><p>SAR data beyond contract scope, sanctions evasion via shell entities, banking credentials to dark web.</p><div class="mono">Benchmark #17, #51, #53</div></div>
+    <div class="evidence-card"><h4>The Dual Opportunity</h4><p>For each scenario, add <strong>both</strong>: the sensitive version (actual source code) AND its non-sensitive counterpart (a discussion about coding practices). The gate catches more threats <strong>and</strong> filters more noise.</p></div>
+  </div>
+  <div class="ref-box"><div class="ref-label">Next Step</div><p>Use AXIA's synthetic data pipeline (YAML-configured, Tavily research, multi-model generation) to create training samples for all 32 uncovered benchmark scenarios. Each scenario gets sensitive + non-sensitive contrastive pairs. Priority: IP theft and DLP evasion patterns.</p></div>
+</div></div>
+
+<!-- 22: The Blind Spot -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Blind Spot</div>
+  <h2>What the ensemble gate <span class="warn">can never catch</span></h2>
+  <div class="blind-spot">
+    <div class="bs-label">The Problem</div>
+    <p>"The garden is blooming, time to harvest."</p>
+    <p>Zero PII. Zero keywords. Zero structural markers. The ensemble correctly classifies this as <strong>Not Sensitive</strong>. It skips the LLM entirely. But it's coded insider trading &mdash; and nobody catches it.</p>
+    <p>The same blind spot applies to: a departing employee downloading their normal-looking files at 2 AM, someone using encryption to bypass DLP, bulk exports that look like routine transfers one at a time.</p>
+    <p>These threats are <strong>invisible to any content classifier</strong> &mdash; no matter how well trained &mdash; because the risk signal isn't in the text. It's in the behavior, the timing, the context.</p>
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">Enhancements 1-6 improve the gate. Enhancement 7 addresses what the gate structurally cannot see.</p>
+</div></div>
+
+<!-- 18: Enhancement 6 -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Enhancement 7 &mdash; New</div>
+  <h2>Add a <span class="highlight">behavioral bypass</span> path</h2>
+  <p class="narrative">For certain contexts, route communications to the LLM regardless of what the ensemble says.</p>
+  <div class="card-row">
+    <div class="card"><h3>HR-Flagged Users</h3><p>Employee on PIP, resignation submitted, or in termination process. All their communications hit the LLM, even routine-looking ones.</p></div>
+    <div class="card"><h3>UEBA Anomalies</h3><p>Access at unusual hours, volume spikes, new destinations. When behavioral analytics flag something, bypass the content gate.</p></div>
+    <div class="card"><h3>High-Value Assets</h3><p>Any communication touching source code repos, M&A war rooms, or board-level documents. Content classification alone isn't sufficient.</p></div>
+  </div>
+  <p style="margin-top:1rem;font-size:.85rem;color:var(--muted)">This preserves the cost benefit for the ~90% of normal traffic while ensuring behavioral threats can't slip through the content gate.</p>
+</div></div>
+
+<!-- 19: Before/After -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Projected Impact</div>
+  <h2>Before and after</h2>
+  <div class="vs-row">
+    <div class="vs-box before"><div class="vs-label">Current Gate</div><ul>
+      <li>Over-flags routine business content</li>
+      <li>Topic proximity triggers false sensitives</li>
+      <li>Technical content treated as sensitive</li>
+      <li>Unnecessary LLM calls on noise</li>
+      <li>Content-clean threats slip through</li>
+    </ul></div>
+    <div class="vs-box after"><div class="vs-label">After Enhancements</div><ul>
+      <li>Tighter non-sensitive boundary</li>
+      <li>"About" vs "contains" distinction</li>
+      <li>32 priority scenarios now in training</li>
+      <li>Fewer false sensitives to LLM</li>
+      <li>50-70% reduction in LLM calls</li>
+      <li>Behavioral bypass catches what gate can't</li>
+    </ul></div>
+  </div>
+</div></div>
+
+<!-- 20: Metrics -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Numbers</div>
+  <h2>What changes for AXIA</h2>
+  <div class="metrics">
+    <div class="metric"><div class="val">0%</div><div class="desc">False negatives (gate)</div></div>
+    <div class="metric"><div class="val">55&rarr;55</div><div class="desc">Benchmark scenarios covered</div></div>
+    <div class="metric"><div class="val">~60%</div><div class="desc">More noise filtered at gate</div></div>
+    <div class="metric"><div class="val">~40%</div><div class="desc">Fewer LLM calls</div></div>
+    <div class="metric"><div class="val">+1</div><div class="desc">Behavioral bypass path</div></div>
+  </div>
+  <p style="margin-top:1.5rem;font-size:.82rem;color:var(--muted)">The ensemble handles content. The bypass handles behavior. The LLM focuses where it matters.</p>
+</div></div>
+
+<!-- 21: Moat -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">The Bigger Picture</div>
+  <h2>Smarter gate + wider training + behavioral path = <span class="highlight">complete coverage</span></h2>
+  <p class="narrative">The ensemble gate has the right instinct but is trained on a narrow world. Expanding to all 32 priority scenarios while tightening its boundaries transforms it from a financial-email classifier into a true enterprise content gate.</p>
+  <p class="narrative">And adding a behavioral bypass for high-risk contexts closes the one gap that no amount of training data can fix.</p>
+  <div class="quote" style="margin-top:1rem">Together, these turn AXIA's classification pipeline from a good content filter into a system that catches threats whether they're visible in the text or hidden in the behavior &mdash; across every content domain AXIA is designed to protect.</div>
+</div></div>
+
+<!-- 22: Next Steps -->
+<div class="slide"><div class="slide-inner">
+  <div class="label">Next Steps</div>
+  <h2>The path forward</h2>
+  <div class="card-row">
+    <div class="card"><h3>Quick Win (Week 1)</h3><p>Relabel the 38 identified samples. Retrain ensemble. Measure gate improvement on held-out set.</p></div>
+    <div class="card"><h3>Training Expansion (Weeks 2-4)</h3><p>Counter-examples for 3 failure patterns + contrastive pairs for 21 topic categories. Retrain and validate.</p></div>
+    <div class="card"><h3>Domain Expansion (Weeks 2-4)</h3><p>Generate synthetic training data for all 32 uncovered AXIA benchmark scenarios. Sensitive + non-sensitive pairs for each. Priority: IP theft, DLP evasion, financial crime.</p></div>
+    <div class="card"><h3>Behavioral Path (Parallel)</h3><p>Design the bypass triggers: HR integration, UEBA signals, asset classification. Route flagged contexts directly to LLM.</p></div>
+    <div class="card"><h3>Validation</h3><p>10,000 real interactions through the improved pipeline. Measure: false negative rate (must stay 0%), LLM call reduction, detection time.</p></div>
+  </div>
+</div></div>
+
+</div>
+
+<nav class="nav"><div class="nav-inner">
+  <button id="prev" aria-label="Previous">&larr;</button>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="Next">&rarr;</button>
+</div></nav>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;
+let current=0,animating=false;
+const dotsEl=document.getElementById('dots');
+for(let i=0;i<total;i++){const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>goTo(i));dotsEl.appendChild(d)}
+const dots=document.querySelectorAll('.dot');
+function goTo(n){
+  if(n<0||n>=total||n===current||animating)return;
+  animating=true;const prev=current,fwd=n>prev;
+  slides[prev].classList.remove('active');slides[prev].classList.add(fwd?'exit-left':'exit-right');
+  slides[n].style.transition='none';slides[n].classList.remove('exit-left','exit-right');
+  slides[n].style.transform=fwd?'translateX(40px)':'translateX(-40px)';slides[n].style.opacity='0';
+  void slides[n].offsetWidth;slides[n].style.transition='';
+  slides[n].classList.add('active');slides[n].style.transform='';slides[n].style.opacity='';slides[n].scrollTop=0;
+  current=n;
+  setTimeout(()=>{slides[prev].classList.remove('exit-left','exit-right');slides[prev].style.transform='';animating=false},500);
+  dots.forEach((d,i)=>d.classList.toggle('active',i===current));
+  document.getElementById('counter').textContent=(current+1)+' / '+total;
+  document.getElementById('progress').style.width=((current+1)/total*100)+'%';
+}
+document.getElementById('prev').addEventListener('click',()=>goTo(current-1));
+document.getElementById('next').addEventListener('click',()=>goTo(current+1));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();goTo(current+1)}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();goTo(current-1)}
+  if(e.key==='Home'){e.preventDefault();goTo(0)}
+  if(e.key==='End'){e.preventDefault();goTo(total-1)}
+});
+let tX=0,tY=0;
+document.addEventListener('touchstart',e=>{tX=e.changedTouches[0].screenX;tY=e.changedTouches[0].screenY},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-tX,dy=e.changedTouches[0].screenY-tY;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){dx<0?goTo(current+1):goTo(current-1)}},{passive:true});
+document.getElementById('progress').style.width=(1/total*100)+'%';
+</script>
+</body>
+</html>
