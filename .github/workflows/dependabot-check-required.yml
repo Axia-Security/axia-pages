@@ -1,0 +1,26 @@
+name: Dependabot Critical Check (Required)
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-critical-alerts:
+    name: No Critical Vulnerabilities
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check for CRITICAL Dependabot alerts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.event.repository.full_name }}
+        run: |
+          echo "Checking $REPO for open CRITICAL Dependabot alerts..."
+          CRITICALS=$(gh api "/repos/${REPO}/dependabot/alerts?state=open&severity=critical&per_page=100" --jq 'length' 2>/dev/null || echo "0")
+          if [ "$CRITICALS" -gt 0 ] 2>/dev/null; then
+            echo "::error::$CRITICALS CRITICAL alert(s) found"
+            exit 1
+          else
+            echo "No CRITICAL Dependabot alerts. Check passed."
+          fi
