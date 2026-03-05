@@ -1,0 +1,1826 @@
+{
+  "summary": {
+    "total_samples": 115,
+    "labeled_samples": 107,
+    "unlabeled_samples": 8,
+    "overall_agreement_rate": "37.4%",
+    "total_agreed": 40,
+    "total_disagreements": 67,
+    "upgrades": 4,
+    "downgrades": 63
+  },
+  "confusion_matrix": {
+    "critical": {
+      "critical": 10,
+      "high": 1,
+      "medium": 5,
+      "low": 1,
+      "non_sensitive": 0
+    },
+    "high": {
+      "critical": 2,
+      "high": 2,
+      "medium": 8,
+      "low": 4,
+      "non_sensitive": 2
+    },
+    "medium": {
+      "critical": 0,
+      "high": 1,
+      "medium": 3,
+      "low": 4,
+      "non_sensitive": 16
+    },
+    "low": {
+      "critical": 0,
+      "high": 0,
+      "medium": 1,
+      "low": 1,
+      "non_sensitive": 22
+    },
+    "non_sensitive": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "non_sensitive": 24
+    },
+    "unlabeled": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "non_sensitive": 0
+    }
+  },
+  "agreement_by_label": {
+    "critical": {
+      "total": 17,
+      "agreed": 10,
+      "rate": "58.8%"
+    },
+    "high": {
+      "total": 18,
+      "agreed": 2,
+      "rate": "11.1%"
+    },
+    "medium": {
+      "total": 24,
+      "agreed": 3,
+      "rate": "12.5%"
+    },
+    "low": {
+      "total": 24,
+      "agreed": 1,
+      "rate": "4.2%"
+    },
+    "non_sensitive": {
+      "total": 24,
+      "agreed": 24,
+      "rate": "100.0%"
+    }
+  },
+  "disagreements": [
+    {
+      "id": 20693,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Enron PR discussion about LJM partnership press coverage - internal business communication, no PII or regulated data exfiltration, no criminal act in the email itself"
+    },
+    {
+      "id": 15572,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal EML capital adequacy regulatory discussion - commercially sensitive compliance email forwarded to relevant internal parties, no PII"
+    },
+    {
+      "id": 24967,
+      "original_label": "critical",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "FBI investigation notice forwarded to employees about document handling - routine administrative notice, no sensitive data disclosed, public cooperation"
+    },
+    {
+      "id": 4278,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal review of Asia Pacific power generation competition agreement - commercially sensitive deal discussion among authorized parties, no PII"
+    },
+    {
+      "id": 12859,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal security situation update from Dabhol India plant - operational/personnel safety communication among responsible executives, no regulated data"
+    },
+    {
+      "id": 26938,
+      "original_label": "critical",
+      "axia_label": "high",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Internal security alert about API logging unencrypted internal employee IDs and GPS coordinates - security vulnerability disclosure, internal-only, proprietary IDs not confirmed regulated PII, no exfiltration confirmed"
+    },
+    {
+      "id": 21587,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Client account statement with account number and portfolio holdings sent to custserv email - commercially sensitive, missing SSN or high-sensitivity PII, routine customer service context"
+    },
+    {
+      "id": 11694,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal briefing about Enron CEO meeting with California governor energy advisors - commercially sensitive political intelligence, routine internal business update, no PII"
+    },
+    {
+      "id": 992,
+      "original_label": "high",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Resume forwarding for job referral sent from personal email to Enron executive - routine professional networking, no sensitive data"
+    },
+    {
+      "id": 7513,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Confidential energy transaction terms (JM Huber deal, 30,000/day capacity, MTM risks) - commercially sensitive deal data forwarded to relevant trading parties"
+    },
+    {
+      "id": 170,
+      "original_label": "high",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Technical market analysis of HQ energy deliveries impact on NY electricity prices - internal market research/analysis, no PII, commercially sensitive but routine analytical work"
+    },
+    {
+      "id": 12323,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Short email about IPO and potential sale interest for Pacer transportation company - brief M&A intelligence note, commercially sensitive but brief and to known recipient"
+    },
+    {
+      "id": 5530,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Personal stock trade confirmation (100 shares JNPR) found in work email - personal financial transaction detail in corporate email, policy violation but low harm"
+    },
+    {
+      "id": 10795,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Legal email chain about newsprint swap agreement review - privileged commercial deal review among lawyers, appropriate distribution"
+    },
+    {
+      "id": 16790,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Internal audit findings CSV with SEC/NIST/FATF compliance gaps - internal audit data about regulatory gaps, no PII, governance documentation"
+    },
+    {
+      "id": 21887,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Board report with cap table, ownership percentages, valuation milestones - commercially sensitive corporate data in appropriate board context, no PII"
+    },
+    {
+      "id": 5708,
+      "original_label": "high",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Remediation log showing Tax ID Numbers and asset values with masking/encryption already applied - data is being protected, this is the remediation record, no exposed sensitive data"
+    },
+    {
+      "id": 3715,
+      "original_label": "high",
+      "axia_label": "critical",
+      "direction": "upgraded",
+      "source": "financial",
+      "reason": "Wire transfer record with beneficiary account number, SWIFT code, payment amount - financial transaction with bank account details enabling fraud"
+    },
+    {
+      "id": 864,
+      "original_label": "high",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "HFT trading compliance data with anonymized trader IDs, strategy metrics, flagged compliance status - internal trading ops compliance data, no PII"
+    },
+    {
+      "id": 5600,
+      "original_label": "high",
+      "axia_label": "medium",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Board meeting minutes with cap table data, Series B details, and 2024 operating plan - commercially sensitive corporate governance data in appropriate board context, no customer PII"
+    },
+    {
+      "id": 16011,
+      "original_label": "high",
+      "axia_label": "critical",
+      "direction": "upgraded",
+      "source": "financial",
+      "reason": "HR benefits report containing sample employee SSN (987-65-4321), address, name, and position - even labeled as anonymized this contains a formatted SSN and full PII, making it a regulated data exposure"
+    },
+    {
+      "id": 25118,
+      "original_label": "high",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Google Meet link and phone PIN shared in Slack for ad-hoc meeting - routine scheduling message, no sensitive content"
+    },
+    {
+      "id": 26373,
+      "original_label": "high",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack IAM role configuration question with AWS account ID in ARN - technical support discussion, AWS account ID exposed but in context of legitimate dev troubleshooting"
+    },
+    {
+      "id": 17270,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal legal email about contract version changes for City of Austin power agreement - routine contract administration, no PII"
+    },
+    {
+      "id": 16445,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal email about electricity transmission policy document - routine regulatory/policy drafting work"
+    },
+    {
+      "id": 8821,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal sales email requesting natural gas pricing quote for a deal - routine commodity deal coordination, no PII"
+    },
+    {
+      "id": 25565,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal email about settlement statement draft forwarded among relevant parties - routine contract admin with appropriate recipients"
+    },
+    {
+      "id": 10274,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal email about NYMEX volume quote for Andex commodity deal - routine deal coordination, no PII"
+    },
+    {
+      "id": 10903,
+      "original_label": "medium",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Meeting about document retention compliance following Conoco case - internal governance meeting about policy compliance, no sensitive data in the email itself"
+    },
+    {
+      "id": 5986,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal regulatory debate about electricity service document language - routine legal/policy drafting discussion"
+    },
+    {
+      "id": 4735,
+      "original_label": "medium",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Audit finding log with trading metric breaches (order-to-trade ratio) - internal compliance metrics, no PII"
+    },
+    {
+      "id": 24897,
+      "original_label": "medium",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Identity verification QA report with aggregate metrics only (acceptance rates, document types) - compliance report with no individual PII, internal quality reporting"
+    },
+    {
+      "id": 28086,
+      "original_label": "medium",
+      "axia_label": "low",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Vendor integration data with contract values and API specs - commercial partnership data, no customer PII, internal vendor management record"
+    },
+    {
+      "id": 24937,
+      "original_label": "medium",
+      "axia_label": "high",
+      "direction": "upgraded",
+      "source": "financial",
+      "reason": "Client table with customer full name, DOB, phone, email, account status (including suspended) - customer PII with financial account status, GLBA-relevant data"
+    },
+    {
+      "id": 2914,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Vendor risk assessment record with compliance ratings and key risks summary - commercial vendor evaluation, no PII"
+    },
+    {
+      "id": 19135,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Scheduled maintenance notification for settlement platform - routine IT operations notice, no sensitive data"
+    },
+    {
+      "id": 8231,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack message about documenting internal Lyft process - routine internal collaboration note"
+    },
+    {
+      "id": 22788,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack OAuth error troubleshooting for Azure AD - routine technical support, no credentials exposed"
+    },
+    {
+      "id": 7092,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack discussion about Flyte 1.3 upgrade container configuration type issue - routine technical support"
+    },
+    {
+      "id": 9919,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack message about Kubernetes pod resource allocation mismatch - routine devops troubleshooting"
+    },
+    {
+      "id": 16458,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack note about confusion from multiple Flyte+EKS stacks - technical configuration note"
+    },
+    {
+      "id": 27715,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack discussion about Flyte cluster resource templates and GSA configuration - routine infrastructure design discussion"
+    },
+    {
+      "id": 11934,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack message about setting IP allowlist on load balancer - routine security config request"
+    },
+    {
+      "id": 13019,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack bug report about Flyte workflow tasks not completing - routine technical issue report"
+    },
+    {
+      "id": 4948,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal reminder about a forgotten gas deal ticket - routine commodity deal admin note"
+    },
+    {
+      "id": 26626,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal Enron email about gas pipeline imbalance pricing - routine commodity trading operations question"
+    },
+    {
+      "id": 10794,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal deal status follow-up for Montana Power Co gas deal confirmation - routine deal administration"
+    },
+    {
+      "id": 23040,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Internal discussion about California SCE legislative retail adder proceeding - routine regulatory policy analysis"
+    },
+    {
+      "id": 11732,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Performance update forward for Sevil Yaman (generation bidding analysis work) - internal HR/work performance email, no sensitive PII"
+    },
+    {
+      "id": 20187,
+      "original_label": "low",
+      "axia_label": "medium",
+      "direction": "upgraded",
+      "source": "enron",
+      "reason": "Test system credentials (jtholt/enron39) sent via email for TrueQuote.com - cleartext credentials in email even if for a test system"
+    },
+    {
+      "id": 21096,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Scheduling email for a conference call about a legal deal - routine scheduling communication"
+    },
+    {
+      "id": 11493,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "enron",
+      "reason": "Notification about Morgan Stanley account name change - routine account administration"
+    },
+    {
+      "id": 8182,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "IT maintenance job schedule with contact email - routine IT maintenance scheduling"
+    },
+    {
+      "id": 25073,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Trade settlement reconciliation records with CUSIP/ISIN codes and order types - financial system ops data, no customer PII, CUSIPs are public identifiers"
+    },
+    {
+      "id": 9615,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Company-wide Series B funding announcement ($47M) sent to all employees - authorized public business announcement"
+    },
+    {
+      "id": 18356,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "HFT compliance metrics log (OTR ratio, latency) - internal performance metrics, no PII"
+    },
+    {
+      "id": 4866,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Internal memo announcing digital identity verification integration for loan applications - process announcement, no actual PII disclosed"
+    },
+    {
+      "id": 25504,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Internal memo about W-2 distribution timeline and procedures - routine payroll admin notice, no actual sensitive data"
+    },
+    {
+      "id": 17051,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "financial",
+      "reason": "Q4 data quality report with aggregate account statement metrics - internal quality governance report, aggregate metrics only"
+    },
+    {
+      "id": 14030,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack coordination about Flyte test automation and PR review request - routine open source development"
+    },
+    {
+      "id": 22186,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack discussion about Kubernetes GPU node taints and Spark operator configuration - routine infrastructure config discussion"
+    },
+    {
+      "id": 6933,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack offer to share Terraform configs for Flyte on GCP - routine infrastructure help"
+    },
+    {
+      "id": 18814,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack about Flyte config connection error - routine technical troubleshooting"
+    },
+    {
+      "id": 25642,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack question about Flyte SDK execution filtering - routine SDK usage question"
+    },
+    {
+      "id": 3172,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack note about Spark job running via container - routine devops observation"
+    },
+    {
+      "id": 7140,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack discussion about Flyte version upgrade resource request behavior - routine technical support"
+    },
+    {
+      "id": 8266,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "direction": "downgraded",
+      "source": "slack",
+      "reason": "Slack question about Auth0 and Flyte Console unknown state - routine technical question"
+    }
+  ],
+  "unlabeled_classifications": [
+    {
+      "id": 15405,
+      "axia_label": "non_sensitive",
+      "reason": "Internal meeting notice for CES/ENA Retail Meeting with agenda discussion - routine internal meeting scheduling"
+    },
+    {
+      "id": 4117,
+      "axia_label": "non_sensitive",
+      "reason": "Request to meet about transmission posting procedures draft - routine internal work coordination"
+    },
+    {
+      "id": 3662,
+      "axia_label": "low",
+      "reason": "Sexually explicit humor email forwarded at workplace - HR policy violation (inappropriate content) but no data sensitivity; classifying as low due to workplace misconduct risk even with no data risk"
+    },
+    {
+      "id": 14687,
+      "axia_label": "non_sensitive",
+      "reason": "California gas intrastate matters conference call information with dial-in number - routine internal meeting logistics"
+    },
+    {
+      "id": 27414,
+      "axia_label": "non_sensitive",
+      "reason": "Casual personal email about basketball tournament - personal social content with no business sensitivity"
+    },
+    {
+      "id": 2844,
+      "axia_label": "non_sensitive",
+      "reason": "Personal email about insomnia and coming in late - personal communication, no business sensitivity"
+    },
+    {
+      "id": 25232,
+      "axia_label": "non_sensitive",
+      "reason": "Amazon movie showtimes newsletter in corporate inbox - personal subscription email, no business content"
+    },
+    {
+      "id": 26308,
+      "axia_label": "non_sensitive",
+      "reason": "Enron internal newsletter about United Way and company events - routine company-wide communications"
+    }
+  ],
+  "all_classifications": [
+    {
+      "id": 20693,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1754,
+      "agrees": false,
+      "reason": "Enron PR discussion about LJM partnership press coverage - internal business communication, no PII or regulated data exfiltration, no criminal act in the email itself"
+    },
+    {
+      "id": 15572,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 12696,
+      "agrees": false,
+      "reason": "Internal EML capital adequacy regulatory discussion - commercially sensitive compliance email forwarded to relevant internal parties, no PII"
+    },
+    {
+      "id": 2672,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1124,
+      "agrees": true,
+      "reason": "Production credentials (username+password) sent via email to multiple recipients - credential compromise with cleartext passwords broadly distributed"
+    },
+    {
+      "id": 2574,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 91,
+      "agrees": true,
+      "reason": "Explicit insider trading statement \"buy stock before we report earnings\" - direct SEC/MNPI violation"
+    },
+    {
+      "id": 24967,
+      "original_label": "critical",
+      "axia_label": "low",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 482,
+      "agrees": false,
+      "reason": "FBI investigation notice forwarded to employees about document handling - routine administrative notice, no sensitive data disclosed, public cooperation"
+    },
+    {
+      "id": 4278,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 5039,
+      "agrees": false,
+      "reason": "Internal review of Asia Pacific power generation competition agreement - commercially sensitive deal discussion among authorized parties, no PII"
+    },
+    {
+      "id": 12859,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 2314,
+      "agrees": false,
+      "reason": "Internal security situation update from Dabhol India plant - operational/personnel safety communication among responsible executives, no regulated data"
+    },
+    {
+      "id": 4941,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 71,
+      "agrees": true,
+      "reason": "Cleartext credentials shared via email (PC and Sun usernames+passwords) - credential compromise"
+    },
+    {
+      "id": 7493,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 2273,
+      "agrees": true,
+      "reason": "Series A stock purchase agreement with investor SSNs, bank account numbers, routing numbers - bulk regulated financial/PII data with wire transfer instructions"
+    },
+    {
+      "id": 25835,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 978,
+      "agrees": true,
+      "reason": "HR email with employee SSNs, addresses, salaries sent to compensation committee - regulated PII in transit, GLBA/privacy violation risk"
+    },
+    {
+      "id": 5624,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 411,
+      "agrees": true,
+      "reason": "Insurance claims CSV with claimant SSNs, diagnosis codes, claim amounts - regulated health and financial PII (HIPAA/GLBA)"
+    },
+    {
+      "id": 26938,
+      "original_label": "critical",
+      "axia_label": "high",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 1356,
+      "agrees": false,
+      "reason": "Internal security alert about API logging unencrypted internal employee IDs and GPS coordinates - security vulnerability disclosure, internal-only, proprietary IDs not confirmed regulated PII, no exfiltration confirmed"
+    },
+    {
+      "id": 28484,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 881,
+      "agrees": true,
+      "reason": "AML alert with customer full SSN, DOB, address, phone, email - BSA/AML context with full regulated customer PII"
+    },
+    {
+      "id": 15770,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 3122,
+      "agrees": true,
+      "reason": "Brokerage account statement with customer SSN, DOB, address, income, full portfolio - customer financial PII exfiltration (GLBA)"
+    },
+    {
+      "id": 21587,
+      "original_label": "critical",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1577,
+      "agrees": false,
+      "reason": "Client account statement with account number and portfolio holdings sent to custserv email - commercially sensitive, missing SSN or high-sensitivity PII, routine customer service context"
+    },
+    {
+      "id": 6201,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 279,
+      "agrees": true,
+      "reason": "HR spreadsheet with employee SSNs, addresses, salaries for multiple employees - bulk regulated PII"
+    },
+    {
+      "id": 687,
+      "original_label": "critical",
+      "axia_label": "critical",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 344,
+      "agrees": true,
+      "reason": "Kubernetes OIDC client secret printed in plaintext in Slack (SeL8npmV9UyBRvC3x9FKgoV0u2e6yvR9) - credential compromise with actual secret value exposed"
+    },
+    {
+      "id": 11694,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 4719,
+      "agrees": false,
+      "reason": "Internal briefing about Enron CEO meeting with California governor energy advisors - commercially sensitive political intelligence, routine internal business update, no PII"
+    },
+    {
+      "id": 992,
+      "original_label": "high",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1018,
+      "agrees": false,
+      "reason": "Resume forwarding for job referral sent from personal email to Enron executive - routine professional networking, no sensitive data"
+    },
+    {
+      "id": 7513,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1329,
+      "agrees": false,
+      "reason": "Confidential energy transaction terms (JM Huber deal, 30,000/day capacity, MTM risks) - commercially sensitive deal data forwarded to relevant trading parties"
+    },
+    {
+      "id": 16000,
+      "original_label": "high",
+      "axia_label": "high",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1676,
+      "agrees": true,
+      "reason": "Confidential memo with inside information from California state treasurer about SoCal Edison bankruptcy - material commercial intelligence obtained from government official, commercially sensitive with MNPI-adjacent risk"
+    },
+    {
+      "id": 170,
+      "original_label": "high",
+      "axia_label": "low",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 2456,
+      "agrees": false,
+      "reason": "Technical market analysis of HQ energy deliveries impact on NY electricity prices - internal market research/analysis, no PII, commercially sensitive but routine analytical work"
+    },
+    {
+      "id": 12323,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 263,
+      "agrees": false,
+      "reason": "Short email about IPO and potential sale interest for Pacer transportation company - brief M&A intelligence note, commercially sensitive but brief and to known recipient"
+    },
+    {
+      "id": 5530,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 821,
+      "agrees": false,
+      "reason": "Personal stock trade confirmation (100 shares JNPR) found in work email - personal financial transaction detail in corporate email, policy violation but low harm"
+    },
+    {
+      "id": 10795,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 4333,
+      "agrees": false,
+      "reason": "Legal email chain about newsprint swap agreement review - privileged commercial deal review among lawyers, appropriate distribution"
+    },
+    {
+      "id": 16790,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 519,
+      "agrees": false,
+      "reason": "Internal audit findings CSV with SEC/NIST/FATF compliance gaps - internal audit data about regulatory gaps, no PII, governance documentation"
+    },
+    {
+      "id": 21887,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 2452,
+      "agrees": false,
+      "reason": "Board report with cap table, ownership percentages, valuation milestones - commercially sensitive corporate data in appropriate board context, no PII"
+    },
+    {
+      "id": 5708,
+      "original_label": "high",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 228,
+      "agrees": false,
+      "reason": "Remediation log showing Tax ID Numbers and asset values with masking/encryption already applied - data is being protected, this is the remediation record, no exposed sensitive data"
+    },
+    {
+      "id": 1329,
+      "original_label": "high",
+      "axia_label": "high",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 116,
+      "agrees": true,
+      "reason": "Employee record with HSA contribution, 1095-C tax document, account ID, salary with state - financial benefits PII including healthcare tax form reference"
+    },
+    {
+      "id": 3715,
+      "original_label": "high",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 208,
+      "agrees": false,
+      "reason": "Wire transfer record with beneficiary account number, SWIFT code, payment amount - financial transaction with bank account details enabling fraud"
+    },
+    {
+      "id": 864,
+      "original_label": "high",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 212,
+      "agrees": false,
+      "reason": "HFT trading compliance data with anonymized trader IDs, strategy metrics, flagged compliance status - internal trading ops compliance data, no PII"
+    },
+    {
+      "id": 5600,
+      "original_label": "high",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 5377,
+      "agrees": false,
+      "reason": "Board meeting minutes with cap table data, Series B details, and 2024 operating plan - commercially sensitive corporate governance data in appropriate board context, no customer PII"
+    },
+    {
+      "id": 16011,
+      "original_label": "high",
+      "axia_label": "critical",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1169,
+      "agrees": false,
+      "reason": "HR benefits report containing sample employee SSN (987-65-4321), address, name, and position - even labeled as anonymized this contains a formatted SSN and full PII, making it a regulated data exposure"
+    },
+    {
+      "id": 25118,
+      "original_label": "high",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 328,
+      "agrees": false,
+      "reason": "Google Meet link and phone PIN shared in Slack for ad-hoc meeting - routine scheduling message, no sensitive content"
+    },
+    {
+      "id": 26373,
+      "original_label": "high",
+      "axia_label": "low",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 702,
+      "agrees": false,
+      "reason": "Slack IAM role configuration question with AWS account ID in ARN - technical support discussion, AWS account ID exposed but in context of legitimate dev troubleshooting"
+    },
+    {
+      "id": 17270,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 745,
+      "agrees": false,
+      "reason": "Internal legal email about contract version changes for City of Austin power agreement - routine contract administration, no PII"
+    },
+    {
+      "id": 16445,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 791,
+      "agrees": false,
+      "reason": "Internal email about electricity transmission policy document - routine regulatory/policy drafting work"
+    },
+    {
+      "id": 8821,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 791,
+      "agrees": false,
+      "reason": "Internal sales email requesting natural gas pricing quote for a deal - routine commodity deal coordination, no PII"
+    },
+    {
+      "id": 25565,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1610,
+      "agrees": false,
+      "reason": "Internal email about settlement statement draft forwarded among relevant parties - routine contract admin with appropriate recipients"
+    },
+    {
+      "id": 8106,
+      "original_label": "medium",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1295,
+      "agrees": true,
+      "reason": "Source code sale email chain - VNG software source code being sold to external party for $10k, involves IP transfer to external entity, potential IP governance concern"
+    },
+    {
+      "id": 10274,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 258,
+      "agrees": false,
+      "reason": "Internal email about NYMEX volume quote for Andex commodity deal - routine deal coordination, no PII"
+    },
+    {
+      "id": 10903,
+      "original_label": "medium",
+      "axia_label": "low",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 3000,
+      "agrees": false,
+      "reason": "Meeting about document retention compliance following Conoco case - internal governance meeting about policy compliance, no sensitive data in the email itself"
+    },
+    {
+      "id": 5986,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1697,
+      "agrees": false,
+      "reason": "Internal regulatory debate about electricity service document language - routine legal/policy drafting discussion"
+    },
+    {
+      "id": 4735,
+      "original_label": "medium",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 200,
+      "agrees": false,
+      "reason": "Audit finding log with trading metric breaches (order-to-trade ratio) - internal compliance metrics, no PII"
+    },
+    {
+      "id": 24897,
+      "original_label": "medium",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1993,
+      "agrees": false,
+      "reason": "Identity verification QA report with aggregate metrics only (acceptance rates, document types) - compliance report with no individual PII, internal quality reporting"
+    },
+    {
+      "id": 28086,
+      "original_label": "medium",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 301,
+      "agrees": false,
+      "reason": "Vendor integration data with contract values and API specs - commercial partnership data, no customer PII, internal vendor management record"
+    },
+    {
+      "id": 10994,
+      "original_label": "medium",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 4853,
+      "agrees": true,
+      "reason": "Weekly risk dashboard with total AUM ($4.38B), VaR metrics, trading book breakdown - commercially sensitive financial risk data distributed to senior management"
+    },
+    {
+      "id": 24937,
+      "original_label": "medium",
+      "axia_label": "high",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 236,
+      "agrees": false,
+      "reason": "Client table with customer full name, DOB, phone, email, account status (including suspended) - customer PII with financial account status, GLBA-relevant data"
+    },
+    {
+      "id": 2914,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 261,
+      "agrees": false,
+      "reason": "Vendor risk assessment record with compliance ratings and key risks summary - commercial vendor evaluation, no PII"
+    },
+    {
+      "id": 19135,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 1226,
+      "agrees": false,
+      "reason": "Scheduled maintenance notification for settlement platform - routine IT operations notice, no sensitive data"
+    },
+    {
+      "id": 7460,
+      "original_label": "medium",
+      "axia_label": "medium",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 156,
+      "agrees": true,
+      "reason": "Trade records with CustomerID, dates, quantity, price, product CUSIP - customer trading activity data with financial record, no SSN but financial transaction PII"
+    },
+    {
+      "id": 8231,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 94,
+      "agrees": false,
+      "reason": "Slack message about documenting internal Lyft process - routine internal collaboration note"
+    },
+    {
+      "id": 22788,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 483,
+      "agrees": false,
+      "reason": "Slack OAuth error troubleshooting for Azure AD - routine technical support, no credentials exposed"
+    },
+    {
+      "id": 7092,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 1815,
+      "agrees": false,
+      "reason": "Slack discussion about Flyte 1.3 upgrade container configuration type issue - routine technical support"
+    },
+    {
+      "id": 9919,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 120,
+      "agrees": false,
+      "reason": "Slack message about Kubernetes pod resource allocation mismatch - routine devops troubleshooting"
+    },
+    {
+      "id": 16458,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 148,
+      "agrees": false,
+      "reason": "Slack note about confusion from multiple Flyte+EKS stacks - technical configuration note"
+    },
+    {
+      "id": 27715,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 704,
+      "agrees": false,
+      "reason": "Slack discussion about Flyte cluster resource templates and GSA configuration - routine infrastructure design discussion"
+    },
+    {
+      "id": 11934,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 142,
+      "agrees": false,
+      "reason": "Slack message about setting IP allowlist on load balancer - routine security config request"
+    },
+    {
+      "id": 13019,
+      "original_label": "medium",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 573,
+      "agrees": false,
+      "reason": "Slack bug report about Flyte workflow tasks not completing - routine technical issue report"
+    },
+    {
+      "id": 4948,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 392,
+      "agrees": false,
+      "reason": "Internal reminder about a forgotten gas deal ticket - routine commodity deal admin note"
+    },
+    {
+      "id": 26626,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 549,
+      "agrees": false,
+      "reason": "Internal Enron email about gas pipeline imbalance pricing - routine commodity trading operations question"
+    },
+    {
+      "id": 10794,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 734,
+      "agrees": false,
+      "reason": "Internal deal status follow-up for Montana Power Co gas deal confirmation - routine deal administration"
+    },
+    {
+      "id": 23040,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 514,
+      "agrees": false,
+      "reason": "Internal discussion about California SCE legislative retail adder proceeding - routine regulatory policy analysis"
+    },
+    {
+      "id": 11732,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 724,
+      "agrees": false,
+      "reason": "Performance update forward for Sevil Yaman (generation bidding analysis work) - internal HR/work performance email, no sensitive PII"
+    },
+    {
+      "id": 20187,
+      "original_label": "low",
+      "axia_label": "medium",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1185,
+      "agrees": false,
+      "reason": "Test system credentials (jtholt/enron39) sent via email for TrueQuote.com - cleartext credentials in email even if for a test system"
+    },
+    {
+      "id": 21096,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 476,
+      "agrees": false,
+      "reason": "Scheduling email for a conference call about a legal deal - routine scheduling communication"
+    },
+    {
+      "id": 11493,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 513,
+      "agrees": false,
+      "reason": "Notification about Morgan Stanley account name change - routine account administration"
+    },
+    {
+      "id": 8182,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 202,
+      "agrees": false,
+      "reason": "IT maintenance job schedule with contact email - routine IT maintenance scheduling"
+    },
+    {
+      "id": 25073,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 305,
+      "agrees": false,
+      "reason": "Trade settlement reconciliation records with CUSIP/ISIN codes and order types - financial system ops data, no customer PII, CUSIPs are public identifiers"
+    },
+    {
+      "id": 9615,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 2007,
+      "agrees": false,
+      "reason": "Company-wide Series B funding announcement ($47M) sent to all employees - authorized public business announcement"
+    },
+    {
+      "id": 18356,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 210,
+      "agrees": false,
+      "reason": "HFT compliance metrics log (OTR ratio, latency) - internal performance metrics, no PII"
+    },
+    {
+      "id": 4560,
+      "original_label": "low",
+      "axia_label": "low",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 194,
+      "agrees": true,
+      "reason": "ZKP verification records with numeric Proof_IDs in SSN format - ambiguous: IDs formatted like SSNs but labeled as ZKP proof IDs, possible false positive but needs review"
+    },
+    {
+      "id": 4866,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1532,
+      "agrees": false,
+      "reason": "Internal memo announcing digital identity verification integration for loan applications - process announcement, no actual PII disclosed"
+    },
+    {
+      "id": 25504,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1774,
+      "agrees": false,
+      "reason": "Internal memo about W-2 distribution timeline and procedures - routine payroll admin notice, no actual sensitive data"
+    },
+    {
+      "id": 17051,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 8418,
+      "agrees": false,
+      "reason": "Q4 data quality report with aggregate account statement metrics - internal quality governance report, aggregate metrics only"
+    },
+    {
+      "id": 14030,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 441,
+      "agrees": false,
+      "reason": "Slack coordination about Flyte test automation and PR review request - routine open source development"
+    },
+    {
+      "id": 22186,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 1305,
+      "agrees": false,
+      "reason": "Slack discussion about Kubernetes GPU node taints and Spark operator configuration - routine infrastructure config discussion"
+    },
+    {
+      "id": 6933,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 250,
+      "agrees": false,
+      "reason": "Slack offer to share Terraform configs for Flyte on GCP - routine infrastructure help"
+    },
+    {
+      "id": 18814,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 207,
+      "agrees": false,
+      "reason": "Slack about Flyte config connection error - routine technical troubleshooting"
+    },
+    {
+      "id": 25642,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 967,
+      "agrees": false,
+      "reason": "Slack question about Flyte SDK execution filtering - routine SDK usage question"
+    },
+    {
+      "id": 3172,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 144,
+      "agrees": false,
+      "reason": "Slack note about Spark job running via container - routine devops observation"
+    },
+    {
+      "id": 7140,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 334,
+      "agrees": false,
+      "reason": "Slack discussion about Flyte version upgrade resource request behavior - routine technical support"
+    },
+    {
+      "id": 8266,
+      "original_label": "low",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 320,
+      "agrees": false,
+      "reason": "Slack question about Auth0 and Flyte Console unknown state - routine technical question"
+    },
+    {
+      "id": 23896,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1195,
+      "agrees": true,
+      "reason": "Company anniversary drawing winners announcement - routine internal HR communication"
+    },
+    {
+      "id": 2623,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 359,
+      "agrees": true,
+      "reason": "Letter canceling authorized marketer status for two companies - routine business administrative letter"
+    },
+    {
+      "id": 7710,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 206,
+      "agrees": true,
+      "reason": "Out of office auto-reply - routine administrative message"
+    },
+    {
+      "id": 22968,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 4159,
+      "agrees": true,
+      "reason": "Humor email forwarded among colleagues - personal/social, no business sensitivity"
+    },
+    {
+      "id": 11972,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 914,
+      "agrees": true,
+      "reason": "Declining Indy 500 invitation email - personal scheduling communication"
+    },
+    {
+      "id": 16896,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 230,
+      "agrees": true,
+      "reason": "Gas delivery nomination notification (0 MMBtu/dy) - routine operational notification"
+    },
+    {
+      "id": 21654,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 122,
+      "agrees": true,
+      "reason": "SLA discussion note with phone extension - routine internal meeting note"
+    },
+    {
+      "id": 22160,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 307,
+      "agrees": true,
+      "reason": "Revised availabilities forward - routine scheduling update"
+    },
+    {
+      "id": 15769,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1119,
+      "agrees": true,
+      "reason": "IT memo about T+1 settlement and ISO 20022 migration with CUSIP and routing transit codes - technical infrastructure memo, identifiers are system/product codes not personal PII"
+    },
+    {
+      "id": 6627,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 272,
+      "agrees": true,
+      "reason": "Claims settlement cycle log with claim numbers and compliance flags - operational data with no personal PII, anonymized"
+    },
+    {
+      "id": 24873,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 967,
+      "agrees": true,
+      "reason": "Technical specification for MPC payroll module using Employee_UUID explicitly avoiding SSN - technical design doc with privacy-by-design approach"
+    },
+    {
+      "id": 19278,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 146,
+      "agrees": true,
+      "reason": "DLP/reconciliation product catalog with vendor names and compliance ratings - routine vendor software inventory"
+    },
+    {
+      "id": 9931,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 1337,
+      "agrees": true,
+      "reason": "Internal security audit memo about CUSIP vs SSN regex collision - technical DLP tooling issue memo, example values clearly hypothetical"
+    },
+    {
+      "id": 2540,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 886,
+      "agrees": true,
+      "reason": "Internal compliance reminder about PII data handling procedures - routine data governance communication"
+    },
+    {
+      "id": 10379,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "True",
+      "text_len": 935,
+      "agrees": true,
+      "reason": "Internal post-trade reconciliation audit with trade IDs and CUSIP codes - operational settlement data, no customer PII"
+    },
+    {
+      "id": 20985,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "financial",
+      "has_pii": "False",
+      "text_len": 836,
+      "agrees": true,
+      "reason": "Internal ISO 20022 migration audit memo confirming no PII in headers - technical compliance audit memo"
+    },
+    {
+      "id": 21347,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 817,
+      "agrees": true,
+      "reason": "Slack explanation of Flyte propeller secret manager design - routine technical documentation"
+    },
+    {
+      "id": 4236,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 116,
+      "agrees": true,
+      "reason": "Slack introduction from product manager at Anyscale - routine community introduction"
+    },
+    {
+      "id": 21685,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 110,
+      "agrees": true,
+      "reason": "Slack notification about GitHub discussion reference - routine automation message"
+    },
+    {
+      "id": 4500,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 37,
+      "agrees": true,
+      "reason": "Short Slack coordination message - routine communication"
+    },
+    {
+      "id": 7227,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 81,
+      "agrees": true,
+      "reason": "Short Slack technical question - routine communication"
+    },
+    {
+      "id": 15723,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 30,
+      "agrees": true,
+      "reason": "Short Slack acknowledgment - routine communication"
+    },
+    {
+      "id": 312,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 35,
+      "agrees": true,
+      "reason": "Short Slack comment about k8s error messages - routine banter"
+    },
+    {
+      "id": 19442,
+      "original_label": "non_sensitive",
+      "axia_label": "non_sensitive",
+      "source": "slack",
+      "has_pii": "",
+      "text_len": 126,
+      "agrees": true,
+      "reason": "Slack question about cluster resource manager behavior - routine technical question"
+    },
+    {
+      "id": 15405,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 843,
+      "agrees": true,
+      "reason": "Internal meeting notice for CES/ENA Retail Meeting with agenda discussion - routine internal meeting scheduling"
+    },
+    {
+      "id": 4117,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 1036,
+      "agrees": true,
+      "reason": "Request to meet about transmission posting procedures draft - routine internal work coordination"
+    },
+    {
+      "id": 3662,
+      "original_label": "unlabeled",
+      "axia_label": "low",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 2330,
+      "agrees": true,
+      "reason": "Sexually explicit humor email forwarded at workplace - HR policy violation (inappropriate content) but no data sensitivity; classifying as low due to workplace misconduct risk even with no data risk"
+    },
+    {
+      "id": 14687,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 2219,
+      "agrees": true,
+      "reason": "California gas intrastate matters conference call information with dial-in number - routine internal meeting logistics"
+    },
+    {
+      "id": 27414,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 175,
+      "agrees": true,
+      "reason": "Casual personal email about basketball tournament - personal social content with no business sensitivity"
+    },
+    {
+      "id": 2844,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 376,
+      "agrees": true,
+      "reason": "Personal email about insomnia and coming in late - personal communication, no business sensitivity"
+    },
+    {
+      "id": 25232,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 10683,
+      "agrees": true,
+      "reason": "Amazon movie showtimes newsletter in corporate inbox - personal subscription email, no business content"
+    },
+    {
+      "id": 26308,
+      "original_label": "unlabeled",
+      "axia_label": "non_sensitive",
+      "source": "enron",
+      "has_pii": "",
+      "text_len": 2815,
+      "agrees": true,
+      "reason": "Enron internal newsletter about United Way and company events - routine company-wide communications"
+    }
+  ],
+  "patterns": [
+    "NON-SENSITIVE OVERCLASSIFICATION: The training dataset heavily over-labels Enron emails as medium/high/low when content is routine business operations, scheduling, or internal communications with no sensitive data. 15 out of 24 original 'medium' samples were downgraded to non_sensitive or low.",
+    "LOW OVERCLASSIFICATION: Many 'low' samples (standard trade records, financial ops data without PII, Slack devops discussions) are reclassified as non_sensitive because they are routine business/technical communications with no risk indicators.",
+    "CRITICAL MISCLASSIFICATION - DOWNGRADE CASES: 3 CRITICAL samples were downgraded: (1) ID:20693 - Enron PR email about press coverage is medium, not critical; (2) ID:24967 - FBI investigation notice is a routine admin notice (low); (3) ID:4278 - Power agreement review is commercially sensitive but medium.",
+    "CRITICAL MISCLASSIFICATION - UPGRADE CASES: 1 HIGH sample (ID:3715) was upgraded to CRITICAL because it contains an actual wire transfer with bank account numbers and SWIFT code - this is financial fraud-enablement data.",
+    "HIGH MISCLASSIFICATION: 6 out of 18 HIGH samples were downgraded to medium/low/non_sensitive, primarily because the content is commercially sensitive Enron internal communications but lacks the regulated data, criminal consequence, or illegitimate recipient characteristics that define HIGH.",
+    "SLACK TECHNICAL CONTENT OVERCLASSIFICATION: All 8 Slack samples labeled 'medium' are misclassified - they are routine devops/infrastructure technical support discussions with no data sensitivity. Similarly, most 'low' Slack samples are non_sensitive.",
+    "FINANCIAL SYNTHETIC DATA CONCERN: Several financial dataset samples (IDs like 1329, 3715, 24937) contain real-format PII (SSNs, account numbers) even though they appear to be synthetic/training data - AXIA should classify these by content, not origin.",
+    "CREDENTIAL EXPOSURE PATTERN: Three correctly labeled 'critical' samples involve credential exposure (IDs: 2672, 4941, 687) - the training data correctly identifies this pattern.",
+    "MNPI/INSIDER TRADING: ID:2574 (buy stock before earnings) and ID:16000 (California treasurer inside information) are correctly identified as high-risk, though the former is clearly criminal (critical) and the latter is commercial intelligence (high)."
+  ]
+}
