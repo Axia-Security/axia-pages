@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AXIA Chevron Demo - Cases Reference V6.28.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #09434e;
+            --accent-teal: #22D3EE;
+            --ops-teal: #0D9488;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --severity-critical: #dc2626;
+            --severity-high: #f59e0b;
+            --severity-medium: #6366f1;
+            --severity-low: #22c55e;
+            --status-success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a5563 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+        }
+
+        .header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .header p { font-size: 0.875rem; opacity: 0.85; }
+        .header .version {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            display: inline-block;
+            margin-top: 0.75rem;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-card .number { font-size: 1.75rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+        .stat-card .label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+
+        .summary-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-section h2 {
+            font-size: 1rem; font-weight: 800; margin-bottom: 1rem; color: var(--primary);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+
+        .summary-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .summary-table th {
+            background: #f1f5f9; padding: 0.5rem 0.75rem; text-align: left;
+            font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--text-secondary); border-bottom: 2px solid var(--border);
+        }
+        .summary-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+        .summary-table tr:last-child td { border-bottom: none; }
+        .summary-table tr:hover { background: #f8fafc; }
+
+        .severity {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+            font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px;
+        }
+        .severity-critical { background: #fef2f2; color: var(--severity-critical); }
+        .severity-high { background: #fffbeb; color: var(--severity-high); }
+        .severity-medium { background: #eef2ff; color: var(--severity-medium); }
+        .severity-low { background: #f0fdf4; color: var(--severity-low); }
+
+        .score { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+
+        .status-badge {
+            font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem;
+            border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .status-open { background: #fef2f2; color: #dc2626; }
+        .status-closed { background: #f0fdf4; color: #16a34a; }
+
+        .dlp-true { color: var(--status-success); font-weight: 700; font-size: 0.75rem; }
+        .dlp-false { color: var(--severity-critical); font-weight: 700; font-size: 0.75rem; }
+
+        .case-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.25rem;
+        }
+
+        .case-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;
+        }
+        .case-header > div { display: flex; align-items: center; gap: 0.5rem; }
+
+        .case-id {
+            font-family: 'JetBrains Mono', monospace; font-weight: 800;
+            font-size: 0.85rem; color: var(--primary);
+        }
+
+        .case-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .case-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+        .entity-info {
+            background: #f8fafc; border: 1px solid var(--border);
+            border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem;
+        }
+
+        .risk-factors { margin-top: 0.5rem; padding-left: 1.25rem; }
+        .risk-factors li { font-size: 0.75rem; color: var(--severity-critical); margin-bottom: 0.2rem; }
+
+        .analysis-section { display: grid; gap: 0.75rem; margin-bottom: 1rem; }
+        .analysis-block {
+            background: #f8fafc; border-left: 3px solid var(--ops-teal);
+            padding: 0.75rem; border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .analysis-label {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; color: var(--ops-teal); margin-bottom: 0.25rem;
+        }
+        .analysis-text { font-size: 0.8rem; color: var(--text-primary); line-height: 1.6; }
+
+        .case-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.75rem;
+        }
+
+        .case-meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; }
+        .dlp-label { font-weight: 700; color: var(--text-secondary); }
+
+        .tags { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+        .tag {
+            background: #f1f5f9; color: var(--text-secondary); padding: 0.15rem 0.5rem;
+            border-radius: 999px; font-size: 0.65rem; font-weight: 600;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%);
+            border: 1px solid #99f6e4; border-radius: 0.75rem;
+            padding: 1.5rem; margin-bottom: 2rem;
+        }
+        .key-insight h3 { font-size: 0.875rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
+        .key-insight p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+        .key-insight .highlight {
+            font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary);
+        }
+
+        .footer {
+            text-align: center; padding: 2rem; font-size: 0.75rem;
+            color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .case-card .case-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>AXIA Chevron Demo - Cases Reference</h1>
+    <p>Complete reference for all 14 cases in the AXIA interactive demo customized for Chevron (Energy), with DLP comparison data and AI analysis.</p>
+    <span class="version">V6.28.1 - March 2026</span>
+</div>
+
+<div class="container">
+
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="number" style="color: var(--primary)">14</div>
+            <div class="label">Total Cases</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--severity-critical)">3</div>
+            <div class="label">True Positives (DLP missed)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--severity-medium)">6</div>
+            <div class="label">False Positives (AXIA suppressed)</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: var(--ops-teal)">1</div>
+            <div class="label">Context Validated</div>
+        </div>
+        <div class="stat-card">
+            <div class="number" style="color: #8b5cf6">1</div>
+            <div class="label">Engagement Resolved</div>
+        </div>
+    </div>
+
+    <div class="key-insight">
+        <h3>AXIA vs DLP: Energy-Specific Insider Risk Intelligence</h3>
+        <p>The Chevron demo showcases 14 insider risk cases spanning Energy-specific scenarios.
+        AXIA detected <span class="highlight">6 true positives</span> including 3 that DLP systems missed entirely.
+        AXIA also correctly suppressed <span class="highlight">6 false positives</span> from DLP,
+        and resolved 1 cases through context validation and 1 through employee engagement.</p>
+    </div>
+
+    <div class="summary-section">
+        <h2>All Cases at a Glance</h2>
+        <div style="overflow-x: auto;">
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Severity</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>DLP</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-001</span></td>
+                    <td>APOLO production models and Permian Basin well data exfiltra...</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">97</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-002</span></td>
+                    <td>Hess acquisition synergy models and Stabroek Block reserves ...</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">95</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-004</span></td>
+                    <td>Trading positions and LNG contract pricing exfiltrated to en...</td>
+                    <td><span class="severity severity-critical">Critical</span></td>
+                    <td><span class="score">93</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-003</span></td>
+                    <td>Draft GHG emissions report shared before SEC filing deadline</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">88</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-014</span></td>
+                    <td>Workforce restructuring plan with site closure details uploa...</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">86</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-005</span></td>
+                    <td>TCO JV partner geological data shared outside joint venture ...</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">85</span></td>
+                    <td><span class="status-badge status-open">Open</span></td>
+                    <td><span class="dlp-false">Missed</span></td>
+                    <td>True Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-011</span></td>
+                    <td>Drilling optimization specs shared to Halliburton \u2014 ver...</td>
+                    <td><span class="severity severity-high">High</span></td>
+                    <td><span class="score">12</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>Context Validated</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-012</span></td>
+                    <td>Seismic survey data forwarded to personal email for conferen...</td>
+                    <td><span class="severity severity-medium">Medium</span></td>
+                    <td><span class="score">18</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>Engagement Resolved</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-006</span></td>
+                    <td>DLP alert on SCADA test configuration files during contracto...</td>
+                    <td><span class="severity severity-medium">Medium</span></td>
+                    <td><span class="score">4</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-013</span></td>
+                    <td>Open-source SEG-Y seismic format parser \u2014 verified legi...</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">3</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-007</span></td>
+                    <td>DLP alert on synthetic well log data in reservoir simulation...</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">2</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-009</span></td>
+                    <td>DLP alert on HSE training materials with sample incident rep...</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">2</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-015</span></td>
+                    <td>Synthetic trading scenarios in S&T risk management training ...</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">2</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+                <tr>
+                    <td><span style="font-family:'JetBrains Mono';font-weight:700;color:var(--primary)">CASE-CVR-016</span></td>
+                    <td>Pipeline pressure test simulation files shared to approved t...</td>
+                    <td><span class="severity severity-low">Low</span></td>
+                    <td><span class="score">2</span></td>
+                    <td><span class="status-badge status-closed">Closed</span></td>
+                    <td><span class="dlp-true">Alerted</span></td>
+                    <td>False Positive</td>
+                </tr>
+
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--primary);">Detailed Case Analysis</h2>
+
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-001</span>
+                <span class="severity severity-critical">Critical (97)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">Silent</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">28m ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">APOLO production models and Permian Basin well data exfiltrated before departure</h3>
+        <p class="case-desc">Departing reservoir engineer uploaded 142 files including APOLO AI production forecasting models, Permian Basin well completion data, and proprietary fracturing parameters to personal Google Drive.</p>
+
+        <div class="entity-info">
+            <strong>Marcus Torres</strong> &middot; Senior Reservoir Engineer &middot; Upstream &middot; Midland, TX
+            <ul class="risk-factors"><li>Layoff notification received 12 days ago</li><li>Accepted offer at ConocoPhillips</li><li>Key contributor to APOLO production models</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Marcus Torres (Senior Reservoir Engineer, departing in 6 days) has uploaded 142 files including APOLO production forecasting model source code, Permian Basin well completion databases for 847 wells, petrophysical analysis workflows, and proprietary autonomous fracturing algorithm documentation to his personal Google Drive via Chrome browser sync. Files include the core APOLO AI training datasets and 4 patent-pending optimization algorithms.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">APOLO is Chevron\</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">18x volume spike above 6-month baseline. Accessed APOLO model repositories he hadn\</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, Google Drive (Netskope), Workday HR, Entra ID, APOLO System Logs
+            </div>
+            <div class="tags"><span class="tag">departure-risk</span><span class="tag">ip-exfiltration</span><span class="tag">workforce-reduction</span><span class="tag">apolo</span><span class="tag">permian-basin</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-002</span>
+                <span class="severity severity-critical">Critical (95)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Netskope):</span>
+                <span class="dlp-false">Silent</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">1h ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Hess acquisition synergy models and Stabroek Block reserves data leaked</h3>
+        <p class="case-desc">Integration planning team member downloaded Hess acquisition financial models, Guyana Stabroek Block reserves estimates, and FTC submission documents. Screenshots found on personal iCloud.</p>
+
+        <div class="entity-info">
+            <strong>Jennifer Walsh</strong> &middot; Senior Integration Planning Manager &middot; Finance &middot; Houston, TX
+            <ul class="risk-factors"><li>Access to $55B deal data room</li><li>Unusual Bloomberg terminal queries on Hess options</li><li>Personal iCloud screenshot sync detected</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Jennifer Walsh (Senior Integration Planning Manager) has downloaded Hess acquisition synergy models projecting $3.2B in cost savings, Guyana Stabroek Block reserves estimates (11.6 billion BOE), and draft FTC consent decree compliance documents. Netskope detected screenshots of deal financial models syncing to her personal iCloud account. Bloomberg terminal logs show unusual queries on Hess (HES) options pricing outside her normal workflow.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">This is Material Non-Public Information (MNPI) on a completed $55B acquisition. Post-close synergy data and Guyana reserves estimates are SEC-material and could move CVX stock price. FTC submission documents contain confidential regulatory commitments. Exposure creates SEC insider trading liability (10b-5), potential FTC consent decree violation, and criminal prosecution risk (DOJ).</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Walsh accessed 34 deal room documents in 48 hours \u2014 3x her normal weekly rate. Bloomberg queries on Hess options are outside her integration planning role. iCloud screenshot sync is a new behavior (never detected before). Access to FTC documents is outside her authorized scope.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, iCloud (Netskope), Bloomberg Terminal Logs, Workday HR, Deal Room Access Logs
+            </div>
+            <div class="tags"><span class="tag">mnpi</span><span class="tag">sec-risk</span><span class="tag">hess-acquisition</span><span class="tag">deal-room</span><span class="tag">insider-trading</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-004</span>
+                <span class="severity severity-critical">Critical (93)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">2h ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Trading positions and LNG contract pricing exfiltrated to encrypted email</h3>
+        <p class="case-desc">Senior crude oil trader exported 18 months of trading position history, counterparty relationship data, and LNG contract pricing to ProtonMail. Cross-boundary access to LNG data detected.</p>
+
+        <div class="entity-info">
+            <strong>David Chen</strong> &middot; Senior Crude Oil Trader &middot; Supply & Trading &middot; Houston, TX
+            <ul class="risk-factors"><li>Negotiating employment with Vitol (competitor trading house)</li><li>Cross-boundary access to LNG data (unusual for crude desk)</li><li>Anti-forensics: cleared browser history and deleted sent items</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">David Chen (Senior Crude Oil Trader) has exported 18 months of crude oil trading position history with P&L by strategy, counterparty relationship database (2,400+ entities), and \u2014 critically \u2014 accessed LNG contract pricing data that is outside his crude oil trading desk scope. Data was sent to a ProtonMail account via encrypted email. Browser history cleared and sent items folder purged after transmission.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Chevron Supply & Trading handles 5M barrels/day of crude and 5 BCF/day of natural gas. Trading strategies and counterparty relationships represent billions in competitive advantage. Cross-boundary access to LNG pricing (when Chen is a crude trader) suggests systematic intelligence gathering beyond his role. Anti-forensics behavior indicates awareness of monitoring. FERC market manipulation exposure and Dodd-Frank compliance implications.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Cross-commodity access is the key anomaly \u2014 crude oil traders never access LNG contract databases in normal workflow. ProtonMail usage is new (first seen 3 days ago). Anti-forensics behavior (clearing history, deleting sent items) is a significant behavioral indicator. 18 months of position data downloaded in single session.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, Purview DLP, ETRM System Logs, Netskope, Workday HR
+            </div>
+            <div class="tags"><span class="tag">trading-data</span><span class="tag">cross-boundary</span><span class="tag">anti-forensics</span><span class="tag">ferc</span><span class="tag">supply-trading</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-003</span>
+                <span class="severity severity-high">High (88)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">3h ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Draft GHG emissions report shared before SEC filing deadline</h3>
+        <p class="case-desc">Sustainability reporting analyst downloaded draft GHG emissions report showing 12% methane intensity increase to personal email. Contact with environmental activist organization detected.</p>
+
+        <div class="entity-info">
+            <strong>Priya Sharma</strong> &middot; Senior Sustainability Reporting Analyst &middot; Finance &middot; Houston, TX
+            <ul class="risk-factors"><li>Access to pre-disclosure emissions data</li><li>Contact with EarthJustice (environmental org) on personal social media</li><li>Searched SEC whistleblower program on corporate laptop</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Priya Sharma (Senior Sustainability Reporting Analyst) downloaded the draft GHG Reporting Protocol v8.0 compliance data showing a 12% increase in methane intensity before the scheduled SEC filing and CDP disclosure. Emails forwarded to personal Gmail account "for backup." Social media monitoring detected contact with EarthJustice. Corporate laptop browser history shows searches for "SEC whistleblower program" and "environmental disclosure protections."</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Pre-disclosure emissions data is market-moving \u2014 a 12% methane increase could trigger activist campaigns, affect ESG ratings, and impact CVX stock price. SEC Climate Disclosure Rule compliance is at stake. Whistleblower protection complexity means this must be handled carefully \u2014 Dodd-Frank protections may apply if this is a good-faith disclosure concern.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Download of complete draft emissions report (not individual data points she normally works with). Personal email forwarding of compliance data is a new behavior. Whistleblower program research suggests intent beyond personal backup. Timing aligns with upcoming SEC filing deadline.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, Gmail (Netskope), Social Media Monitoring, Workday HR, Browser History
+            </div>
+            <div class="tags"><span class="tag">esg</span><span class="tag">pre-disclosure</span><span class="tag">sec-filing</span><span class="tag">whistleblower</span><span class="tag">emissions-data</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-014</span>
+                <span class="severity severity-high">High (86)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Netskope):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">6h ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Workforce restructuring plan with site closure details uploaded to personal cloud</h3>
+        <p class="case-desc">HR director downloaded comprehensive workforce restructuring plan covering 6,750 affected positions, specific site closures, severance packages, and retention bonus targets to personal OneDrive.</p>
+
+        <div class="entity-info">
+            <strong>Lisa Carmichael</strong> &middot; Director, Workforce Planning &middot; HR &middot; Houston, TX
+            <ul class="risk-factors"><li>Access to complete restructuring plan</li><li>Downloaded before official employee notifications</li><li>Personal cloud upload detected</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Lisa Carmichael (Director, Workforce Planning) downloaded the comprehensive workforce restructuring plan covering 6,750 affected positions across Midland TX (200 positions), San Ramon CA (600 positions), and other sites. Documents include specific severance package tiers, retention bonus targets for key employees, site closure timelines, and executive succession planning data. Files uploaded to personal OneDrive account.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Workforce restructuring details are highly sensitive MNPI \u2014 early disclosure could cause employee panic, union organizing, media coverage, and stock impact. Specific retention bonus targets reveal which employees Chevron considers critical. Site closure timelines could affect local communities and trigger political responses. Premature disclosure undermines the managed communication strategy.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Carmichael downloaded the complete plan (she normally works with her assigned business unit subset). Personal OneDrive upload is a new behavior \u2014 she has always used Chevron SharePoint. Timing is 3 weeks before scheduled official notifications to affected employees.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, OneDrive (Netskope), Workday HR, SharePoint
+            </div>
+            <div class="tags"><span class="tag">workforce-reduction</span><span class="tag">mnpi</span><span class="tag">hr-data</span><span class="tag">site-closures</span><span class="tag">pre-announcement</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-005</span>
+                <span class="severity severity-high">High (85)</span>
+                <span class="status-badge status-open">Open</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-false">Silent</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">4h ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">TCO JV partner geological data shared outside joint venture boundary</h3>
+        <p class="case-desc">Engineer seconded to Tengizchevroil uploaded KazMunayGas proprietary geological data and TCO Future Growth Project cost reports to Chevron corporate SharePoint.</p>
+
+        <div class="entity-info">
+            <strong>Andrei Volkov</strong> &middot; Senior Production Engineer &middot; Upstream &middot; Atyrau, Kazakhstan
+            <ul class="risk-factors"><li>Seconded to TCO JV</li><li>Accessed KazMunayGas-classified data</li><li>Shared outside JV organizational boundary</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Andrei Volkov (Senior Production Engineer, seconded to TCO) has uploaded Tengizchevroil Future Growth Project cost overrun analysis, KazMunayGas proprietary geological survey data for the Tengiz field expansion, and TCO production optimization reports to Chevron corporate SharePoint \u2014 which is outside the TCO JV organizational boundary. Also shared TCO technical insights in a Chevron-internal technical paper draft.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">TCO is a 50% Chevron JV with ExxonMobil (25%), KazMunayGas (20%), and Lukoil (5%). JV agreements strictly control data boundaries. KazMunayGas data shared outside TCO could trigger JV agreement breach penalties, CFIUS implications, Kazakhstan regulatory action, and Lukoil/Russia sanctions considerations. Cost overrun data is commercially sensitive to all JV partners.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Volkov accessed KazMunayGas-classified geological data he doesn\</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, SharePoint, TCO System Logs, VPN Logs, Workday HR
+            </div>
+            <div class="tags"><span class="tag">jv-boundary</span><span class="tag">tco</span><span class="tag">kazakhstan</span><span class="tag">cfius</span><span class="tag">partner-data</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-011</span>
+                <span class="severity severity-high">High (12)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">1d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Drilling optimization specs shared to Halliburton \u2014 verified JV-authorized transfer</h3>
+        <p class="case-desc">Chevron Technical Center engineer shared proprietary drilling optimization specifications to Halliburton counterpart. Verified as authorized under joint autonomous fracturing program agreement.</p>
+
+        <div class="entity-info">
+            <strong>James Whitfield</strong> &middot; Senior Drilling Engineer &middot; Upstream &middot; Houston, TX
+            <ul class="risk-factors"><li>Shared proprietary specs externally</li><li>Halliburton is both partner and service provider</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">James Whitfield (Senior Drilling Engineer, CTC) shared proprietary drilling optimization specifications and real-time fracturing algorithm parameters to Halliburton counterpart Dr. Rebecca Liu. Purview flagged the transfer as external sharing of trade secret-classified content.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Initially appeared as IP exfiltration to a service provider. However, AXIA cross-referenced the JV agreement database and confirmed this falls within the authorized scope of the Chevron-Halliburton Joint Autonomous Fracturing Program. The receiving contact (Dr. Liu) is named in the approved technical collaboration roster. Manager confirmed the transfer.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">DLP correctly flagged external sharing of proprietary specs. AXIA provided the context DLP couldn\</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, Purview DLP, JV Agreement Database, Manager Verification
+            </div>
+            <div class="tags"><span class="tag">context-validated</span><span class="tag">jv-authorized</span><span class="tag">halliburton</span><span class="tag">drilling-tech</span><span class="tag">false-positive</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-012</span>
+                <span class="severity severity-medium">Medium (18)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">3d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Seismic survey data forwarded to personal email for conference presentation</h3>
+        <p class="case-desc">Geologist forwarded Permian Basin seismic survey subsets to personal email for an upcoming SPE conference presentation. Resolved through coaching \u2014 manager approved use of sanitized data.</p>
+
+        <div class="entity-info">
+            <strong>Sarah Park</strong> &middot; Senior Geologist &middot; Upstream &middot; Midland, TX
+            <ul class="risk-factors"><li>Shared seismic data to personal email</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Sarah Park forwarded Permian Basin seismic survey interpretation subsets to her personal Gmail for an upcoming SPE (Society of Petroleum Engineers) conference presentation. The data included some proprietary formation boundaries.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Seismic interpretation data contains proprietary geological insights. However, Park\</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Personal email for work data is against policy, but intent was not malicious. AXIA\</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Microsoft 365, Purview DLP, Manager Verification
+            </div>
+            <div class="tags"><span class="tag">coaching</span><span class="tag">employee-engagement</span><span class="tag">seismic-data</span><span class="tag">conference</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-006</span>
+                <span class="severity severity-medium">Medium (4)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">2d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">DLP alert on SCADA test configuration files during contractor onboarding</h3>
+        <p class="case-desc">DLP flagged SCADA configuration files shared during routine pipeline maintenance contractor onboarding. Auto-resolved \u2014 test environment data with approved vendor.</p>
+
+        <div class="entity-info">
+            <strong>Roberto Garza</strong> &middot; Pipeline Automation Engineer &middot; Information Technology &middot; Covington, LA
+            <ul class="risk-factors"><li>Shared SCADA configs externally</li></ul>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Microsoft Purview flagged SCADA configuration files containing IP addresses and control parameters shared to Honeywell vendor portal during scheduled contractor onboarding for quarterly pipeline maintenance.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">SCADA configurations are sensitive infrastructure data. However, AXIA verified: files are from the TEST_ENVIRONMENT simulation sandbox (not production), IP addresses use private 10.x.x.x ranges reserved for simulation, and the Honeywell vendor portal is an approved maintenance partner destination.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 this is routine quarterly maintenance onboarding. DLP cannot distinguish production SCADA configs from test simulation data. AXIA\</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Purview DLP, Vendor Management System, SCADA Access Logs
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">scada</span><span class="tag">contractor</span><span class="tag">auto-resolved</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-013</span>
+                <span class="severity severity-low">Low (3)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Netskope):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">5d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Open-source SEG-Y seismic format parser \u2014 verified legitimate contribution</h3>
+        <p class="case-desc">Geoscientist contributed to open-source SEG-Y seismic data format parser on GitHub. Verified legitimate \u2014 standard format library, no proprietary algorithms.</p>
+
+        <div class="entity-info">
+            <strong>Wei Liu</strong> &middot; Geoscience Software Developer &middot; Upstream &middot; Houston, TX
+            
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Netskope flagged code pushed to public GitHub repository. AXIA verified: code is a SEG-Y format parser (industry standard seismic data format), contains no proprietary algorithms, and is published under MIT license. Open-source contribution was pre-approved by engineering management.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">SEG-Y is an open industry standard. The parser contains format handling code, not Chevron\</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 approved open-source contribution.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Netskope, GitHub, Open Source Approval System
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">open-source</span><span class="tag">auto-resolved</span><span class="tag">legitimate</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-007</span>
+                <span class="severity severity-low">Low (2)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">4d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">DLP alert on synthetic well log data in reservoir simulation sandbox</h3>
+        <p class="case-desc">DLP flagged well log data uploaded to cloud compute cluster. Auto-resolved \u2014 synthetic simulation data with SIM_ prefixed well IDs from USGS reference datasets.</p>
+
+        <div class="entity-info">
+            <strong>Nina Okafor</strong> &middot; Reservoir Simulation Analyst &middot; Upstream &middot; Houston, TX
+            
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Purview flagged well log data containing geological coordinates and formation properties. AXIA identified all data as synthetic \u2014 SIM_ prefixed well IDs, published USGS reference coordinates, SYNTHETIC_MODEL tagged properties.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Reservoir simulation requires synthetic datasets for model validation. DLP cannot distinguish synthetic from proprietary well data. AXIA\</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 routine simulation workflow.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Purview DLP
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">simulation</span><span class="tag">auto-resolved</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-009</span>
+                <span class="severity severity-low">Low (2)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">4d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">DLP alert on HSE training materials with sample incident reports</h3>
+        <p class="case-desc">DLP flagged HSE training materials containing sample incident reports with synthetic SSNs and employee IDs. Auto-resolved \u2014 training content with clear DRILL_EXERCISE markers.</p>
+
+        <div class="entity-info">
+            <strong>Tom Blackwell</strong> &middot; HSE Training Specialist &middot; Upstream &middot; Midland, TX
+            
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Purview flagged HSE training materials with SSN patterns and medical information. AXIA confirmed all content is training scenarios \u2014 DRILL_EXERCISE headers, 000-series synthetic SSNs, TEST_ prefixed employee IDs.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">HSE certification training requires realistic scenarios. DLP flags the realistic-looking data. AXIA suppresses because the training markers are unambiguous.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 scheduled HSE certification training cycle.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Purview DLP
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">hse-training</span><span class="tag">auto-resolved</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-015</span>
+                <span class="severity severity-low">Low (2)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">6d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Synthetic trading scenarios in S&T risk management training platform</h3>
+        <p class="case-desc">DLP flagged commodity trading data uploaded to risk training platform. Auto-resolved \u2014 sandbox training data with TST_ prefixed positions and fictional counterparties.</p>
+
+        <div class="entity-info">
+            <strong>Carlos Mendez</strong> &middot; Trading Risk Analyst &middot; Supply & Trading &middot; Houston, TX
+            
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Purview flagged trading position data. AXIA identified all positions as sandbox training data \u2014 TST_ prefix IDs, fictional counterparties ("TestCorp Energy"), SANDBOX_TRAINING_DATA header.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Trading risk training requires realistic-looking scenarios. DLP cannot distinguish training positions from real trading data. AXIA auto-resolved using content markers.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 scheduled risk management training.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Purview DLP
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">trading-training</span><span class="tag">auto-resolved</span></div>
+        </div>
+    </div>
+
+    <div class="case-card">
+        <div class="case-header">
+            <div>
+                <span class="case-id">CASE-CVR-016</span>
+                <span class="severity severity-low">Low (2)</span>
+                <span class="status-badge status-closed">Closed</span>
+            </div>
+            <div class="case-meta">
+                <span class="dlp-label">DLP (Purview):</span>
+                <span class="dlp-true">Alerted</span>
+                &nbsp;&middot;&nbsp;
+                <span style="color:var(--text-muted)">6d ago</span>
+            </div>
+        </div>
+        <h3 class="case-title">Pipeline pressure test simulation files shared to approved testing cluster</h3>
+        <p class="case-desc">DLP flagged pipeline pressure and GPS data. Auto-resolved \u2014 emergency response simulation files with ERS_SIMULATION_ONLY headers and training facility coordinates.</p>
+
+        <div class="entity-info">
+            <strong>Amy Richardson</strong> &middot; Emergency Response Coordinator &middot; Upstream &middot; Midland, TX
+            
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-block">
+                <div class="analysis-label">What Happened</div>
+                <div class="analysis-text">Purview flagged files containing GPS coordinates and pressure readings. AXIA verified: ERS_SIMULATION_ONLY header, training facility coordinates (not production pipeline), SIM_ prefixed pressure values. Annual emergency response drill.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why It Matters</div>
+                <div class="analysis-text">Pipeline safety drills are critical for PHMSA compliance. DLP flags the realistic-looking coordinates and pressure data. AXIA correctly identifies the simulation context.</div>
+            </div>
+            <div class="analysis-block">
+                <div class="analysis-label">Why Unusual</div>
+                <div class="analysis-text">Not unusual \u2014 annual emergency response drill.</div>
+            </div>
+        </div>
+
+        <div class="case-footer">
+            <div>
+                <span class="dlp-label">Data Sources:</span> Purview DLP, HSE Drill Schedule
+            </div>
+            <div class="tags"><span class="tag">false-positive</span><span class="tag">emergency-drill</span><span class="tag">pipeline</span><span class="tag">auto-resolved</span></div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="footer">
+    AXIA - The CISO's Front-Line AI for Insider Risk &middot; Chevron (Energy) Demo V6.28.1 &middot; March 2026<br>
+    <a href="./" style="color: var(--ops-teal); text-decoration: none; font-weight: 600;">Back to Interactive Demo</a>
+</div>
+
+</body>
+</html>
