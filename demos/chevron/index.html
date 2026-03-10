@@ -1486,8 +1486,6 @@ const tailwindConfig = {
 
 // OpenAI Assistant configuration
 const ASSISTANT_ID = 'asst_OKbmLJvzqYG8KbfSdtRQwFtS';
-// API key is held server-side by the Cloudflare Worker proxy.
-// Users can still paste their own key via the Settings modal.
 const PROXY_URL = 'https://axia-demo-proxy.yohaye.workers.dev';
 const DEFAULT_API_KEY = '';
 
@@ -2291,6 +2289,7 @@ const DEMO_DATA = {
             color: 'blue-500',
             type: 'channel',
             category: 'channel',
+            channelType: 'email',
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
             stats: {
@@ -2311,6 +2310,7 @@ const DEMO_DATA = {
             color: 'red-500',
             type: 'channel',
             category: 'channel',
+            channelType: 'email',
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
             stats: {
@@ -2331,6 +2331,7 @@ const DEMO_DATA = {
             color: 'yellow-600',
             type: 'channel',
             category: 'channel',
+            channelType: 'saas',
             status: 'connected',
             connectedSince: 'Oct 22, 2025',
             stats: {
@@ -2351,6 +2352,7 @@ const DEMO_DATA = {
             color: 'indigo-500',
             type: 'context',
             category: 'context',
+            isContextSource: true,
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
             stats: {
@@ -2368,6 +2370,7 @@ const DEMO_DATA = {
             color: 'orange-500',
             type: 'context',
             category: 'context',
+            isContextSource: true,
             status: 'connected',
             connectedSince: 'Oct 15, 2025',
             stats: {
@@ -2408,7 +2411,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager', 'contact-hr'],
             analysis: {
                 what: 'Marcus Torres (Senior Reservoir Engineer, departing in 6 days) has uploaded 142 files including APOLO production forecasting model source code, Permian Basin well completion databases for 847 wells, petrophysical analysis workflows, and proprietary autonomous fracturing algorithm documentation to his personal Google Drive via Chrome browser sync. Files include the core APOLO AI training datasets and 4 patent-pending optimization algorithms.',
-                whyItMatters: 'APOLO is Chevron\'s competitive advantage in shale production optimization, processing millions of data points across thousands of wells. The Permian Basin well completion data represents years of proprietary field development knowledge. Combined value estimated at $50M+. The Propel Fuels v. Phillips 66 precedent ($604.9M verdict for 77 trade secrets) establishes massive damages potential in energy trade secret cases.',
+                whyMatters: 'APOLO is Chevron\'s competitive advantage in shale production optimization, processing millions of data points across thousands of wells. The Permian Basin well completion data represents years of proprietary field development knowledge. Combined value estimated at $50M+. The Propel Fuels v. Phillips 66 precedent ($604.9M verdict for 77 trade secrets) establishes massive damages potential in energy trade secret cases.',
                 whyUnusual: '18x volume spike above 6-month baseline. Accessed APOLO model repositories he hadn\'t touched in 8 months. Downloaded 3 years of historical well performance data in a single session. Activity concentrated between 10pm-2am, outside normal work hours. Workday confirms layoff notification as part of the 15-20% workforce reduction.',
                 riskScore: { total: 97, factors: { content: 98, behavior: 96, context: 97 } },
                 dataSources: ['Microsoft 365', 'Google Drive (Netskope)', 'Workday HR', 'Entra ID', 'APOLO System Logs'],
@@ -2449,7 +2452,7 @@ const DEMO_DATA = {
             completedActions: ['contact-legal'],
             analysis: {
                 what: 'Jennifer Walsh (Senior Integration Planning Manager) has downloaded Hess acquisition synergy models projecting $3.2B in cost savings, Guyana Stabroek Block reserves estimates (11.6 billion BOE), and draft FTC consent decree compliance documents. Netskope detected screenshots of deal financial models syncing to her personal iCloud account. Bloomberg terminal logs show unusual queries on Hess (HES) options pricing outside her normal workflow.',
-                whyItMatters: 'This is Material Non-Public Information (MNPI) on a completed $55B acquisition. Post-close synergy data and Guyana reserves estimates are SEC-material and could move CVX stock price. FTC submission documents contain confidential regulatory commitments. Exposure creates SEC insider trading liability (10b-5), potential FTC consent decree violation, and criminal prosecution risk (DOJ).',
+                whyMatters: 'This is Material Non-Public Information (MNPI) on a completed $55B acquisition. Post-close synergy data and Guyana reserves estimates are SEC-material and could move CVX stock price. FTC submission documents contain confidential regulatory commitments. Exposure creates SEC insider trading liability (10b-5), potential FTC consent decree violation, and criminal prosecution risk (DOJ).',
                 whyUnusual: 'Walsh accessed 34 deal room documents in 48 hours \u2014 3x her normal weekly rate. Bloomberg queries on Hess options are outside her integration planning role. iCloud screenshot sync is a new behavior (never detected before). Access to FTC documents is outside her authorized scope.',
                 riskScore: { total: 95, factors: { content: 98, behavior: 92, context: 95 } },
                 dataSources: ['Microsoft 365', 'iCloud (Netskope)', 'Bloomberg Terminal Logs', 'Workday HR', 'Deal Room Access Logs'],
@@ -2489,7 +2492,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager', 'contact-legal'],
             analysis: {
                 what: 'David Chen (Senior Crude Oil Trader) has exported 18 months of crude oil trading position history with P&L by strategy, counterparty relationship database (2,400+ entities), and \u2014 critically \u2014 accessed LNG contract pricing data that is outside his crude oil trading desk scope. Data was sent to a ProtonMail account via encrypted email. Browser history cleared and sent items folder purged after transmission.',
-                whyItMatters: 'Chevron Supply & Trading handles 5M barrels/day of crude and 5 BCF/day of natural gas. Trading strategies and counterparty relationships represent billions in competitive advantage. Cross-boundary access to LNG pricing (when Chen is a crude trader) suggests systematic intelligence gathering beyond his role. Anti-forensics behavior indicates awareness of monitoring. FERC market manipulation exposure and Dodd-Frank compliance implications.',
+                whyMatters: 'Chevron Supply & Trading handles 5M barrels/day of crude and 5 BCF/day of natural gas. Trading strategies and counterparty relationships represent billions in competitive advantage. Cross-boundary access to LNG pricing (when Chen is a crude trader) suggests systematic intelligence gathering beyond his role. Anti-forensics behavior indicates awareness of monitoring. FERC market manipulation exposure and Dodd-Frank compliance implications.',
                 whyUnusual: 'Cross-commodity access is the key anomaly \u2014 crude oil traders never access LNG contract databases in normal workflow. ProtonMail usage is new (first seen 3 days ago). Anti-forensics behavior (clearing history, deleting sent items) is a significant behavioral indicator. 18 months of position data downloaded in single session.',
                 riskScore: { total: 93, factors: { content: 95, behavior: 94, context: 90 } },
                 dataSources: ['Microsoft 365', 'Purview DLP', 'ETRM System Logs', 'Netskope', 'Workday HR'],
@@ -2532,7 +2535,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager'],
             analysis: {
                 what: 'Priya Sharma (Senior Sustainability Reporting Analyst) downloaded the draft GHG Reporting Protocol v8.0 compliance data showing a 12% increase in methane intensity before the scheduled SEC filing and CDP disclosure. Emails forwarded to personal Gmail account "for backup." Social media monitoring detected contact with EarthJustice. Corporate laptop browser history shows searches for "SEC whistleblower program" and "environmental disclosure protections."',
-                whyItMatters: 'Pre-disclosure emissions data is market-moving \u2014 a 12% methane increase could trigger activist campaigns, affect ESG ratings, and impact CVX stock price. SEC Climate Disclosure Rule compliance is at stake. Whistleblower protection complexity means this must be handled carefully \u2014 Dodd-Frank protections may apply if this is a good-faith disclosure concern.',
+                whyMatters: 'Pre-disclosure emissions data is market-moving \u2014 a 12% methane increase could trigger activist campaigns, affect ESG ratings, and impact CVX stock price. SEC Climate Disclosure Rule compliance is at stake. Whistleblower protection complexity means this must be handled carefully \u2014 Dodd-Frank protections may apply if this is a good-faith disclosure concern.',
                 whyUnusual: 'Download of complete draft emissions report (not individual data points she normally works with). Personal email forwarding of compliance data is a new behavior. Whistleblower program research suggests intent beyond personal backup. Timing aligns with upcoming SEC filing deadline.',
                 riskScore: { total: 88, factors: { content: 92, behavior: 85, context: 87 } },
                 dataSources: ['Microsoft 365', 'Gmail (Netskope)', 'Social Media Monitoring', 'Workday HR', 'Browser History'],
@@ -2572,7 +2575,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager'],
             analysis: {
                 what: 'Andrei Volkov (Senior Production Engineer, seconded to TCO) has uploaded Tengizchevroil Future Growth Project cost overrun analysis, KazMunayGas proprietary geological survey data for the Tengiz field expansion, and TCO production optimization reports to Chevron corporate SharePoint \u2014 which is outside the TCO JV organizational boundary. Also shared TCO technical insights in a Chevron-internal technical paper draft.',
-                whyItMatters: 'TCO is a 50% Chevron JV with ExxonMobil (25%), KazMunayGas (20%), and Lukoil (5%). JV agreements strictly control data boundaries. KazMunayGas data shared outside TCO could trigger JV agreement breach penalties, CFIUS implications, Kazakhstan regulatory action, and Lukoil/Russia sanctions considerations. Cost overrun data is commercially sensitive to all JV partners.',
+                whyMatters: 'TCO is a 50% Chevron JV with ExxonMobil (25%), KazMunayGas (20%), and Lukoil (5%). JV agreements strictly control data boundaries. KazMunayGas data shared outside TCO could trigger JV agreement breach penalties, CFIUS implications, Kazakhstan regulatory action, and Lukoil/Russia sanctions considerations. Cost overrun data is commercially sensitive to all JV partners.',
                 whyUnusual: 'Volkov accessed KazMunayGas-classified geological data he doesn\'t normally work with. Upload to Chevron corporate SharePoint (not TCO SharePoint) is a clear boundary violation. Used Chevron VPN to access TCO systems from Houston during home leave. Pattern suggests well-intentioned but unauthorized data sharing.',
                 riskScore: { total: 85, factors: { content: 88, behavior: 80, context: 87 } },
                 dataSources: ['Microsoft 365', 'SharePoint', 'TCO System Logs', 'VPN Logs', 'Workday HR'],
@@ -2612,7 +2615,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager'],
             analysis: {
                 what: 'Lisa Carmichael (Director, Workforce Planning) downloaded the comprehensive workforce restructuring plan covering 6,750 affected positions across Midland TX (200 positions), San Ramon CA (600 positions), and other sites. Documents include specific severance package tiers, retention bonus targets for key employees, site closure timelines, and executive succession planning data. Files uploaded to personal OneDrive account.',
-                whyItMatters: 'Workforce restructuring details are highly sensitive MNPI \u2014 early disclosure could cause employee panic, union organizing, media coverage, and stock impact. Specific retention bonus targets reveal which employees Chevron considers critical. Site closure timelines could affect local communities and trigger political responses. Premature disclosure undermines the managed communication strategy.',
+                whyMatters: 'Workforce restructuring details are highly sensitive MNPI \u2014 early disclosure could cause employee panic, union organizing, media coverage, and stock impact. Specific retention bonus targets reveal which employees Chevron considers critical. Site closure timelines could affect local communities and trigger political responses. Premature disclosure undermines the managed communication strategy.',
                 whyUnusual: 'Carmichael downloaded the complete plan (she normally works with her assigned business unit subset). Personal OneDrive upload is a new behavior \u2014 she has always used Chevron SharePoint. Timing is 3 weeks before scheduled official notifications to affected employees.',
                 riskScore: { total: 86, factors: { content: 90, behavior: 82, context: 86 } },
                 dataSources: ['Microsoft 365', 'OneDrive (Netskope)', 'Workday HR', 'SharePoint'],
@@ -2651,7 +2654,7 @@ const DEMO_DATA = {
             completedActions: ['contact-manager'],
             analysis: {
                 what: 'James Whitfield (Senior Drilling Engineer, CTC) shared proprietary drilling optimization specifications and real-time fracturing algorithm parameters to Halliburton counterpart Dr. Rebecca Liu. Purview flagged the transfer as external sharing of trade secret-classified content.',
-                whyItMatters: 'Initially appeared as IP exfiltration to a service provider. However, AXIA cross-referenced the JV agreement database and confirmed this falls within the authorized scope of the Chevron-Halliburton Joint Autonomous Fracturing Program. The receiving contact (Dr. Liu) is named in the approved technical collaboration roster. Manager confirmed the transfer.',
+                whyMatters: 'Initially appeared as IP exfiltration to a service provider. However, AXIA cross-referenced the JV agreement database and confirmed this falls within the authorized scope of the Chevron-Halliburton Joint Autonomous Fracturing Program. The receiving contact (Dr. Liu) is named in the approved technical collaboration roster. Manager confirmed the transfer.',
                 whyUnusual: 'DLP correctly flagged external sharing of proprietary specs. AXIA provided the context DLP couldn\'t \u2014 verifying the JV authorization, named recipient, and approved collaboration scope. This prevented a false escalation that would have disrupted a critical partnership.',
                 riskScore: { total: 12, factors: { content: 85, behavior: 10, context: 5 } },
                 dataSources: ['Microsoft 365', 'Purview DLP', 'JV Agreement Database', 'Manager Verification'],
@@ -2693,7 +2696,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Microsoft Purview flagged SCADA configuration files containing IP addresses and control parameters shared to Honeywell vendor portal during scheduled contractor onboarding for quarterly pipeline maintenance.',
-                whyItMatters: 'SCADA configurations are sensitive infrastructure data. However, AXIA verified: files are from the TEST_ENVIRONMENT simulation sandbox (not production), IP addresses use private 10.x.x.x ranges reserved for simulation, and the Honeywell vendor portal is an approved maintenance partner destination.',
+                whyMatters: 'SCADA configurations are sensitive infrastructure data. However, AXIA verified: files are from the TEST_ENVIRONMENT simulation sandbox (not production), IP addresses use private 10.x.x.x ranges reserved for simulation, and the Honeywell vendor portal is an approved maintenance partner destination.',
                 whyUnusual: 'Not unusual \u2014 this is routine quarterly maintenance onboarding. DLP cannot distinguish production SCADA configs from test simulation data. AXIA\'s content analysis correctly identified sandbox markers.',
                 riskScore: { total: 4, factors: { content: 5, behavior: 3, context: 2 } },
                 dataSources: ['Purview DLP', 'Vendor Management System', 'SCADA Access Logs'],
@@ -2732,7 +2735,7 @@ const DEMO_DATA = {
             completedActions: ['contact-employee', 'contact-manager'],
             analysis: {
                 what: 'Sarah Park forwarded Permian Basin seismic survey interpretation subsets to her personal Gmail for an upcoming SPE (Society of Petroleum Engineers) conference presentation. The data included some proprietary formation boundaries.',
-                whyItMatters: 'Seismic interpretation data contains proprietary geological insights. However, Park\'s intent was legitimate \u2014 preparing an approved conference presentation. AXIA engaged Park directly, who explained the purpose. Manager confirmed the presentation was approved but Park should use the sanitized dataset (with proprietary formation boundaries removed).',
+                whyMatters: 'Seismic interpretation data contains proprietary geological insights. However, Park\'s intent was legitimate \u2014 preparing an approved conference presentation. AXIA engaged Park directly, who explained the purpose. Manager confirmed the presentation was approved but Park should use the sanitized dataset (with proprietary formation boundaries removed).',
                 whyUnusual: 'Personal email for work data is against policy, but intent was not malicious. AXIA\'s coaching engagement resolved the issue \u2014 Park now uses the approved sanitized dataset and the company\'s external sharing workflow.',
                 riskScore: { total: 18, factors: { content: 42, behavior: 15, context: 10 } },
                 dataSources: ['Microsoft 365', 'Purview DLP', 'Manager Verification'],
@@ -2774,7 +2777,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Purview flagged well log data containing geological coordinates and formation properties. AXIA identified all data as synthetic \u2014 SIM_ prefixed well IDs, published USGS reference coordinates, SYNTHETIC_MODEL tagged properties.',
-                whyItMatters: 'Reservoir simulation requires synthetic datasets for model validation. DLP cannot distinguish synthetic from proprietary well data. AXIA\'s content analysis identified all sandbox markers and auto-resolved.',
+                whyMatters: 'Reservoir simulation requires synthetic datasets for model validation. DLP cannot distinguish synthetic from proprietary well data. AXIA\'s content analysis identified all sandbox markers and auto-resolved.',
                 whyUnusual: 'Not unusual \u2014 routine simulation workflow.',
                 riskScore: { total: 2, factors: { content: 3, behavior: 1, context: 1 } },
                 dataSources: ['Purview DLP'],
@@ -2811,7 +2814,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Purview flagged HSE training materials with SSN patterns and medical information. AXIA confirmed all content is training scenarios \u2014 DRILL_EXERCISE headers, 000-series synthetic SSNs, TEST_ prefixed employee IDs.',
-                whyItMatters: 'HSE certification training requires realistic scenarios. DLP flags the realistic-looking data. AXIA suppresses because the training markers are unambiguous.',
+                whyMatters: 'HSE certification training requires realistic scenarios. DLP flags the realistic-looking data. AXIA suppresses because the training markers are unambiguous.',
                 whyUnusual: 'Not unusual \u2014 scheduled HSE certification training cycle.',
                 riskScore: { total: 2, factors: { content: 3, behavior: 1, context: 1 } },
                 dataSources: ['Purview DLP'],
@@ -2848,7 +2851,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Netskope flagged code pushed to public GitHub repository. AXIA verified: code is a SEG-Y format parser (industry standard seismic data format), contains no proprietary algorithms, and is published under MIT license. Open-source contribution was pre-approved by engineering management.',
-                whyItMatters: 'SEG-Y is an open industry standard. The parser contains format handling code, not Chevron\'s proprietary seismic interpretation algorithms. Contribution was approved and benefits the broader geoscience community.',
+                whyMatters: 'SEG-Y is an open industry standard. The parser contains format handling code, not Chevron\'s proprietary seismic interpretation algorithms. Contribution was approved and benefits the broader geoscience community.',
                 whyUnusual: 'Not unusual \u2014 approved open-source contribution.',
                 riskScore: { total: 3, factors: { content: 5, behavior: 2, context: 1 } },
                 dataSources: ['Netskope', 'GitHub', 'Open Source Approval System'],
@@ -2886,7 +2889,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Purview flagged trading position data. AXIA identified all positions as sandbox training data \u2014 TST_ prefix IDs, fictional counterparties ("TestCorp Energy"), SANDBOX_TRAINING_DATA header.',
-                whyItMatters: 'Trading risk training requires realistic-looking scenarios. DLP cannot distinguish training positions from real trading data. AXIA auto-resolved using content markers.',
+                whyMatters: 'Trading risk training requires realistic-looking scenarios. DLP cannot distinguish training positions from real trading data. AXIA auto-resolved using content markers.',
                 whyUnusual: 'Not unusual \u2014 scheduled risk management training.',
                 riskScore: { total: 2, factors: { content: 3, behavior: 1, context: 1 } },
                 dataSources: ['Purview DLP'],
@@ -2923,7 +2926,7 @@ const DEMO_DATA = {
             completedActions: [],
             analysis: {
                 what: 'Purview flagged files containing GPS coordinates and pressure readings. AXIA verified: ERS_SIMULATION_ONLY header, training facility coordinates (not production pipeline), SIM_ prefixed pressure values. Annual emergency response drill.',
-                whyItMatters: 'Pipeline safety drills are critical for PHMSA compliance. DLP flags the realistic-looking coordinates and pressure data. AXIA correctly identifies the simulation context.',
+                whyMatters: 'Pipeline safety drills are critical for PHMSA compliance. DLP flags the realistic-looking coordinates and pressure data. AXIA correctly identifies the simulation context.',
                 whyUnusual: 'Not unusual \u2014 annual emergency response drill.',
                 riskScore: { total: 2, factors: { content: 3, behavior: 1, context: 1 } },
                 dataSources: ['Purview DLP', 'HSE Drill Schedule'],
@@ -3054,6 +3057,61 @@ const DEMO_DATA = {
         { id: 'create-dlp-rule', label: 'Create new DLP Rule', icon: 'add_circle', enabled: true, category: 'enforcement' },
         { id: 'adjust-dlp-rule', label: 'Adjust related DLP Rule', icon: 'tune', enabled: true, category: 'enforcement' },
         { id: 'activate-smart-block', label: 'Activate Smart Block', icon: 'security', enabled: true, category: 'enforcement' }
+    ],
+
+    // ==================== ENFORCEMENT RULES ====================
+    enforcementRules: [
+        {
+            id: 'rule-001',
+            name: 'Departure Data Exfiltration Block',
+            description: 'When a departing employee attempts bulk download of proprietary data (APOLO models, well data, trading strategies), block the transfer and create critical case',
+            scenario: {
+                when: 'Any employee with departure flag in Workday',
+                does: 'Bulk downloads proprietary files (APOLO models, well data, trading strategies)',
+                through: 'Any channel',
+                to: 'Any external destination or personal storage'
+            },
+            channels: ['ms-purview', 'netskope'],
+            action: 'Block + Alert',
+            triggerCount: 14,
+            lastTriggered: '2h ago',
+            status: 'active',
+            sourceCase: 'CASE-CVR-001'
+        },
+        {
+            id: 'rule-002',
+            name: 'Cross-Boundary Trading Data Block',
+            description: 'When a trader accesses commodity data outside their assigned trading desk (e.g., crude trader accessing LNG contracts), block and alert S&T compliance',
+            scenario: {
+                when: 'Any S&T trader',
+                does: 'Accesses commodity data outside assigned trading desk boundary',
+                through: 'Trading platform or shared drives',
+                to: 'Cross-desk data repositories'
+            },
+            channels: ['ms-purview'],
+            action: 'Block + Alert',
+            triggerCount: 7,
+            lastTriggered: '2h ago',
+            status: 'active',
+            sourceCase: 'CASE-CVR-004'
+        },
+        {
+            id: 'rule-003',
+            name: 'JV Data Boundary Enforcement',
+            description: 'When TCO/Tengiz JV-tagged data is shared outside the designated JV organizational boundary, block transfer',
+            scenario: {
+                when: 'Any employee with JV data access',
+                does: 'Shares or transfers TCO/Tengiz JV-tagged documents',
+                through: 'Email, cloud storage, or file transfer',
+                to: 'Recipients outside designated JV organizational boundary'
+            },
+            channels: ['ms-purview', 'netskope'],
+            action: 'Block + Alert',
+            triggerCount: 5,
+            lastTriggered: '2h ago',
+            status: 'active',
+            sourceCase: 'CASE-CVR-005'
+        }
     ]
 };
 
@@ -3676,8 +3734,8 @@ async function uploadFileToOpenAI(file) {
 // V6.4: Scrollable dashboard, 10 widgets with Departments, dramatic MTTR storytelling (4.2h->1.1h)
 // V6.3: Draggable widgets, Before/After value proof, consistent time picker, prioritized layout
 // V6.2: New Value Dashboard with 3x3 grid of fixed widgets (Risk, Volume, Effectiveness)
-let currentScreen = 'posture';
-let previousScreen = 'posture';
+let currentScreen = 'dashboard';
+let previousScreen = 'dashboard';
 let currentCaseId = null;
 let tourStep = 0;
 let tourActive = false;
@@ -4103,6 +4161,15 @@ function renderCaseDetails(caseId) {
     const c = casesData.find(c => c.id === caseId);
     if (!c) return;
 
+    // Normalize timeline: may be top-level or nested in analysis
+    const typeColorMap = { context: 'text-secondary', behavioral: 'accent-teal', alert: 'severity-critical', action: 'primary' };
+    const timeline = (c.timeline || c.analysis?.timeline || []).map(t => ({
+        time: t.time,
+        event: t.event,
+        source: t.source || t.type || '',
+        color: t.color || typeColorMap[t.type] || 'text-secondary'
+    }));
+
     document.getElementById('detail-case-id').textContent = c.id;
     document.getElementById('detail-title').textContent = c.title;
 
@@ -4336,8 +4403,8 @@ function renderCaseDetails(caseId) {
             <div class="border-t border-border-default p-4">
                 <div class="relative pl-4">
                     <div class="absolute left-[7px] top-1 bottom-1 w-px bg-border-default"></div>
-                    ${c.timeline.map((t, i) => `
-                        <div class="relative flex gap-3 ${i < c.timeline.length - 1 ? 'pb-4' : ''}">
+                    ${timeline.map((t, i) => `
+                        <div class="relative flex gap-3 ${i < timeline.length - 1 ? 'pb-4' : ''}">
                             <div class="absolute -left-[1px] mt-1 h-4 w-4 rounded-full border-2 border-surface-dark bg-${t.color} z-10"></div>
                             <div class="pl-4">
                                 <p class="text-sm font-medium text-text-primary">${t.event}</p>
@@ -6415,7 +6482,7 @@ function renderHeatmapGrid(departments, severities = ['critical', 'high', 'mediu
         }).join('');
         return `
             <div class="grid gap-1 items-center" style="grid-template-columns: minmax(80px, 1.2fr) 50px repeat(${severities.length}, 1fr)">
-                <div class="text-[10px] text-text-secondary truncate pr-1 font-medium">${name}</div>
+                <div class="text-[10px] text-text-secondary truncate pr-1 font-medium" title="${name}">${name}</div>
                 <div class="flex items-center justify-center rounded-sm" style="background: var(--color-surface-elevated, #f1f5f9); height: 26px;">
                     <span style="font-size:11px;font-weight:800;color:var(--color-text-primary,#1e293b)">${deptTotal}</span>
                 </div>
